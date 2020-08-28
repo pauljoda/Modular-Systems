@@ -165,3 +165,5 @@ run/
 .idea/gradle.xml
 .idea/jarRepositories.xml
 /.idea/
+ACCESS_TOKEN
+USERNAME
