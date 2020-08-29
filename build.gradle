@@ -27,12 +27,17 @@ repositories {
     }
     maven {
         name "Nucleus"
-        url 'https://www.maven.pkg.github.com/pauljoda/Nucleus'
+        url 'https://maven.pkg.github.com/pauljoda/Nucleus'
         credentials {
             // Must create files in the same directory with this info, one per file. DO NOT UPLOAD
             username new File("USERNAME").text
             password new File("ACCESS_TOKEN").text
         }
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
     }
 }
 
@@ -94,7 +99,11 @@ minecraft {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.2-' + project.forge_version
-    compile group: "com.pauljoda.nucleus", name: "Nucleus", version: "1.16.2-6.0-B52", classifier: "dev"
+    compile group: "com.pauljoda.nucleus", name: "Nucleus", version: "1.16.2-6.0-B+", classifier: "dev"
+    // compile against the JEI API but do not include it at runtime
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${JEI_version}:api")
+    // at runtime, use the full JEI jar
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${JEI_version}")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
