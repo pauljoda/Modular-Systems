@@ -27,7 +27,7 @@ repositories {
     }
     maven {
         name "Nucleus"
-        url 'https://maven.pkg.github.com/pauljoda/Nucleus'
+        url 'https://www.maven.pkg.github.com/pauljoda/Nucleus'
         credentials {
             // Must create files in the same directory with this info, one per file. DO NOT UPLOAD
             username new File("USERNAME").text

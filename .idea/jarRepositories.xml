@@ -41,5 +41,10 @@
       <option name="name" value="GitHubPackages" />
       <option name="url" value="https://maven.pkg.github.com/pauljoda/Nucleus" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="Nucleus" />
+      <option name="name" value="Nucleus" />
+      <option name="url" value="https://www.maven.pkg.github.com/pauljoda/Nucleus" />
+    </remote-repository>
   </component>
 </project>
