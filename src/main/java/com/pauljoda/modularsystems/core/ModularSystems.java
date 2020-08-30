@@ -1,6 +1,9 @@
 package com.pauljoda.modularsystems.core;
 
 import com.pauljoda.modularsystems.core.lib.Reference;
+import com.pauljoda.modularsystems.core.manager.ContainerManager;
+import com.pauljoda.modularsystems.generator.screen.GeneratorScreen;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
@@ -38,8 +41,21 @@ public class ModularSystems {
         });
     }
 
-    private void setup(final FMLCommonSetupEvent event) { }
+    /**
+     * Common setup, called after all registering
+     * @param event Setup event
+     */
+    private void setup(final FMLCommonSetupEvent event) {
 
+    }
+
+    /**
+     * Common setup, called after all registering, client only
+     * @param event Setup event
+     */
     @OnlyIn(Dist.CLIENT)
-    private void setupClient(final FMLClientSetupEvent event) { }
+    private void setupClient(final FMLClientSetupEvent event) {
+        ScreenManager.registerFactory(ContainerManager.generator, GeneratorScreen::new);
+
+    }
 }
