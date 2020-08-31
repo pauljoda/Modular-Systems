@@ -1,8 +1,8 @@
-package com.pauljoda.modularsystems.generator.tile;
+package com.pauljoda.modularsystems.energy.tile;
 
 import com.pauljoda.modularsystems.core.lib.Reference;
 import com.pauljoda.modularsystems.core.manager.TileManager;
-import com.pauljoda.modularsystems.generator.container.GeneratorContainer;
+import com.pauljoda.modularsystems.energy.container.GeneratorContainer;
 import com.pauljoda.nucleus.common.tiles.energy.EnergyAndItemHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

@@ -1,14 +1,13 @@
-package com.pauljoda.modularsystems.generator.container;
+package com.pauljoda.modularsystems.energy.container;
 
 import com.pauljoda.modularsystems.core.manager.ContainerManager;
-import com.pauljoda.modularsystems.generator.tile.GeneratorTile;
+import com.pauljoda.modularsystems.energy.tile.GeneratorTile;
 import com.pauljoda.nucleus.common.container.BaseContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 

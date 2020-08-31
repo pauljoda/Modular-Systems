@@ -1,7 +1,8 @@
 package com.pauljoda.modularsystems.core.manager;
 
 import com.pauljoda.modularsystems.core.lib.Reference;
-import com.pauljoda.modularsystems.generator.tile.GeneratorTile;
+import com.pauljoda.modularsystems.core.tile.EnergyStorageTile;
+import com.pauljoda.modularsystems.energy.tile.GeneratorTile;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,6 +30,9 @@ public class TileManager {
     @ObjectHolder("generator")
     public static TileEntityType<GeneratorTile> generator;
 
+    @ObjectHolder("energy_storage")
+    public static TileEntityType<EnergyStorageTile> energy_storage;
+
     /*******************************************************************************************************************
      * Registration                                                                                                    *
      *******************************************************************************************************************/
@@ -38,5 +42,8 @@ public class TileManager {
         event.getRegistry()
                 .register(TileEntityType.Builder.create(GeneratorTile::new, BlockManager.generator)
                         .build(null).setRegistryName("generator"));
+        event.getRegistry()
+                .register(TileEntityType.Builder.create(EnergyStorageTile::new, BlockManager.energy_storage)
+                        .build(null).setRegistryName("energy_storage"));
     }
 }

@@ -1,7 +1,8 @@
 package com.pauljoda.modularsystems.core.manager;
 
 import com.pauljoda.modularsystems.core.lib.Reference;
-import com.pauljoda.modularsystems.generator.block.GeneratorBlock;
+import com.pauljoda.modularsystems.core.block.EnergyStorageBlock;
+import com.pauljoda.modularsystems.energy.block.GeneratorBlock;
 import net.minecraft.block.Block;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,6 +30,9 @@ public class BlockManager {
     @ObjectHolder("generator")
     public static Block generator;
 
+    @ObjectHolder("energy_storage")
+    public static Block energy_storage;
+
     /*******************************************************************************************************************
      * Registration                                                                                                    *
      *******************************************************************************************************************/
@@ -36,5 +40,6 @@ public class BlockManager {
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().register(new GeneratorBlock());
+        event.getRegistry().register(new EnergyStorageBlock());
     }
 }

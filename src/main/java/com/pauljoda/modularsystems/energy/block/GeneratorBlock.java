@@ -1,7 +1,7 @@
-package com.pauljoda.modularsystems.generator.block;
+package com.pauljoda.modularsystems.energy.block;
 
 import com.pauljoda.modularsystems.core.block.BaseBlock;
-import com.pauljoda.modularsystems.generator.tile.GeneratorTile;
+import com.pauljoda.modularsystems.energy.tile.GeneratorTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;

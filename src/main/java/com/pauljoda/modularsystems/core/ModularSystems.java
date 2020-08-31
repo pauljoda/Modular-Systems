@@ -2,11 +2,13 @@ package com.pauljoda.modularsystems.core;
 
 import com.pauljoda.modularsystems.core.lib.Reference;
 import com.pauljoda.modularsystems.core.manager.ContainerManager;
-import com.pauljoda.modularsystems.generator.screen.GeneratorScreen;
+import com.pauljoda.modularsystems.core.manager.TileManager;
+import com.pauljoda.modularsystems.energy.screen.GeneratorScreen;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -56,6 +58,5 @@ public class ModularSystems {
     @OnlyIn(Dist.CLIENT)
     private void setupClient(final FMLClientSetupEvent event) {
         ScreenManager.registerFactory(ContainerManager.generator, GeneratorScreen::new);
-
     }
 }

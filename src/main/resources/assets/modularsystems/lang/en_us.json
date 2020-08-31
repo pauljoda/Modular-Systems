@@ -10,11 +10,14 @@
   "_comment": "Blocks",
   "_comment": "#######################",
 
-  "block.modularsystems.generator": "Generator Core",
+  "block.modularsystems.generator": "Generator",
+  "block.modularsystems.energy_storage": "Energy Storage",
 
   "_comment": "#######################",
   "_comment": "Descriptions",
   "_comment": "#######################",
 
-  "modularsystems.generator": "Generator"
+  "modularsystems.generator": "Generator",
+
+  "modularsystems.compatible_systems": "Compatible Systems"
 }

@@ -42,6 +42,9 @@ public class ItemManager {
     @ObjectHolder("generator")
     public static Item generator;
 
+    @ObjectHolder("energy_storage")
+    public static Item energy_storage;
+
     /*******************************************************************************************************************
      * Register                                                                                                        *
      *******************************************************************************************************************/
@@ -60,6 +63,7 @@ public class ItemManager {
 
         // Register BlockItems
         registerBlockItemForBlock(event.getRegistry(), BlockManager.generator);
+        registerBlockItemForBlock(event.getRegistry(), BlockManager.energy_storage);
     }
 
     @SuppressWarnings("ConstantConditions")

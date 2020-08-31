@@ -1,7 +1,7 @@
 package com.pauljoda.modularsystems.core.manager;
 
 import com.pauljoda.modularsystems.core.lib.Reference;
-import com.pauljoda.modularsystems.generator.container.GeneratorContainer;
+import com.pauljoda.modularsystems.energy.container.GeneratorContainer;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
