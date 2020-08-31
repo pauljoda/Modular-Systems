@@ -1,7 +1,11 @@
 package com.pauljoda.modularsystems.core.tile;
 
 import com.pauljoda.modularsystems.core.manager.TileManager;
+import com.pauljoda.modularsystems.core.multiblock.AbstractMultiBlockExpansionTile;
+import com.pauljoda.modularsystems.core.multiblock.interfaces.IMultiBlockCore;
+import com.pauljoda.modularsystems.energy.tile.GeneratorTile;
 import com.pauljoda.nucleus.common.tiles.energy.EnergyHandler;
+import com.pauljoda.nucleus.energy.implementations.EnergyBank;
 
 /**
  * This file was created for Modular-Systems
@@ -13,10 +17,14 @@ import com.pauljoda.nucleus.common.tiles.energy.EnergyHandler;
  * @author Paul Davis - pauljoda
  * @since 8/30/20
  */
-public class EnergyStorageTile extends EnergyHandler {
+public class EnergyStorageTile extends AbstractMultiBlockExpansionTile {
 
-    // Default energy size
-    public static final int DEFAULT_ENERGY = 100000;
+    /*******************************************************************************************************************
+     * Class Variables                                                                                                 *
+     *******************************************************************************************************************/
+
+    // Default value for how much is added when attached to a network
+    protected static final int ADDED_STORAGE_VALUE = 32000;
 
     /**
      * Main Constructor
@@ -26,56 +34,55 @@ public class EnergyStorageTile extends EnergyHandler {
     }
 
     /*******************************************************************************************************************
-     * EnergyHandler                                                                                                   *
+     * AbstractMultiBlockExpansion                                                                                     *
      *******************************************************************************************************************/
 
     /**
-     * Used to define the default size of this energy bank
-     *
-     * @return The default size of the energy bank
+     * Called when this expansion is added to a network, called after core has become aware of us
      */
     @Override
-    protected int getDefaultEnergyStorageSize() {
-        return DEFAULT_ENERGY;
+    public void addedToNetwork() {
+        if(getCore() != null) {
+            EnergyHandler coreHandler = (EnergyHandler) world.getTileEntity(getCore());
+            coreHandler.energyStorage.setMaxStored(coreHandler.getMaxEnergyStored() + ADDED_STORAGE_VALUE);
+        }
     }
 
     /**
-     * Is this tile an energy provider
-     *
-     * @return True to allow energy out
+     * Called when this tile is removed from the network, only modify the core values needed, should mirror
+     * what was done when added to network
      */
     @Override
-    protected boolean isProvider() {
-        return true;
+    public void removedFromNetwork() {
+        EnergyHandler energyHandler = ((EnergyHandler)world.getTileEntity(getCore()));
+        energyHandler.energyStorage.setMaxStored(Math.max(0, energyHandler.getMaxEnergyStored() - ADDED_STORAGE_VALUE));
     }
 
     /**
-     * Is this tile an energy reciever
+     * Tests if this block can join another multiblock based on core type,
      *
-     * @return True to accept energy
+     * @param otherCore Core to check against
+     *
+     * @return True if able to join that network
      */
     @Override
-    protected boolean isReceiver() {
-        return true;
-    }
-
-    /**
-     * Used to scale the current power level
-     *
-     * @param scale The scale to move to
-     * @return A number from 0 - { @param scale} for current level
-     */
-    public float getPowerLevelScaled(int scale) {
-        return energyStorage.getEnergyStored() * (scale * 1F) / energyStorage.getMaxEnergyStored();
+    public boolean canJoinMultiBlock(IMultiBlockCore otherCore) {
+        return otherCore instanceof GeneratorTile;
     }
 
     /*******************************************************************************************************************
-     * Tile Entity                                                                                                     *
+     * EnergyStorageTile                                                                                               *
      *******************************************************************************************************************/
 
-    @Override
-    protected void onServerTick() {
-        super.onServerTick();
-        receiveEnergy(1, false);
+    /**
+     * Scales the current stored energy used for outside bar
+     * @param scale Value to scale to
+     * @return Scaled perfectage full
+     */
+    public float getPowerLevelScaled(int scale) {
+        if(getCore() == null || world.getTileEntity(core) == null)
+            return 0;
+        EnergyBank energyStorage = ((EnergyHandler) world.getTileEntity(core)).energyStorage;
+        return energyStorage.getEnergyStored() * (scale * 1F) / energyStorage.getMaxEnergyStored();
     }
 }

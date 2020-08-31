@@ -1,5 +1,6 @@
-package com.pauljoda.modularsystems.core.multiblock;
+package com.pauljoda.modularsystems.core.multiblock.collections;
 
+import com.pauljoda.modularsystems.core.multiblock.interfaces.IMultiBlockExpansion;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -25,7 +26,7 @@ public class MultiBlockData {
      *******************************************************************************************************************/
 
     // Holds reference to all blocks that depend on this one
-    protected List<BlockPos> children = new ArrayList<>();
+    protected List<BlockPos> nodes = new ArrayList<>();
 
     /*******************************************************************************************************************
      * MultiBlock                                                                                                      *
@@ -36,7 +37,15 @@ public class MultiBlockData {
      * @param node The node to add
      */
     public void addNode(BlockPos node) {
-        children.add(node);
+        nodes.add(node);
+    }
+
+    /**
+     * Get the instance of the nodes
+     * @return List of nodes
+     */
+    public List<BlockPos> getNodes() {
+        return nodes;
     }
 
     /**
@@ -45,13 +54,12 @@ public class MultiBlockData {
      * @return The node that is at that location
      */
     public BlockPos getNode(BlockPos loc) {
-        for(BlockPos node : children) {
+        for(BlockPos node : nodes) {
             if(node.equals(loc))
                 return node;
         }
         return null;
     }
-
 
     /**
      * Deletes the node in the network
@@ -59,7 +67,7 @@ public class MultiBlockData {
      * @return True if found and deleted
      */
     public boolean deleteNode(IMultiBlockExpansion node) {
-        for(Iterator<BlockPos> iterator = children.iterator(); iterator.hasNext(); ) {
+        for(Iterator<BlockPos> iterator = nodes.iterator(); iterator.hasNext(); ) {
             BlockPos child = iterator.next();
             if(child.equals(node.getPos())) {
                 iterator.remove();
@@ -75,7 +83,7 @@ public class MultiBlockData {
      * @param world The world
      */
     public void destroyNetwork(World world) {
-        for(BlockPos loc : children) {
+        for(BlockPos loc : nodes) {
             if(!world.isRemote && world.getTileEntity(loc) != null && world.getTileEntity(loc) instanceof IMultiBlockExpansion)
                 ((IMultiBlockExpansion)world.getTileEntity(loc)).removeFromNetwork(false);
         }
@@ -90,10 +98,10 @@ public class MultiBlockData {
      * @param tag Tag to write
      */
     public void write(CompoundNBT tag) {
-        if(children != null && !children.isEmpty()) {
-            tag.putInt("ChildSize", children.size());
-            for(int i = 0; i < children.size(); i++)
-                tag.putLong( "child" + i, children.get(i).toLong());
+        if(nodes != null && !nodes.isEmpty()) {
+            tag.putInt("ChildSize", nodes.size());
+            for(int i = 0; i < nodes.size(); i++)
+                tag.putLong( "child" + i, nodes.get(i).toLong());
         }
     }
 
@@ -103,9 +111,9 @@ public class MultiBlockData {
      */
     public void read(CompoundNBT tag) {
         if(tag.contains("ChildSize")) {
-            children = new ArrayList<>();
+            nodes = new ArrayList<>();
             for(int i = 0; i < tag.getInt("ChildSize"); i++) {
-                children.add(BlockPos.fromLong(tag.getLong("child" + i)));
+                nodes.add(BlockPos.fromLong(tag.getLong("child" + i)));
             }
         }
     }

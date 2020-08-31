@@ -2,16 +2,21 @@ package com.pauljoda.modularsystems.energy.tile;
 
 import com.pauljoda.modularsystems.core.lib.Reference;
 import com.pauljoda.modularsystems.core.manager.TileManager;
+import com.pauljoda.modularsystems.core.multiblock.interfaces.IMultiBlockCore;
+import com.pauljoda.modularsystems.core.multiblock.interfaces.IMultiBlockExpansion;
+import com.pauljoda.modularsystems.core.multiblock.collections.MultiBlockData;
+import com.pauljoda.modularsystems.core.tile.EnergyStorageTile;
 import com.pauljoda.modularsystems.energy.container.GeneratorContainer;
-import com.pauljoda.nucleus.common.tiles.energy.EnergyAndItemHandler;
+import com.pauljoda.nucleus.common.tiles.energy.EnergyHandler;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 /**
  * This file was created for Modular-Systems
@@ -23,13 +28,20 @@ import net.minecraftforge.common.ForgeHooks;
  * @author Paul Davis - pauljoda
  * @since 8/29/20
  */
-public class GeneratorTile extends EnergyAndItemHandler implements INamedContainerProvider {
+public class GeneratorTile extends EnergyHandler implements IMultiBlockCore, ICapabilityProvider, INamedContainerProvider {
 
     /*******************************************************************************************************************
      * Variables                                                                                                       *
      *******************************************************************************************************************/
 
-    protected static final int MAX_STORAGE = 32000;
+    // Default storage
+    protected static final int DEFAULT_STORAGE = 32000;
+
+    // Max expansions allowed in this multiblock
+    protected static final int MAX_EXPANSIONS = 50;
+
+    // Instance of multiblock data
+    protected MultiBlockData multiBlockData;
 
     /*******************************************************************************************************************
      * Constructor                                                                                                     *
@@ -37,6 +49,51 @@ public class GeneratorTile extends EnergyAndItemHandler implements INamedContain
 
     public GeneratorTile() {
         super(TileManager.generator);
+        multiBlockData = new MultiBlockData();
+    }
+
+    /*******************************************************************************************************************
+     * IMultiBlockCore                                                                                                 *
+     *******************************************************************************************************************/
+
+    /**
+     * Called when an expansion is added to this core, add logic to modify here, expansion will not
+     *
+     * @param expansion Expansion
+     */
+    @Override
+    public void addExpansion(IMultiBlockExpansion expansion) {
+        multiBlockData.addNode(expansion.getPos());
+    }
+
+    /**
+     * Returns an instance of this multiblock's data object
+     *
+     * @return Instance of data object
+     */
+    @Override
+    public MultiBlockData getMultiBlockData() {
+        return multiBlockData;
+    }
+
+    /**
+     * Tests if the given expansion can join this network, check for things like size and type
+     *
+     * @param expansion The expansion wanting to join
+     *
+     * @return True if allowed to connect
+     */
+    @Override
+    public boolean isExpansionAllowed(IMultiBlockExpansion expansion) {
+        return multiBlockData.getNodes().size() < MAX_EXPANSIONS && expansion instanceof EnergyStorageTile;
+    }
+
+    /**
+     * Destroy the network
+     */
+    @Override
+    public void destroyMultiblock() {
+        multiBlockData.destroyNetwork(world);
     }
 
     /*******************************************************************************************************************
@@ -50,7 +107,7 @@ public class GeneratorTile extends EnergyAndItemHandler implements INamedContain
      */
     @Override
     protected int getDefaultEnergyStorageSize() {
-        return MAX_STORAGE;
+        return DEFAULT_STORAGE;
     }
 
     /**
@@ -74,28 +131,20 @@ public class GeneratorTile extends EnergyAndItemHandler implements INamedContain
     }
 
     /*******************************************************************************************************************
-     * IItemHandler                                                                                                    *
+     * TileEntity                                                                                                      *
      *******************************************************************************************************************/
 
-    /**
-     * The initial size of the inventory
-     *
-     * @return How big to make the inventory on creation
-     */
     @Override
-    protected int getInventorySize() {
-        return 1;
+    public void read(BlockState blockState, CompoundNBT compound) {
+        super.read(blockState, compound);
+        multiBlockData.read(compound);
     }
 
-    /**
-     * Used to define if an item is valid for a slot
-     *
-     * @param index The slot id
-     * @param stack The stack to check
-     * @return True if you can put this there
-     */
-    protected boolean isItemValidForSlot(int index, ItemStack stack) {
-        return inventoryContents.get(0).isEmpty() && index == 0 && ForgeHooks.getBurnTime(stack) > 0;
+    @Override
+    public CompoundNBT write(CompoundNBT compound) {
+        super.write(compound);
+        multiBlockData.write(compound);
+        return compound;
     }
 
     /*******************************************************************************************************************

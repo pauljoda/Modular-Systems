@@ -3,6 +3,7 @@ package com.pauljoda.modularsystems.core;
 import com.pauljoda.modularsystems.core.lib.Reference;
 import com.pauljoda.modularsystems.core.manager.ContainerManager;
 import com.pauljoda.modularsystems.core.manager.TileManager;
+import com.pauljoda.modularsystems.energy.renderer.EnergyStorageRenderer;
 import com.pauljoda.modularsystems.energy.screen.GeneratorScreen;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraftforge.api.distmarker.Dist;
@@ -58,5 +59,7 @@ public class ModularSystems {
     @OnlyIn(Dist.CLIENT)
     private void setupClient(final FMLClientSetupEvent event) {
         ScreenManager.registerFactory(ContainerManager.generator, GeneratorScreen::new);
+
+        ClientRegistry.bindTileEntityRenderer(TileManager.energy_storage, EnergyStorageRenderer::new);
     }
 }

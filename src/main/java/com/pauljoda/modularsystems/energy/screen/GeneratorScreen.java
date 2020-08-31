@@ -5,9 +5,17 @@ import com.pauljoda.modularsystems.energy.container.GeneratorContainer;
 import com.pauljoda.modularsystems.energy.tile.GeneratorTile;
 import com.pauljoda.nucleus.client.gui.GuiBase;
 import com.pauljoda.nucleus.client.gui.component.display.GuiComponentTextureAnimated;
+import com.pauljoda.nucleus.util.EnergyUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.energy.CapabilityEnergy;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This file was created for Modular-Systems
@@ -27,6 +35,7 @@ public class GeneratorScreen extends GuiBase<GeneratorContainer> {
                 175, 165,
                 new ResourceLocation(Reference.MOD_ID, "textures/gui/generator.png"));
         this.generator = container.tile;
+        font = Minecraft.getInstance().fontRenderer;
         addComponents();
     }
 
@@ -42,23 +51,26 @@ public class GeneratorScreen extends GuiBase<GeneratorContainer> {
                     16, 62, GuiComponentTextureAnimated.ANIMATION_DIRECTION.UP) {
                 @Override
                 protected int getCurrentProgress(int scale) {
-                    return (generator.getEnergyStored() * scale) / generator.getMaxEnergyStored();
+                        return (generator.getEnergyStored() * scale) / generator.getMaxEnergyStored();
                 }
-//
-//                /**
-//                 * Used to determine if a dynamic tooltip is needed at runtime
-//                 *
-//                 * @param mouseX Mouse X Pos
-//                 * @param mouseY Mouse Y Pos
-//                 * @return A list of string to display
-//                 */
-//                @Override
-//                public List<ITextComponent> getDynamicToolTip(int mouseX, int mouseY) {
-//                    List<ITextComponent> toolTip = new ArrayList<ITextComponent>();
-//                    EnergyUtils.addToolTipInfo(machine.getCapability(CapabilityEnergy.ENERGY, null),
-//                            toolTip, machine.energyStorage.getMaxInsert(), machine.energyStorage.getMaxExtract());
-//                    return toolTip;
-//                }
+
+                /**
+                 * Used to determine if a dynamic tooltip is needed at runtime
+                 *
+                 * @param mouseX Mouse X Pos
+                 * @param mouseY Mouse Y Pos
+                 *
+                 * @return A list of string to display
+                 */
+                @Override
+                public List<ITextComponent> getDynamicToolTip(int mouseX, int mouseY) {
+                    List<ITextComponent> toolTip = new ArrayList<ITextComponent>();
+                    List<String> temp = new ArrayList<>();
+                    EnergyUtils.addToolTipInfo(generator.getCapability(CapabilityEnergy.ENERGY, null).orElse(null),
+                            temp, generator.energyStorage.getMaxInsert(), generator.energyStorage.getMaxExtract());
+                    temp.forEach(string -> { toolTip.add(new TranslationTextComponent(string)); });
+                    return toolTip;
+                }
             });
         }
     }

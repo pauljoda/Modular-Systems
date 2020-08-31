@@ -1,5 +1,6 @@
-package com.pauljoda.modularsystems.core.multiblock;
+package com.pauljoda.modularsystems.core.multiblock.interfaces;
 
+import com.pauljoda.modularsystems.core.multiblock.interfaces.IMultiBlockCore;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 
@@ -15,7 +16,7 @@ import java.util.List;
  * @author Paul Davis - pauljoda
  * @since 8/30/20
  */
-public interface IMultiBlockExpansion<T extends IMultiBlockCore> {
+public interface IMultiBlockExpansion {
 
     /*******************************************************************************************************************
      * Interface Methods                                                                                               *

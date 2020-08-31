@@ -89,8 +89,8 @@ public class BaseBlock extends ContainerBlock {
         else {
             TileEntity tileentity = worldIn.getTileEntity(pos);
             if (tileentity instanceof INamedContainerProvider) {
-                INamedContainerProvider grinder = (INamedContainerProvider) tileentity;
-                NetworkHooks.openGui((ServerPlayerEntity) player, grinder, pos);
+                INamedContainerProvider namedProvider = (INamedContainerProvider) tileentity;
+                NetworkHooks.openGui((ServerPlayerEntity) player, namedProvider, pos);
             }
             return ActionResultType.SUCCESS;
         }

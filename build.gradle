@@ -106,6 +106,40 @@ dependencies {
     runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${JEI_version}")
 }
 
+configurations.all {
+    resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+}
+
+task devJar(type: Jar, dependsOn: 'classes') {
+    from(sourceSets.main.output) {
+        include '**'
+    }
+    extension = 'jar'
+    classifier = 'dev'
+}
+
+task deobfJar(type: Jar) {
+    classifier = "deobf"
+    from sourceSets.main.output
+}
+
+task javadocJar(type: Zip, dependsOn: javadoc) {
+    from 'build/docs/javadoc'
+    classifier = 'javadoc'
+}
+
+task sourceJarJava(type: Jar, dependsOn: "classes") {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives devJar
+    archives sourceJarJava
+    archives javadocJar
+    archives deobfJar
+}
+
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {

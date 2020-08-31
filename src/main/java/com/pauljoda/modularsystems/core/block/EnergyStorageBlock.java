@@ -1,11 +1,26 @@
 package com.pauljoda.modularsystems.core.block;
 
+import com.pauljoda.modularsystems.core.multiblock.BaseMultiBlockBlock;
+import com.pauljoda.modularsystems.core.multiblock.interfaces.IMultiBlockExpansion;
 import com.pauljoda.modularsystems.core.tile.EnergyStorageTile;
 import com.pauljoda.nucleus.common.IAdvancedToolTipProvider;
 import com.pauljoda.nucleus.util.ClientUtils;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
+import net.minecraft.block.material.PushReaction;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +35,16 @@ import java.util.List;
  * @author Paul Davis - pauljoda
  * @since 8/30/20
  */
-public class EnergyStorageBlock extends BaseBlock implements IAdvancedToolTipProvider {
+public class EnergyStorageBlock extends BaseMultiBlockBlock implements IAdvancedToolTipProvider {
 
     /**
      * Base Constructor
      */
     public EnergyStorageBlock() {
-        super(Properties.create(Material.ROCK).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.0F),
+        super(Properties.create(new Material(MaterialColor.STONE, false, false,
+                true, false,
+                false, false,
+                PushReaction.BLOCK)).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.0F),
                 "energy_storage", EnergyStorageTile.class);
     }
 

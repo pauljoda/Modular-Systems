@@ -2,16 +2,11 @@ package com.pauljoda.modularsystems.energy.container;
 
 import com.pauljoda.modularsystems.core.manager.ContainerManager;
 import com.pauljoda.modularsystems.energy.tile.GeneratorTile;
-import com.pauljoda.nucleus.common.container.BaseContainer;
+import com.pauljoda.nucleus.common.container.ContainerGeneric;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
-
-import javax.annotation.Nonnull;
 
 /**
  * This file was created for Modular-Systems
@@ -23,7 +18,7 @@ import javax.annotation.Nonnull;
  * @author Paul Davis - pauljoda
  * @since 8/29/20
  */
-public class GeneratorContainer  extends BaseContainer {
+public class GeneratorContainer extends ContainerGeneric {
     public GeneratorTile tile;
 
     /**
@@ -33,16 +28,9 @@ public class GeneratorContainer  extends BaseContainer {
      * @param playerInventory The players inventory
      * @param inventory       The tile/object inventory
      */
-    public GeneratorContainer(int id, IInventory playerInventory, IItemHandler inventory) {
-        super(ContainerManager.generator, id, playerInventory, inventory);
-        addSlot(new SlotItemHandler(inventory, 0, 80, 58) {
-            @Override
-            public boolean isItemValid(@Nonnull ItemStack stack) {
-                return inventory.isItemValidForSlot(0, stack);
-            }
-        });
+    public GeneratorContainer(int id, IInventory playerInventory, GeneratorTile inventory) {
+        super(ContainerManager.generator, id);
         this.tile = (GeneratorTile) inventory;
-        addPlayerInventorySlots(8, 84);
     }
 
     public GeneratorContainer(int windowId, PlayerInventory playerInv, PacketBuffer extraData) {
