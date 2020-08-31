@@ -2,7 +2,7 @@
   "parent": "minecraft:block/orientable",
   "textures": {
     "top": "modularsystems:block/generator_side",
-    "front": "modularsystems:block/generator_front",
+    "front": "modularsystems:block/generator_front_on",
     "side": "modularsystems:block/generator_side"
   }
 }

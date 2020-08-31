@@ -34,7 +34,7 @@ public class GeneratorScreen extends GuiBase<GeneratorContainer> {
 
     public GeneratorScreen(GeneratorContainer container, PlayerInventory playerInventory, ITextComponent title) {
         super(container, playerInventory, title,
-                176, 166,
+                175, 165,
                 new ResourceLocation(Reference.MOD_ID, "textures/gui/generator.png"));
         this.generator = container.tile;
         addComponents();
@@ -48,7 +48,7 @@ public class GeneratorScreen extends GuiBase<GeneratorContainer> {
         if(generator != null) {
             // Energy Bar
             // Power Bar
-            components.add(new GuiComponentTextureAnimated(this, 16, 12, 176, 97,
+            components.add(new GuiComponentTextureAnimated(this, 16, 12, 176, 14,
                     16, 62, GuiComponentTextureAnimated.ANIMATION_DIRECTION.UP) {
                 @Override
                 protected int getCurrentProgress(int scale) {
