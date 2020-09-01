@@ -1,6 +1,7 @@
 package com.pauljoda.modularsystems.energy.renderer;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.pauljoda.modularsystems.core.tile.EnergyStorageTile;
 import com.pauljoda.nucleus.util.ClientUtils;
@@ -37,6 +38,7 @@ public class EnergyStorageRenderer extends TileEntityRenderer<EnergyStorageTile>
     public void render(EnergyStorageTile tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         RenderSystem.pushMatrix();
+        RenderSystem.pushLightingAttributes();
         RenderSystem.multMatrix(matrixStackIn.getLast().getMatrix());
 
         RenderSystem.disableCull();
@@ -59,8 +61,8 @@ public class EnergyStorageRenderer extends TileEntityRenderer<EnergyStorageTile>
         RenderSystem.enableCull();
         RenderUtils.restoreRenderState();
         RenderUtils.restoreColor();
-        RenderSystem.enableLighting();
 
+        RenderSystem.popAttributes();
         RenderSystem.popMatrix();
 
     }

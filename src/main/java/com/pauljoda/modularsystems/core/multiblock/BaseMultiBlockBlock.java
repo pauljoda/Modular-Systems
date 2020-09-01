@@ -3,9 +3,11 @@ package com.pauljoda.modularsystems.core.multiblock;
 import com.pauljoda.modularsystems.core.block.BaseBlock;
 import com.pauljoda.modularsystems.core.multiblock.interfaces.IMultiBlockExpansion;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -71,5 +73,17 @@ public class BaseMultiBlockBlock extends BaseBlock {
             expansion.removeFromNetwork(true);
         }
         super.onReplaced(state, worldIn, pos, newState, isMoving);
+    }
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        if(worldIn.getTileEntity(pos) != null) {
+            TileEntity tileEntity = worldIn.getTileEntity(pos);
+            if(tileEntity instanceof AbstractMultiBlockExpansionTile) {
+                AbstractMultiBlockExpansionTile expansionTile = (AbstractMultiBlockExpansionTile) tileEntity;
+                expansionTile.searchAndConnect();
+            }
+        }
     }
 }

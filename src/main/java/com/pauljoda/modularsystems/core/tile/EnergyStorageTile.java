@@ -77,7 +77,7 @@ public class EnergyStorageTile extends AbstractMultiBlockExpansionTile {
     /**
      * Scales the current stored energy used for outside bar
      * @param scale Value to scale to
-     * @return Scaled perfectage full
+     * @return Scaled percentage full
      */
     public float getPowerLevelScaled(int scale) {
         if(getCore() == null || world.getTileEntity(core) == null)
