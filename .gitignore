@@ -169,3 +169,5 @@ ACCESS_TOKEN
 USERNAME
 /.idea/
 /run/
+/runs/
+/runs/client/logs/
