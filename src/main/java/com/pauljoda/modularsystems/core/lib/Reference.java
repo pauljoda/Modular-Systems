@@ -1,4 +1,4 @@
-package com.pauljoda.modularsystems.lib;
+package com.pauljoda.modularsystems.core.lib;
 
 /**
  * The Reference class hosts various constant identifiers for the module.

@@ -1,16 +1,13 @@
 package com.pauljoda.modularsystems;
 
 import com.mojang.logging.LogUtils;
-import com.pauljoda.modularsystems.lib.Reference;
-import com.pauljoda.modularsystems.lib.Registration;
-import com.pauljoda.modularsystems.registry.BlockValueRegistry;
+import com.pauljoda.modularsystems.core.lib.Reference;
+import com.pauljoda.modularsystems.core.lib.Registration;
+import com.pauljoda.modularsystems.core.registry.BlockValueRegistry;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.common.ModConfigSpec;
 import org.slf4j.Logger;
 
 import java.io.File;

@@ -1,6 +1,4 @@
-package com.pauljoda.modularsystems.math;
-
-import org.checkerframework.checker.units.qual.C;
+package com.pauljoda.modularsystems.core.math.collections;
 
 import java.util.Arrays;
 

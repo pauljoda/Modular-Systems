@@ -1,7 +1,7 @@
-package com.pauljoda.modularsystems.data.models;
+package com.pauljoda.modularsystems.core.collections;
 
 import java.util.Arrays;
-import com.pauljoda.modularsystems.math.Calculation;
+import com.pauljoda.modularsystems.core.math.collections.Calculation;
 
 /**
  * This file was created for Modular-Systems
