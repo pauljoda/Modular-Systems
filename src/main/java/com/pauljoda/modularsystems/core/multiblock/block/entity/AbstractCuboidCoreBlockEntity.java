@@ -5,11 +5,16 @@ import com.pauljoda.modularsystems.core.math.function.BlockCountFunction;
 import com.pauljoda.modularsystems.core.multiblock.FuelProvider;
 import com.pauljoda.modularsystems.core.multiblock.StandardCuboidValues;
 import com.pauljoda.modularsystems.core.multiblock.block.AbstractCuboidCoreBlock;
+import com.pauljoda.modularsystems.power.providers.block.entity.CuboidBankBaseBlockEntity;
+import com.pauljoda.nucleus.capabilities.InventoryHolder;
 import com.pauljoda.nucleus.common.blocks.entity.item.InventoryHandler;
 import com.pauljoda.nucleus.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -22,7 +27,7 @@ import java.util.List;
 
 import static com.pauljoda.nucleus.common.blocks.BlockFourWayRotating.FOUR_WAY;
 
-public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler {
+public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler implements MenuProvider {
 
     /*******************************************************************************************************************
      * Variables                                                                                                       *
@@ -42,7 +47,30 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler {
             ((MAX_EDGE_SIZE - 2) * 4); // Pillars
 
     // Values
-    protected StandardCuboidValues values;
+    public StandardCuboidValues values;
+
+    public final ContainerData coreData = new ContainerData() {
+        @Override
+        public int get(int pIndex) {
+            return switch (pIndex) {
+                case 0 -> values.getFuelTime();
+                case 1 -> values.getCurrentFuelProvidedTime();
+                case 2 -> values.getWorkTime();
+                case 3 -> getAdjustedProcessTime();
+                default -> throw new IllegalArgumentException("Invalid Index: " + pIndex);
+            };
+        }
+
+        @Override
+        public void set(int pIndex, int pValue) {
+            throw new IllegalStateException("Cannot set values through IIntArray");
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+    };
 
     /*******************************************************************************************************************
      * Constructor                                                                                                       *
@@ -111,9 +139,35 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler {
         return 2;
     }
 
+    @Override
+    protected InventoryHolder initializeInventory() {
+        return new InventoryHolder() {
+            @Override
+            protected int getInventorySize() {
+                return AbstractCuboidCoreBlockEntity.this.getInventorySize();
+            }
+
+            @Override
+            protected boolean isItemValidForSlot(int index, ItemStack stack) {
+                return AbstractCuboidCoreBlockEntity.this.isItemValidForSlot(index, stack);
+            }
+        };
+    }
+
     /*******************************************************************************************************************
      * Multiblock Methods                                                                                              *
      *******************************************************************************************************************/
+
+    /**
+     * Overrides the onServerTick() method from the superclass.
+     * This method is called every tick on the server-side.
+     * It performs additional logic specific to the implementation of AbstractCuboidCoreBlockEntity.
+     */
+    @Override
+    public void onServerTick() {
+        if(updateMultiblock())
+            doWork();
+    }
 
     /**
      * Updates the multiblock based on the current state of the values.
@@ -167,11 +221,13 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler {
 
             // Check structure
             for (var location : outside) {
-                if(location.equals(getBlockPos())) {} // Continue
-
-                if(getLevel().isEmptyBlock(location) ||
-                    isBlockBanned(getLevel().getBlockState(location)))
-                    return false;
+                // Don't check ourselves
+                if(!location.equals(getBlockPos()) &&
+                        !(getLevel().getBlockEntity(location) instanceof FuelProvider)) {
+                    if (getLevel().isEmptyBlock(location) ||
+                            isBlockBanned(getLevel().getBlockState(location)))
+                        return false;
+                }
             }
 
             // No issues found
@@ -182,12 +238,55 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler {
         return wellFormed;
     }
 
-    protected void buildMultiblock() {
-        ModularSystems.LOGGER.info("Build Multiblock");
+    public void buildMultiblock() {
+        // Safety Check
+        if(values.getCorners() == null)
+            return;
+
+        var outside = LevelUtils.getAllBetween(values.getCorners().getA(), values.getCorners().getB(), false, true);
+        var blockCountFunction = new BlockCountFunction();
+        for (var loc : outside) {
+            // If not ourselves
+            if(!loc.equals(getBlockPos())) {
+                if(getLevel().getBlockEntity(loc) instanceof CuboidBankBaseBlockEntity bank) {
+                    bank.setCoreLocation(loc);
+                    bank.markForUpdate(Block.UPDATE_ALL);
+                } else {
+                    var blockState = getLevel().getBlockState(loc);
+                    blockCountFunction.addBlock(blockState);
+
+                    // TODO: Setup Proxy
+                }
+            }
+        }
+
+        generateValues(blockCountFunction);
+        values.setWellFormed(true);
+        markForUpdate(Block.UPDATE_ALL);
     }
 
-    protected void deconstructMultiblock() {
-        ModularSystems.LOGGER.info("Deconstruct Multiblock");
+    public void deconstructMultiblock() {
+        // Safety Check
+        if(values.getCorners() == null)
+            return;
+
+        values.resetStructureValues();
+        var outside = LevelUtils.getAllBetween(values.getCorners().getA(), values.getCorners().getB(), false, true);
+        for (var loc : outside) {
+            // Not us
+            if(!loc.equals(getBlockPos()) && !getLevel().isEmptyBlock(loc)) {
+                if(getLevel().getBlockEntity(loc) instanceof CuboidProxyBlockEntity proxy) {
+                    var blockState = proxy.getStoredBlockState();
+                    getLevel().setBlock(loc, blockState, Block.UPDATE_ALL);
+                } else if(getLevel().getBlockEntity(loc) instanceof CuboidBankBaseBlockEntity bank) {
+                    bank.setCoreLocation(null);
+                    bank.markForUpdate(Block.UPDATE_ALL);
+                }
+            }
+        }
+
+        values.setWellFormed(false);
+        markForUpdate(Block.UPDATE_ALL);
     }
 
     /**
@@ -279,7 +378,9 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler {
                 markForUpdate(Block.UPDATE_ALL);
             }
 
-            if(canProcess(getStackInSlot(INPUT_SLOT), recipe(getStackInSlot(INPUT_SLOT)), getStackInSlot(OUTPUT_SLOT))
+            if(canProcess(getItemCapability().getStackInSlot(INPUT_SLOT),
+                    recipe(getItemCapability().getStackInSlot(INPUT_SLOT)),
+                    getItemCapability().getStackInSlot(OUTPUT_SLOT))
                     && !values.isWorking()) {
                 // Check Corners
                 if (values.getCorners() == null) {
@@ -298,28 +399,32 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler {
                     process();
 
                     // Started Work
-                    getLevel().getBlockState(getBlockPos()).setValue(AbstractCuboidCoreBlock.LIT, values.getFuelTime() > 0);
-                    markForUpdate(Block.UPDATE_ALL);
+                    var state = getLevel().getBlockState(getBlockPos()).setValue(AbstractCuboidCoreBlock.LIT, values.getFuelTime() > 0);
+                    getLevel().setBlock(getBlockPos(), state, Block.UPDATE_ALL);
+                    //markForUpdate(Block.UPDATE_ALL);
                 }
-                else if (values.isWorking()) {
+                else if (values.getFuelTime() > 0) {
                     didwork = process();
                 }
                 else {
                     values.setWorkTime(0);
                     values.setFuelTime(0);
                     // Back to not working
-                    getLevel().getBlockState(getBlockPos()).setValue(AbstractCuboidCoreBlock.LIT, values.getFuelTime() > 0);
-                    markForUpdate(Block.UPDATE_ALL);
+                    var state = getLevel().getBlockState(getBlockPos()).setValue(AbstractCuboidCoreBlock.LIT, values.getFuelTime() > 0);
+                    getLevel().setBlock(getBlockPos(), state, Block.UPDATE_ALL);
+                    //markForUpdate(Block.UPDATE_ALL);
                 }
             }
             else if (values.getFuelTime() <= 0 && wasWorking) {
                 values.setWorkTime(0);
-                getLevel().getBlockState(getBlockPos()).setValue(AbstractCuboidCoreBlock.LIT, values.getFuelTime() > 0);
-                markForUpdate(Block.UPDATE_ALL);
+                var state = getLevel().getBlockState(getBlockPos()).setValue(AbstractCuboidCoreBlock.LIT, values.getFuelTime() > 0);
+                getLevel().setBlock(getBlockPos(), state, Block.UPDATE_ALL);
+                //markForUpdate(Block.UPDATE_ALL);
             }
             if(didwork) {
-                getLevel().getBlockState(getBlockPos()).setValue(AbstractCuboidCoreBlock.LIT, values.getFuelTime() > 0);
-                markForUpdate(Block.UPDATE_ALL);
+                var state = getLevel().getBlockState(getBlockPos()).setValue(AbstractCuboidCoreBlock.LIT, values.getFuelTime() > 0);
+                getLevel().setBlock(getBlockPos(), state, Block.UPDATE_ALL);
+                //markForUpdate(Block.UPDATE_ALL);
             }
         }
     }
@@ -361,7 +466,8 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler {
         for (var coord :
                 LevelUtils.getAllBetween(values.getCorners().getA(), values.getCorners().getB(),
                         false, true))
-            if(getLevel().getBlockEntity(coord) instanceof FuelProvider fuelProvider)
+            if(getLevel().getBlockEntity(coord) instanceof FuelProvider fuelProvider &&
+                fuelProvider.canProvide())
                 providers.add(fuelProvider);
 
         providers.sort(new FuelProvider.FuelSorter());
@@ -411,23 +517,24 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler {
     protected void processItem() {
         var processCount = processCountAndSize();
         if(processCount != null && processCount.getB() > 0) {
-            var recipeResult = recipe(getStackInSlot(INPUT_SLOT));
+            var inventory = getItemCapability();
+            var recipeResult = recipe(inventory.getStackInSlot(INPUT_SLOT));
 
             // Decrease Input
-            var inputStack = getStackInSlot(INPUT_SLOT);
+            var inputStack = inventory.getStackInSlot(INPUT_SLOT);
             if(inputStack.getCount() <= processCount.getB()) {
-                setStackInSlot(INPUT_SLOT, ItemStack.EMPTY);
+                inventory.setStackInSlot(INPUT_SLOT, ItemStack.EMPTY);
             } else {
-                setStackInSlot(INPUT_SLOT, ItemHandlerHelper.copyStackWithSize(inputStack, inputStack.getCount() - processCount.getB()));
+                inventory.extractItem(INPUT_SLOT, processCount.getB(), false);
             }
 
             // Increase Output
-            if(getStackInSlot(OUTPUT_SLOT).isEmpty()) {
+            if(inventory.getStackInSlot(OUTPUT_SLOT).isEmpty()) {
                 recipeResult = recipeResult.copy();
                 recipeResult.setCount(processCount.getB());
-                setStackInSlot(OUTPUT_SLOT, recipeResult);
+                inventory.setStackInSlot(OUTPUT_SLOT, recipeResult);
             } else
-                getStackInSlot(OUTPUT_SLOT).setCount(getStackInSlot(OUTPUT_SLOT).getCount() + processCount.getB());
+                inventory.getStackInSlot(OUTPUT_SLOT).setCount(inventory.getStackInSlot(OUTPUT_SLOT).getCount() + processCount.getB());
             markForUpdate(Block.UPDATE_ALL);
         }
     }
@@ -439,12 +546,13 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler {
      *         Returns null if the input stack is empty, or if the output stack does not meet the conditions for processing.
      */
     protected Tuple<Integer, Integer> processCountAndSize() {
-        var input = getStackInSlot(INPUT_SLOT);
+        var inventory = getItemCapability();
+        var input = inventory.getStackInSlot(INPUT_SLOT);
 
         if(input.isEmpty())
             return null;
 
-        var output = getStackInSlot(OUTPUT_SLOT);
+        var output = inventory.getStackInSlot(OUTPUT_SLOT);
         var recipeResult = recipe(input);
 
         if(recipeResult.isEmpty() && !output.isEmpty() && !output.is(recipeResult.getItem()))
@@ -466,16 +574,28 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler {
     }
 
     /*******************************************************************************************************************
-     * Inventory Methods                                                                                               *
+     * Block Entity Methods                                                                                            *
      *******************************************************************************************************************/
 
+    /**
+     * Saves the additional data of the {@link AbstractCuboidCoreBlockEntity} into the specified {@link CompoundTag}.
+     *
+     * @param compound The {@link CompoundTag} to store the data into.
+     */
     @Override
-    public boolean isInputSlot(int slot) {
-        return slot == INPUT_SLOT;
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+        values.save(compound);
     }
 
+    /**
+     * Loads the data from the given CompoundTag.
+     *
+     * @param compound The CompoundTag containing the data to be loaded.
+     */
     @Override
-    public boolean isOutputSlot(int slot) {
-        return slot == OUTPUT_SLOT;
+    public void load(CompoundTag compound) {
+        super.load(compound);
+        values.load(compound);
     }
 }

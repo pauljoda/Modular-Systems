@@ -73,6 +73,17 @@ public class BlockValueRegistry {
     }
 
     /**
+     * Checks if the given block is registered.
+     *
+     * @param block The block state to check.
+     * @return True if the block is registered, false otherwise.
+     */
+
+    public boolean isBlockRegistered(String block) {
+        return blockValues.containsKey(block);
+    }
+
+    /**
      * Checks if the given block has a registered block tag.
      *
      * @param block The block state to check.
@@ -87,6 +98,16 @@ public class BlockValueRegistry {
 
         // Didn't find anything
         return false;
+    }
+
+    /**
+     * Checks if the given block has a registered block tag.
+     *
+     * @param tag The block state to check.
+     * @return True if the block has a registered block tag, false otherwise.
+     */
+    public boolean hasBlockTagRegistered(String tag) {
+        return tagValues.containsKey(tag);
     }
 
     /**
@@ -107,6 +128,98 @@ public class BlockValueRegistry {
         // There is nothing registered
         return null;
     }
+
+    /**
+     * Retrieves the speed value for a given block and count.
+     *
+     * @param block The block to get the value for.
+     * @param count The count of blocks.
+     * @return The speed value for the block and count. Returns 0.0 if the block is not registered.
+     */
+    public double getBlockSpeedValue(String block, int count) {
+        if(isBlockRegistered(block)) {
+            var values = blockValues.get(block);
+            return values.getSpeedFunction().F(count);
+        }
+        return 0.0;
+    }
+
+    /**
+     * Retrieves the efficiency value for a given block and count.
+     *
+     * The efficiency value is calculated based on the registered block values.
+     *
+     * @param block The block to get the value for.
+     * @param count The count of blocks.
+     * @return The efficiency value for the block and count. Returns 0.0 if the block is not registered.
+     */
+    public double getBlockEfficiencyValue(String block, int count) {
+        if(isBlockRegistered(block)) {
+            var values = blockValues.get(block);
+            return values.getEfficiencyFunction().F(count);
+        }
+        return 0.0;
+    }
+
+    /**
+     * Retrieves the multiplicity value for a given block and count.
+     *
+     * @param block The block to get the value for.
+     * @param count The count of blocks.
+     * @return The multiplicity value for the block and count. Returns 0.0 if the block is not registered.
+     */
+    public double getBlockMultiplicityValue(String block, int count) {
+        if(isBlockRegistered(block)) {
+            var values = blockValues.get(block);
+            return values.getMultiplicityFunction().F(count);
+        }
+        return 0.0;
+    }
+
+    /**
+     * Retrieves the speed value for a given tag and count.
+     *
+     * @param tag The tag to retrieve the speed value for.
+     * @param count The count of blocks.
+     * @return The speed value for the tag and count. Returns 0.0 if the tag is not registered.
+     */
+    public double getTagSpeedValue(String tag, int count) {
+        if(hasBlockTagRegistered(tag)) {
+            var values = tagValues.get(tag);
+            return values.getSpeedFunction().F(count);
+        }
+        return 0.0D;
+    }
+
+    /**
+     * Calculates the efficiency value for a given tag and count.
+     *
+     * @param tag   The tag to get the value for.
+     * @param count The count of blocks.
+     * @return The efficiency value for the tag and count. Returns 0.0 if the tag is not registered.
+     */
+    public double getTagEfficiencyValue(String tag, int count) {
+        if(hasBlockTagRegistered(tag)) {
+            var values = tagValues.get(tag);
+            return values.getEfficiencyFunction().F(count);
+        }
+        return 0.0D;
+    }
+    /**
+     * Retrieves the multiplicity value for a given tag and count.
+     *
+     * @param tag The tag to get the value for.
+     * @param count The count of blocks.
+     * @return The multiplicity value for the tag and count. Returns 0.0 if the tag is not registered.
+     */
+    public double getTagMultiplicityValue(String tag, int count) {
+        if(hasBlockTagRegistered(tag)) {
+            var values = tagValues.get(tag);
+            return values.getMultiplicityFunction().F(count);
+        }
+        return 0.0D;
+    }
+
 
     /*******************************************************************************************************************
      * Loading                                                                                                         *

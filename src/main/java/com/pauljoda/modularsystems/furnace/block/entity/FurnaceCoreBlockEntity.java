@@ -3,8 +3,13 @@ package com.pauljoda.modularsystems.furnace.block.entity;
 import com.pauljoda.modularsystems.core.lib.Registration;
 import com.pauljoda.modularsystems.core.math.function.BlockCountFunction;
 import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;
+import com.pauljoda.modularsystems.core.registry.BlockValueRegistry;
+import com.pauljoda.modularsystems.furnace.container.FurnaceCoreContainer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -12,6 +17,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
+import org.jetbrains.annotations.Nullable;
 
 public class FurnaceCoreBlockEntity extends AbstractCuboidCoreBlockEntity {
 
@@ -37,8 +43,11 @@ public class FurnaceCoreBlockEntity extends AbstractCuboidCoreBlockEntity {
      */
     @Override
     public ItemStack recipe(ItemStack stack) {
-        return furnaceRecipeCache.getRecipeFor(new RecipeWrapper(this),
-                getLevel()).get().value().getResultItem(getLevel().registryAccess());
+        return furnaceRecipeCache.getRecipeFor(new RecipeWrapper(this.getItemCapability()),
+                getLevel()).isPresent() ?
+                furnaceRecipeCache.getRecipeFor(new RecipeWrapper(this.getItemCapability()),
+                        getLevel()).get().value().getResultItem(getLevel().registryAccess()) :
+                ItemStack.EMPTY;
     }
 
     /**
@@ -59,8 +68,28 @@ public class FurnaceCoreBlockEntity extends AbstractCuboidCoreBlockEntity {
      */
     @Override
     public void generateValues(BlockCountFunction function) {
+        // Calculate from Blocks
+        for (var block : function.getBlockSet()) {
+            if(BlockValueRegistry.INSTANCE.isBlockRegistered(block)) {
+                values.addSpeed(BlockValueRegistry.INSTANCE.getBlockSpeedValue(block, function.getBlockCount(block)));
+                values.addEfficiency(BlockValueRegistry.INSTANCE.getBlockEfficiencyValue(block, function.getBlockCount(block)));
+                values.addMultiplicity(BlockValueRegistry.INSTANCE.getBlockMultiplicityValue(block, function.getBlockCount(block)));
+            }
+        }
 
+        // Calculate from Tags
+        for (var tag : function.getTagSet()) {
+            if(BlockValueRegistry.INSTANCE.hasBlockTagRegistered(tag)) {
+                values.addSpeed(BlockValueRegistry.INSTANCE.getTagSpeedValue(tag, function.getTagCount(tag)));
+                values.addEfficiency(BlockValueRegistry.INSTANCE.getTagEfficiencyValue(tag, function.getTagCount(tag)));
+                values.addMultiplicity(BlockValueRegistry.INSTANCE.getTagMultiplicityValue(tag, function.getTagCount(tag)));
+            }
+        }
     }
+
+    /*******************************************************************************************************************
+     * Inventory Methods                                                                                            *
+     *******************************************************************************************************************/
 
     /**
      * Retrieves the redstone output of the cuboid core.
@@ -74,10 +103,21 @@ public class FurnaceCoreBlockEntity extends AbstractCuboidCoreBlockEntity {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(this);
     }
 
+    /**
+     * Checks if the given item is valid for the specified slot.
+     *
+     * @param i The slot index to check.
+     * @param itemStack The ItemStack to be checked.
+     * @return true if the item is valid for the slot, false otherwise.
+     */
     @Override
     protected boolean isItemValidForSlot(int i, ItemStack itemStack) {
         return i == INPUT_SLOT;
     }
+
+    /*******************************************************************************************************************
+     * Syncable Methods                                                                                                *
+     *******************************************************************************************************************/
 
     @Override
     public void setVariable(int i, double v) {
@@ -87,5 +127,30 @@ public class FurnaceCoreBlockEntity extends AbstractCuboidCoreBlockEntity {
     @Override
     public Double getVariable(int i) {
         return null;
+    }
+
+    /**
+     * Retrieves the display name of the component.
+     *
+     * @return The display name of the component.
+     */
+
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable("block.modular_systems.furnace_core");
+    }
+
+    /**
+     * Creates a menu for the given container ID, player inventory, and player.
+     *
+     * @param pContainerId The container ID.
+     * @param pPlayerInventory The player inventory.
+     * @param pPlayer The player.
+     * @return The created AbstractContainerMenu.
+     */
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+        return new FurnaceCoreContainer(pContainerId, pPlayerInventory, this, coreData);
     }
 }

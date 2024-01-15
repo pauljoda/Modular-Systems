@@ -1,6 +1,6 @@
 package com.pauljoda.modularsystems.core.multiblock;
 
-import com.pauljoda.modularsystems.core.data.Savable;
+import com.pauljoda.nucleus.common.Savable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;

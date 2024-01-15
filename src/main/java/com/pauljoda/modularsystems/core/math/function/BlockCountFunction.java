@@ -55,6 +55,16 @@ public class BlockCountFunction {
     }
 
     /**
+     * Returns the count of a specific block.
+     *
+     * @param block The block name to get the count for.
+     * @return The count of the specified block. If the block is not found in the blockCount map, it returns 0.
+     */
+    public int getBlockCount(String block) {
+        return blockCount.getOrDefault(block, 0);
+    }
+
+    /**
      * Returns the count of a specific tag from the tagCount map.
      *
      * @param tag The tag to get the count for.

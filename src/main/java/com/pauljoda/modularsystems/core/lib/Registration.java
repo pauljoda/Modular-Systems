@@ -4,6 +4,11 @@ import com.pauljoda.modularsystems.core.multiblock.block.CuboidProxyBlock;
 import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBlockEntity;
 import com.pauljoda.modularsystems.furnace.block.FurnaceCoreBlock;
 import com.pauljoda.modularsystems.furnace.block.entity.FurnaceCoreBlockEntity;
+import com.pauljoda.modularsystems.furnace.container.FurnaceCoreContainer;
+import com.pauljoda.modularsystems.power.providers.block.CuboidBankSolidsBlock;
+import com.pauljoda.modularsystems.power.providers.block.entity.CuboidBankSolidsBlockEntity;
+import com.pauljoda.modularsystems.power.providers.container.CuboidBankSolidsContainer;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
@@ -18,8 +23,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import javax.annotation.Nullable;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Registration {
@@ -71,6 +79,12 @@ public class Registration {
             BLOCKS.register("furnace_core", () -> new FurnaceCoreBlock());
     public static final DeferredHolder<Item, BlockItem> FURNACE_CORE_BLOCK_ITEM =
             ITEMS.register("furnace_core", () -> new BlockItem(FURNACE_CORE_BLOCK.get(), new Item.Properties()));
+    // Providers
+    // Solids
+    public static final DeferredHolder<Block, CuboidBankSolidsBlock> CUBOID_BANK_SOLIDS_BLOCK =
+            BLOCKS.register("cuboid_bank_solids", () -> new CuboidBankSolidsBlock());
+    public static final DeferredHolder<Item, BlockItem> CUBOID_BANK_SOLIDS_BLOCK_ITEM =
+            ITEMS.register("cuboid_bank_solids", () -> new BlockItem(CUBOID_BANK_SOLIDS_BLOCK.get(), new Item.Properties()));
 
     /*******************************************************************************************************************
      * Block Entity                                                                                                    *
@@ -81,13 +95,31 @@ public class Registration {
             BLOCK_ENTITY_TYPES.register("cuboid_proxy",
                     () -> BlockEntityType.Builder.of(CuboidProxyBlockEntity::new, CUBOID_PROXY_BLOCK.get()).build(null));
 
+    // Furnace Core
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FurnaceCoreBlockEntity>> FURNACE_CORE_BLOCK_ENTITY =
             BLOCK_ENTITY_TYPES.register("furnace_core",
                     () -> BlockEntityType.Builder.of(FurnaceCoreBlockEntity::new, FURNACE_CORE_BLOCK.get()).build(null));
 
+    // Providers
+    // Solids
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CuboidBankSolidsBlockEntity>> CUBOID_BANK_SOLIDS_BLOCK_ENTITY =
+            BLOCK_ENTITY_TYPES.register("cuboid_bank_solids",
+                    () -> BlockEntityType.Builder.of(CuboidBankSolidsBlockEntity::new, CUBOID_BANK_SOLIDS_BLOCK.get()).build(null));
+
     /*******************************************************************************************************************
      * Container                                                                                                       *
      *******************************************************************************************************************/
+
+    // Furnace Core
+    public static final DeferredHolder<MenuType<?>, MenuType<FurnaceCoreContainer>> FURNACE_CORE_CONTAINER =
+            CONTAINERS.register("furnace_core",
+                    () -> IMenuTypeExtension.create(FurnaceCoreContainer::new));
+
+    // Providers
+    // Solids
+    public static final DeferredHolder<MenuType<?>, MenuType<CuboidBankSolidsContainer>> CUBOID_BANK_SOLIDS_CONTAINER =
+            CONTAINERS.register("cuboid_bank_solids",
+                    () -> IMenuTypeExtension.create(CuboidBankSolidsContainer::new));
 
     /*******************************************************************************************************************
      * Entity                                                                                                          *
@@ -97,12 +129,17 @@ public class Registration {
      * Creative Tabs                                                                                                   *
      *******************************************************************************************************************/
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> PIPETTE_TAB
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> CREATIVE_TAB
             = CREATIVE_MODE_TABS.register(Reference.MOD_ID, () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup." + Reference.MOD_ID))
             .icon(() -> FURNACE_CORE_BLOCK_ITEM.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
+                // Furnace Core
                 output.accept(FURNACE_CORE_BLOCK_ITEM.get());
+
+                // Providers
+                // Solids
+                output.accept(CUBOID_BANK_SOLIDS_BLOCK_ITEM.get());
             }).build());
 
     /*******************************************************************************************************************
@@ -115,14 +152,21 @@ public class Registration {
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 CUBOID_PROXY_BLOCK_ENTITY.get(),
-                (provider, dir) -> provider.getCore()
+                (provider, dir) -> provider.getCore() == null ? provider.getCore().getItemCapability() : null
         );
 
-        // Core
+        // Furnace Core
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 FURNACE_CORE_BLOCK_ENTITY.get(),
-                (provider, dir) -> provider
+                (provider, dir) -> provider.getItemCapability()
+        );
+
+        // Providers
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                CUBOID_BANK_SOLIDS_BLOCK_ENTITY.get(),
+                (CuboidBankSolidsBlockEntity provider, @Nullable Direction dir) -> provider.getItemCapability()
         );
     }
 }

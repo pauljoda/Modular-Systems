@@ -1,8 +1,11 @@
 package com.pauljoda.modularsystems.core.multiblock.block;
 
+import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;
+import com.pauljoda.nucleus.capabilities.InventoryHolder;
 import com.pauljoda.nucleus.common.UpdatingBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -87,8 +90,27 @@ public abstract class AbstractCuboidCoreBlock extends UpdatingBlock {
         if (pLevel.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            this.openContainer(pLevel, pPos, pPlayer);
-            return InteractionResult.CONSUME;
+            if(pLevel.getBlockEntity(pPos) instanceof AbstractCuboidCoreBlockEntity cuboid) {
+                if(cuboid.values.isWellFormed()) {
+                    this.openContainer(pLevel, pPos, pPlayer);
+                    return InteractionResult.CONSUME;
+                } else {
+                    cuboid.values.setDirty(true);
+                    return InteractionResult.CONSUME;
+                }
+            }
         }
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
+        if (pNewState.getBlock() != this) {
+            if(pLevel.getBlockEntity(pPos) instanceof AbstractCuboidCoreBlockEntity core) {
+                var inventory = (InventoryHolder) core.getItemCapability();
+                Containers.dropContents(pLevel, pPos, inventory.inventoryContents);
+            }
+        }
+        super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
     }
 }

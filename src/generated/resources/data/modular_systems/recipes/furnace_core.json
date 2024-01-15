@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": {
+      "item": "minecraft:furnace"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "S": {
+      "tag": "forge:stone"
+    }
+  },
+  "pattern": [
+    "ISI",
+    "SES",
+    "ISI"
+  ],
+  "result": {
+    "item": "modular_systems:furnace_core"
+  }
+}
