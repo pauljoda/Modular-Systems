@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "modular_systems:block/cuboid_proxy"
+    }
+  }
+}

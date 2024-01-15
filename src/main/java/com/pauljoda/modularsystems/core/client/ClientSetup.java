@@ -1,6 +1,7 @@
 package com.pauljoda.modularsystems.core.client;
 
 import com.pauljoda.modularsystems.core.client.render.CuboidBankBER;
+import com.pauljoda.modularsystems.core.client.render.CuboidProxyBER;
 import com.pauljoda.modularsystems.core.lib.Reference;
 import com.pauljoda.modularsystems.core.lib.Registration;
 import com.pauljoda.modularsystems.furnace.screen.FurnaceCoreMenu;
@@ -32,5 +33,6 @@ public class ClientSetup {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         BlockEntityRenderers.register(Registration.CUBOID_BANK_SOLIDS_BLOCK_ENTITY.get(), CuboidBankBER::new);
+        BlockEntityRenderers.register(Registration.CUBOID_PROXY_BLOCK_ENTITY.get(), CuboidProxyBER::new);
     }
 }

@@ -82,4 +82,14 @@ public class FurnaceCoreContainer extends BaseContainer {
     public FurnaceCoreBlockEntity getCore() {
         return furnaceCore;
     }
+
+    @Override
+    public boolean stillValid(Player pPlayer) {
+        return access.evaluate(
+                (p_38916_, p_38917_) -> !p_38916_.getBlockState(p_38917_).is(blockType)
+                        ? false
+                        : pPlayer.distanceToSqr((double)p_38917_.getX() + 0.5, (double)p_38917_.getY() + 0.5, (double)p_38917_.getZ() + 0.5) <= 400,
+                true
+        );
+    }
 }

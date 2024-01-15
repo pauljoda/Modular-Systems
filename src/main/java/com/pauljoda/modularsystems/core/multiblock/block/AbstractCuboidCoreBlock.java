@@ -45,7 +45,7 @@ public abstract class AbstractCuboidCoreBlock extends UpdatingBlock {
      * @param pPos    The position of the container.
      * @param pPlayer The player interacting with the container.
      */
-    protected abstract void openContainer(Level pLevel, BlockPos pPos, Player pPlayer);
+    public abstract void openContainer(Level pLevel, BlockPos pPos, Player pPlayer);
 
     /*******************************************************************************************************************
      * Block                                                                                                           *
@@ -107,8 +107,12 @@ public abstract class AbstractCuboidCoreBlock extends UpdatingBlock {
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
         if (pNewState.getBlock() != this) {
             if(pLevel.getBlockEntity(pPos) instanceof AbstractCuboidCoreBlockEntity core) {
+                // Drop our stuff
                 var inventory = (InventoryHolder) core.getItemCapability();
                 Containers.dropContents(pLevel, pPos, inventory.inventoryContents);
+
+                // Revert everyone
+                core.deconstructMultiblock();
             }
         }
         super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);

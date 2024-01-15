@@ -49,7 +49,7 @@ public class FurnaceCoreBlock extends AbstractCuboidCoreBlock implements IAdvanc
      * @param pPlayer The player interacting with the container.
      */
     @Override
-    protected void openContainer(Level pLevel, BlockPos pPos, Player pPlayer) {
+    public void openContainer(Level pLevel, BlockPos pPos, Player pPlayer) {
         pPlayer.openMenu((MenuProvider) pLevel.getBlockEntity(pPos), pPos);
     }
 

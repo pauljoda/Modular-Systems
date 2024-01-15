@@ -152,7 +152,7 @@ public class Registration {
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 CUBOID_PROXY_BLOCK_ENTITY.get(),
-                (provider, dir) -> provider.getCore() == null ? provider.getCore().getItemCapability() : null
+                (provider, dir) -> provider.getCore() != null ? provider.getCore().getItemCapability() : null
         );
 
         // Furnace Core

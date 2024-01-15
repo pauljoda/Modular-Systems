@@ -2,10 +2,12 @@ package com.pauljoda.modularsystems.core.multiblock.block.entity;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
 import com.pauljoda.nucleus.common.blocks.entity.UpdatingBlockEntity;
+import com.pauljoda.nucleus.util.TimeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -81,6 +83,16 @@ public class CuboidProxyBlockEntity extends UpdatingBlockEntity {
      */
     public void setStoredBlockState(BlockState storedBlockState) {
         this.storedBlockState = storedBlockState;
+    }
+
+    @Override
+    public void onServerTick() {
+        super.onServerTick();
+        // If somehow core gone
+        if(TimeUtils.onSecond(5)) {
+            if(getCore() == null && getLevel() != null)
+                getLevel().setBlock(getBlockPos(), getStoredBlockState(), Block.UPDATE_ALL);
+        }
     }
 
     /*******************************************************************************************************************

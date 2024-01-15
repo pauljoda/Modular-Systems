@@ -1,5 +1,6 @@
 package com.pauljoda.modularsystems.core.multiblock.block.entity;
 
+import com.pauljoda.modularsystems.core.lib.Registration;
 import com.pauljoda.modularsystems.core.math.function.BlockCountFunction;
 import com.pauljoda.modularsystems.core.multiblock.FuelProvider;
 import com.pauljoda.modularsystems.core.multiblock.StandardCuboidValues;
@@ -39,7 +40,7 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
     protected static final int OUTPUT_SLOT = 1;
 
     // Max Cuboid Size
-    protected final int MAX_EDGE_SIZE = 100;
+    protected final int MAX_EDGE_SIZE = 16;
     protected final int MAX_SIZE = ((MAX_EDGE_SIZE * MAX_EDGE_SIZE) * 2) + // Top and bottom
             ((MAX_EDGE_SIZE - 2) * (MAX_EDGE_SIZE - 2) * 4) + // Faces
             ((MAX_EDGE_SIZE - 2) * 4); // Pillars
@@ -149,6 +150,16 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
             protected boolean isItemValidForSlot(int index, ItemStack stack) {
                 return AbstractCuboidCoreBlockEntity.this.isItemValidForSlot(index, stack);
             }
+
+            @Override
+            public boolean isInputSlot(int slot) {
+                return slot == INPUT_SLOT;
+            }
+
+            @Override
+            public boolean isOutputSlot(int slot) {
+                return slot == OUTPUT_SLOT;
+            }
         };
     }
 
@@ -253,7 +264,14 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
                     var blockState = getLevel().getBlockState(loc);
                     blockCountFunction.addBlock(blockState);
 
-                    // TODO: Setup Proxy
+                    getLevel().setBlock(loc, Registration.CUBOID_PROXY_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
+                    var be = getLevel().getBlockEntity(loc);
+                    // Make sure set
+                    if(be instanceof CuboidProxyBlockEntity proxy) {
+                        proxy.setCoreLocation(getBlockPos());
+                        proxy.setStoredBlockState(blockState);
+                        proxy.markForUpdate(Block.UPDATE_ALL);
+                    }
                 }
             }
         }
