@@ -1,11 +1,10 @@
 package com.pauljoda.modularsystems.core.multiblock.block.entity;
 
-import com.pauljoda.modularsystems.ModularSystems;
 import com.pauljoda.modularsystems.core.math.function.BlockCountFunction;
 import com.pauljoda.modularsystems.core.multiblock.FuelProvider;
 import com.pauljoda.modularsystems.core.multiblock.StandardCuboidValues;
 import com.pauljoda.modularsystems.core.multiblock.block.AbstractCuboidCoreBlock;
-import com.pauljoda.modularsystems.power.providers.block.entity.CuboidBankBaseBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBlockEntity;
 import com.pauljoda.nucleus.capabilities.InventoryHolder;
 import com.pauljoda.nucleus.common.blocks.entity.item.InventoryHandler;
 import com.pauljoda.nucleus.util.LevelUtils;
@@ -19,7 +18,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.pauljoda.modularsystems.power.providers.block.entity;
+package com.pauljoda.modularsystems.core.multiblock.providers.block.entity;
 
 import com.pauljoda.modularsystems.core.multiblock.FuelProvider;
 import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;

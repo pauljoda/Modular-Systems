@@ -1,7 +1,7 @@
-package com.pauljoda.modularsystems.power.providers.block.entity;
+package com.pauljoda.modularsystems.core.multiblock.providers.block.entity;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
-import com.pauljoda.modularsystems.power.providers.container.CuboidBankSolidsContainer;
+import com.pauljoda.modularsystems.core.multiblock.providers.container.CuboidBankSolidsContainer;
 import com.pauljoda.nucleus.capabilities.InventoryHolder;
 import com.pauljoda.nucleus.common.container.IInventoryCallback;
 import net.minecraft.core.BlockPos;

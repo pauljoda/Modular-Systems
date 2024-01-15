@@ -1,7 +1,7 @@
-package com.pauljoda.modularsystems.power.providers.screen;
+package com.pauljoda.modularsystems.core.multiblock.providers.screen;
 
 import com.pauljoda.modularsystems.core.lib.Reference;
-import com.pauljoda.modularsystems.power.providers.container.CuboidBankSolidsContainer;
+import com.pauljoda.modularsystems.core.multiblock.providers.container.CuboidBankSolidsContainer;
 import com.pauljoda.nucleus.client.gui.MenuBase;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;

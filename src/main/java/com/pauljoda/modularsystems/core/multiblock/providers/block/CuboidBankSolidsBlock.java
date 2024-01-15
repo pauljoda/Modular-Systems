@@ -1,8 +1,7 @@
-package com.pauljoda.modularsystems.power.providers.block;
+package com.pauljoda.modularsystems.core.multiblock.providers.block;
 
 import com.mojang.serialization.MapCodec;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;
-import com.pauljoda.modularsystems.power.providers.block.entity.CuboidBankSolidsBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBlockEntity;
 import com.pauljoda.nucleus.capabilities.InventoryHolder;
 import com.pauljoda.nucleus.common.IAdvancedToolTipProvider;
 import com.pauljoda.nucleus.util.ClientUtils;

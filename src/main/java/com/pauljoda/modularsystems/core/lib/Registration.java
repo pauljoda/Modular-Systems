@@ -5,9 +5,9 @@ import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBlock
 import com.pauljoda.modularsystems.furnace.block.FurnaceCoreBlock;
 import com.pauljoda.modularsystems.furnace.block.entity.FurnaceCoreBlockEntity;
 import com.pauljoda.modularsystems.furnace.container.FurnaceCoreContainer;
-import com.pauljoda.modularsystems.power.providers.block.CuboidBankSolidsBlock;
-import com.pauljoda.modularsystems.power.providers.block.entity.CuboidBankSolidsBlockEntity;
-import com.pauljoda.modularsystems.power.providers.container.CuboidBankSolidsContainer;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.CuboidBankSolidsBlock;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.providers.container.CuboidBankSolidsContainer;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;

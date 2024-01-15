@@ -1,11 +1,8 @@
-package com.pauljoda.modularsystems.power.providers.block;
+package com.pauljoda.modularsystems.core.multiblock.providers.block;
 
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;
-import com.pauljoda.modularsystems.power.providers.block.entity.CuboidBankBaseBlockEntity;
-import com.pauljoda.nucleus.capabilities.InventoryHolder;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBlockEntity;
 import com.pauljoda.nucleus.common.UpdatingBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +13,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public abstract class CuboidBankBaseBlock extends UpdatingBlock {
     public CuboidBankBaseBlock() {
-        super(Properties.of().strength(2.0F));
+        super(Properties.of().strength(2.0F).noOcclusion());
     }
 
     public CuboidBankBaseBlock(Properties props) {
