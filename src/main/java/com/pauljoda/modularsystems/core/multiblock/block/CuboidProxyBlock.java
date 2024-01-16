@@ -1,13 +1,9 @@
 package com.pauljoda.modularsystems.core.multiblock.block;
 
 import com.mojang.serialization.MapCodec;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;
 import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBlockEntity;
-import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBlockEntity;
-import com.pauljoda.nucleus.capabilities.InventoryHolder;
 import com.pauljoda.nucleus.common.UpdatingBlock;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;

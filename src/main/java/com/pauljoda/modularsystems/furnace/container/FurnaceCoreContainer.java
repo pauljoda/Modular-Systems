@@ -7,7 +7,9 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
 public class FurnaceCoreContainer extends BaseContainer {
 
@@ -50,45 +52,86 @@ public class FurnaceCoreContainer extends BaseContainer {
         this.data = data;
 
         // Add Slots
+        // Input, must add helper methods because the passed capability does not allow extract from input
         addSlot(new SlotItemHandler(furnaceCore.getItemCapability(), 0, 56, 35) {
             @Override
             public boolean mayPickup(Player playerIn) {
                 return true;
             }
+
+            @Override
+            public @NotNull ItemStack remove(int amount) {
+                return furnaceCore.extractInput(0, amount, false);
+            }
         });
+
+        // Output, allow normal IItemhandler slot to manage
         addSlot(new SlotItemHandler(furnaceCore.getItemCapability(), 1, 116, 35));
+
+        // Add player inventory
         addPlayerInventorySlots(8, 84);
 
         // Add dataslots
         addDataSlots(data);
     }
 
+    /**
+     * Retrieves the fuel time of the furnace.
+     *
+     * @return The fuel time of the furnace.
+     */
     public int getFuelTime() {
         return this.data.get(0);
     }
 
+    /**
+     * Retrieves the current amount of fuel time provided.
+     *
+     * @return The current fuel provided time.
+     */
     public int getCurrentFuelProvidedTime() {
         return this.data.get(1);
     }
 
+    /**
+     * Retrieves the work time of the FurnaceCoreContainer.
+     *
+     * @return The work time.
+     */
     public int getWorkTime() {
         return this.data.get(2);
     }
 
+    /**
+     * Retrieves the scaled process time of the Furnace Core container.
+     *
+     * @return The scaled process time as an integer.
+     */
     public int getScaledProcessTime() {
         return this.data.get(3);
     }
 
+    /**
+     * Retrieves the FurnaceCoreBlockEntity associated with this container.
+     *
+     * @return The FurnaceCoreBlockEntity.
+     */
     public FurnaceCoreBlockEntity getCore() {
         return furnaceCore;
     }
 
+    /**
+     * Determines whether the player is still valid for the given container.
+     *
+     * @param pPlayer The player to check.
+     * @return true if the player is still valid, false otherwise.
+     */
     @Override
     public boolean stillValid(Player pPlayer) {
         return access.evaluate(
-                (p_38916_, p_38917_) -> !p_38916_.getBlockState(p_38917_).is(blockType)
+                (level, pos) -> !level.getBlockState(pos).is(blockType)
                         ? false
-                        : pPlayer.distanceToSqr((double)p_38917_.getX() + 0.5, (double)p_38917_.getY() + 0.5, (double)p_38917_.getZ() + 0.5) <= 400,
+                        : pPlayer.distanceToSqr((double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5) <= 400,
                 true
         );
     }

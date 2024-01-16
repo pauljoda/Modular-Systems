@@ -6,7 +6,9 @@ import com.pauljoda.modularsystems.core.multiblock.FuelProvider;
 import com.pauljoda.modularsystems.core.multiblock.StandardCuboidValues;
 import com.pauljoda.modularsystems.core.multiblock.block.AbstractCuboidCoreBlock;
 import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBlockEntity;
-import com.pauljoda.nucleus.capabilities.InventoryHolder;
+import com.pauljoda.modularsystems.core.registry.BlockValueRegistry;
+import com.pauljoda.nucleus.capabilities.InventoryContents;
+import com.pauljoda.nucleus.capabilities.InventoryHolderCapability;
 import com.pauljoda.nucleus.common.blocks.entity.item.InventoryHandler;
 import com.pauljoda.nucleus.util.LevelUtils;
 import net.minecraft.core.BlockPos;
@@ -19,7 +21,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +44,8 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
     protected static final int INPUT_SLOT = 0;
     protected static final int OUTPUT_SLOT = 1;
 
-    // Max Cuboid Size
-    protected final int MAX_EDGE_SIZE = 16;
-    protected final int MAX_SIZE = ((MAX_EDGE_SIZE * MAX_EDGE_SIZE) * 2) + // Top and bottom
-            ((MAX_EDGE_SIZE - 2) * (MAX_EDGE_SIZE - 2) * 4) + // Faces
-            ((MAX_EDGE_SIZE - 2) * 4); // Pillars
+    // Max Cuboid Size (squared)
+    protected final int MAX_EDGE_SIZE = 16*16;
 
     // Values
     public StandardCuboidValues values;
@@ -101,14 +103,6 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
     public abstract ItemStack recipe(ItemStack stack);
 
     /**
-     * Checks if a given block state is banned.
-     *
-     * @param blockState The block state to check.
-     * @return true if the block is banned, false otherwise.
-     */
-    public abstract boolean isBlockBanned(BlockState blockState);
-
-    /**
      * Generates values using the provided BlockCountFunction.
      *
      * @param function The BlockCountFunction used to generate values.
@@ -138,9 +132,29 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
         return 2;
     }
 
+    /**
+     * Initializes the inventory for the AbstractCuboidCoreBlockEntity instance.
+     *
+     * @return An instance of InventoryContents representing the initialized inventory.
+     */
     @Override
-    protected InventoryHolder initializeInventory() {
-        return new InventoryHolder() {
+    protected InventoryContents initializeInventory() {
+        return new InventoryContents() {
+            @Override
+            public int getInventorySize() {
+                return AbstractCuboidCoreBlockEntity.this.getInventorySize();
+            }
+        };
+    }
+
+    /**
+     * Retrieves the capability for handling items in the inventory of the {@link AbstractCuboidCoreBlockEntity}.
+     *
+     * @return An instance of {@link IItemHandlerModifiable} representing the capability for handling items.
+     */
+    @Override
+    public IItemHandlerModifiable getItemCapability() {
+        return new InventoryHolderCapability(getInventoryContents()) {
             @Override
             protected int getInventorySize() {
                 return AbstractCuboidCoreBlockEntity.this.getInventorySize();
@@ -247,6 +261,28 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
         return wellFormed;
     }
 
+    /**
+     * Checks if a given block state is banned.
+     *
+     * @param blockState The block state to check.
+     * @return true if the block is banned, false otherwise.
+     */
+    public boolean isBlockBanned(BlockState blockState) {
+        return blockState.hasBlockEntity() ||
+                !(BlockValueRegistry.INSTANCE.isBlockRegistered(blockState) ||
+                        BlockValueRegistry.INSTANCE.hasBlockTagRegistered(blockState));
+    }
+
+    /**
+     * Builds the multiblock structure based on the current values and configuration.
+     * If the corners are not set, the method returns without building the multiblock.
+     * The method iterates over the blocks between the corners and performs the following actions:
+     * - If the block is a CuboidBankBaseBlockEntity, it sets the core location and marks the block for update.
+     * - If the block is not a CuboidBankBaseBlockEntity, it creates a CuboidProxyBlockEntity at the block's location,
+     *   sets the core location and stored block state, and marks the block for update.
+     * After iterating over all the blocks, the method generates values using the BlockCountFunction.
+     * It sets the well-formed flag to true and marks the block for update.
+     */
     public void buildMultiblock() {
         // Safety Check
         if(values.getCorners() == null)
@@ -258,7 +294,7 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
             // If not ourselves
             if(!loc.equals(getBlockPos())) {
                 if(getLevel().getBlockEntity(loc) instanceof CuboidBankBaseBlockEntity bank) {
-                    bank.setCoreLocation(loc);
+                    bank.setCoreLocation(getBlockPos());
                     bank.markForUpdate(Block.UPDATE_ALL);
                 } else {
                     var blockState = getLevel().getBlockState(loc);
@@ -281,6 +317,16 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
         markForUpdate(Block.UPDATE_ALL);
     }
 
+    /**
+     * Deconstructs the multiblock structure.
+     * If the corners of the multiblock are not set, the method returns without deconstructing the multiblock.
+     * The method resets the structure values to their default values.
+     * It retrieves all the blocks between the corners that are not empty and not equal to the current block position.
+     * For each block, it performs the following actions:
+     * - If the block is a CuboidProxyBlockEntity, it retrieves the stored block state and sets it as the block state of the location.
+     * - If the block is a CuboidBankBaseBlockEntity, it sets the core location to null and marks the block for update.
+     * Finally, it sets the well-formed flag to false and marks the block for update.
+     */
     public void deconstructMultiblock() {
         // Safety Check
         if(values.getCorners() == null)
@@ -541,7 +587,7 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
             if(inputStack.getCount() <= processCount.getB()) {
                 inventory.setStackInSlot(INPUT_SLOT, ItemStack.EMPTY);
             } else {
-                inventory.extractItem(INPUT_SLOT, processCount.getB(), false);
+                extractInput(INPUT_SLOT, processCount.getB(), false);
             }
 
             // Increase Output
@@ -592,6 +638,45 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
     /*******************************************************************************************************************
      * Block Entity Methods                                                                                            *
      *******************************************************************************************************************/
+
+    /**
+     * Used for extracting in input, ignores the can't extract from input
+     *
+     * @param slot     Slot to extract from.
+     * @param amount   Amount to extract (may be greater than the current stacks max limit)
+     * @param simulate If true, the extraction is only simulated
+     * @return ItemStack extracted from the slot, must be null, if nothing can be extracted
+     **/
+    @Nonnull
+    public ItemStack extractInput(int slot, int amount, boolean simulate) {
+        // Must be taking something
+        if (amount == 0)
+            return ItemStack.EMPTY;
+
+        if (slot != INPUT_SLOT)
+            return ItemStack.EMPTY;
+        ItemStack existing = this.getInventoryContents().inventory.get(slot);
+
+        if (existing.isEmpty())
+            return ItemStack.EMPTY;
+
+        int toExtract = Math.min(amount, existing.getMaxStackSize());
+
+        if (existing.getCount() <= toExtract) {
+            if (!simulate) {
+                this.getInventoryContents().inventory.set(slot, ItemStack.EMPTY);
+                markForUpdate(Block.UPDATE_ALL);
+            }
+            return existing;
+        } else {
+            if (!simulate) {
+                this.getInventoryContents().inventory.set(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
+                markForUpdate(Block.UPDATE_ALL);
+            }
+
+            return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
+        }
+    }
 
     /**
      * Saves the additional data of the {@link AbstractCuboidCoreBlockEntity} into the specified {@link CompoundTag}.

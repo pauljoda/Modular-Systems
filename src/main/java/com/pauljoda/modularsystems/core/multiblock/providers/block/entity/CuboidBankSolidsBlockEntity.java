@@ -2,8 +2,8 @@ package com.pauljoda.modularsystems.core.multiblock.providers.block.entity;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
 import com.pauljoda.modularsystems.core.multiblock.providers.container.CuboidBankSolidsContainer;
-import com.pauljoda.nucleus.capabilities.InventoryHolder;
-import com.pauljoda.nucleus.common.container.IInventoryCallback;
+import com.pauljoda.nucleus.capabilities.InventoryContents;
+import com.pauljoda.nucleus.capabilities.InventoryHolderCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -16,21 +16,31 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.CommonHooks;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
 public class CuboidBankSolidsBlockEntity extends CuboidBankBaseBlockEntity implements MenuProvider {
 
-    protected InventoryHolder inventory;
+    protected InventoryContents inventoryContents;
+
+    protected InventoryHolderCapability inventory;
 
     public CuboidBankSolidsBlockEntity(BlockPos pos, BlockState state) {
         super(Registration.CUBOID_BANK_SOLIDS_BLOCK_ENTITY.get(), pos, state);
 
-        inventory = new InventoryHolder() {
+        // Init the Inventory
+        inventoryContents = new InventoryContents() {
+            @Override
+            public int getInventorySize() {
+                return 27;
+            }
+        };
+
+        // Create wrapper
+        inventory = new InventoryHolderCapability(inventoryContents) {
             @Override
             protected int getInventorySize() {
-                return 27;
+                return inventoryContents.getInventorySize();
             }
 
             @Override
@@ -39,12 +49,7 @@ public class CuboidBankSolidsBlockEntity extends CuboidBankBaseBlockEntity imple
             }
         };
 
-        inventory.addCallback(new IInventoryCallback() {
-            @Override
-            public void onInventoryChanged(IItemHandler inventory, int slotNumber) {
-                markForUpdate(Block.UPDATE_ALL);
-            }
-        });
+        inventory.addCallback((inventory, slotNumber) -> markForUpdate(Block.UPDATE_ALL));
     }
 
     /*******************************************************************************************************************
@@ -58,7 +63,7 @@ public class CuboidBankSolidsBlockEntity extends CuboidBankBaseBlockEntity imple
      */
     private int getFuelCount() {
         var count = 0;
-        for (var stack : inventory.inventoryContents) {
+        for (var stack : inventoryContents.inventory) {
             if (!stack.isEmpty() && stack.getCount() > 0)
                 count += 1;
         }
@@ -166,7 +171,7 @@ public class CuboidBankSolidsBlockEntity extends CuboidBankBaseBlockEntity imple
     @Override
     protected void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        inventory.save(pTag);
+        inventoryContents.save(pTag);
     }
 
     /**
@@ -177,7 +182,7 @@ public class CuboidBankSolidsBlockEntity extends CuboidBankBaseBlockEntity imple
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        inventory.load(pTag);
+        inventoryContents.load(pTag);
     }
 
     /*******************************************************************************************************************

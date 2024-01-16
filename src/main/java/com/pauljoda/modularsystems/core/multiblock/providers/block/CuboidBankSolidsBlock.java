@@ -2,7 +2,7 @@ package com.pauljoda.modularsystems.core.multiblock.providers.block;
 
 import com.mojang.serialization.MapCodec;
 import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBlockEntity;
-import com.pauljoda.nucleus.capabilities.InventoryHolder;
+import com.pauljoda.nucleus.capabilities.InventoryHolderCapability;
 import com.pauljoda.nucleus.common.IAdvancedToolTipProvider;
 import com.pauljoda.nucleus.util.ClientUtils;
 import net.minecraft.ChatFormatting;
@@ -53,13 +53,22 @@ public class CuboidBankSolidsBlock extends CuboidBankBaseBlock implements IAdvan
         return new CuboidBankSolidsBlockEntity(pPos, pState);
     }
 
+    /**
+     * Removes a block from the world, performing necessary actions such as dropping items and alerting the core in the case of a CuboidBankSolidsBlock.
+     *
+     * @param pState The current block state.
+     * @param pLevel The level in which the block exists.
+     * @param pPos   The position of the block.
+     * @param pNewState The new block state after removal.
+     * @param pMovedByPiston Whether the block was moved by a piston.
+     */
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
-        if (pNewState.getBlock() != this) {
+        if (!pLevel.isClientSide && pNewState.getBlock() != this) {
             if(pLevel.getBlockEntity(pPos) instanceof CuboidBankSolidsBlockEntity bank) {
                 // Drop Ourselves
-                var inventory = (InventoryHolder) bank.getItemCapability();
-                Containers.dropContents(pLevel, pPos, inventory.inventoryContents);
+                var inventory = (InventoryHolderCapability) bank.getItemCapability();
+                Containers.dropContents(pLevel, pPos, inventory.inventoryContents.inventory);
 
                 // Alert the core
                 if(bank.getCore() != null) {

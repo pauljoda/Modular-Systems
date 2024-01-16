@@ -51,17 +51,6 @@ public class FurnaceCoreBlockEntity extends AbstractCuboidCoreBlockEntity {
     }
 
     /**
-     * Checks if a given block state is banned.
-     *
-     * @param blockState The block state to check.
-     * @return true if the block is banned, false otherwise.
-     */
-    @Override
-    public boolean isBlockBanned(BlockState blockState) {
-        return blockState.hasBlockEntity();
-    }
-
-    /**
      * Generates values using the provided BlockCountFunction.
      *
      * @param function The BlockCountFunction used to generate values.

@@ -6,6 +6,7 @@ import com.pauljoda.nucleus.common.blocks.entity.Syncable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -124,6 +125,7 @@ public abstract class CuboidBankBaseBlockEntity extends Syncable implements Fuel
         switch (id) {
             case UPDATE_PRIORITY:
                 priority = (int) value;
+                markForUpdate(Block.UPDATE_ALL);
                 break;
             default:
         }

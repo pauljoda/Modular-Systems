@@ -171,3 +171,4 @@ USERNAME
 /run/
 /runs/
 /runs/client/logs/
+/src/generated/resources/.cache/

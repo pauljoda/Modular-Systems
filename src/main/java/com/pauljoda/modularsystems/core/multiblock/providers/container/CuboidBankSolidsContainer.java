@@ -1,11 +1,17 @@
 package com.pauljoda.modularsystems.core.multiblock.providers.container;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
+import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBlockEntity;
 import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBlockEntity;
 import com.pauljoda.nucleus.common.container.BaseContainer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
+/**
+ * Represents a container for the CuboidBankSolidsBlockEntity.
+ * This class provides methods to handle the interaction between the block entity and the player's inventory.
+ */
 public class CuboidBankSolidsContainer extends BaseContainer {
 
     CuboidBankSolidsBlockEntity cuboidBankSolids;
@@ -42,5 +48,10 @@ public class CuboidBankSolidsContainer extends BaseContainer {
         // Add Slots
         addInventoryGrid(8, 19, 9, 0);
         addPlayerInventorySlots(8, 84);
+    }
+
+
+    public CuboidBankBaseBlockEntity getBank() {
+        return cuboidBankSolids;
     }
 }

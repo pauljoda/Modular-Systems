@@ -3,9 +3,11 @@
   "block.modular_systems.cuboid_bank_solids.desc": "Provides solid fuel to a cuboid multiblock",
   "block.modular_systems.furnace_core": "Modular Furnace Core",
   "block.modular_systems.furnace_core.desc": "Create a cuboid with the core as part of one of the faces",
+  "cuboid.multiblock": "Cuboid Multiblock",
   "efficiency.menu": "Efficiency: ",
   "information.menu": "Information",
   "itemGroup.modular_systems": "Modular Systems",
   "multiplicity.menu": "Multiplicity: ",
+  "priority.menu": "Priority",
   "speed.menu": "Speed: "
 }

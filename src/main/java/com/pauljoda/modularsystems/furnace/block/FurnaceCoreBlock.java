@@ -2,36 +2,23 @@ package com.pauljoda.modularsystems.furnace.block;
 
 import com.mojang.serialization.MapCodec;
 import com.pauljoda.modularsystems.core.multiblock.block.AbstractCuboidCoreBlock;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;
 import com.pauljoda.modularsystems.furnace.block.entity.FurnaceCoreBlockEntity;
-import com.pauljoda.nucleus.capabilities.InventoryHolder;
-import com.pauljoda.nucleus.common.IAdvancedToolTipProvider;
-import com.pauljoda.nucleus.common.blocks.entity.item.InventoryHandler;
-import com.pauljoda.nucleus.util.ClientUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.CommonHooks;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public class FurnaceCoreBlock extends AbstractCuboidCoreBlock implements IAdvancedToolTipProvider {
+public class FurnaceCoreBlock extends AbstractCuboidCoreBlock {
 
     public FurnaceCoreBlock() {
         super();
@@ -107,21 +94,5 @@ public class FurnaceCoreBlock extends AbstractCuboidCoreBlock implements IAdvanc
             pLevel.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0, 0.0, 0.0);
             pLevel.addParticle(ParticleTypes.FLAME, d0 + d5, d1 + d6, d2 + d7, 0.0, 0.0, 0.0);
         }
-    }
-
-    /*******************************************************************************************************************
-     * IAdvancedToolTipProvided                                                                                        *
-     *******************************************************************************************************************/
-
-    /**
-     * Get the tool tip to present when shift is pressed
-     *
-     * @param itemStack The itemstack
-     * @return The list to display
-     */
-    @Nullable
-    @Override
-    public List<String> getAdvancedToolTip(@NotNull ItemStack itemStack) {
-        return List.of(ChatFormatting.GREEN + ClientUtils.translate("block.modular_systems.furnace_core.desc"));
     }
 }

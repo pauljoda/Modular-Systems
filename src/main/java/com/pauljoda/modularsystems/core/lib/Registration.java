@@ -8,6 +8,7 @@ import com.pauljoda.modularsystems.furnace.container.FurnaceCoreContainer;
 import com.pauljoda.modularsystems.core.multiblock.providers.block.CuboidBankSolidsBlock;
 import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBlockEntity;
 import com.pauljoda.modularsystems.core.multiblock.providers.container.CuboidBankSolidsContainer;
+import com.pauljoda.nucleus.common.blocks.entity.item.InventoryHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -152,14 +153,14 @@ public class Registration {
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 CUBOID_PROXY_BLOCK_ENTITY.get(),
-                (provider, dir) -> provider.getCore() != null ? provider.getCore().getItemCapability() : null
+                (provider, dir) -> provider.getCore() != null ? provider.getCore().getItemCapabilitySided(dir) : null
         );
 
         // Furnace Core
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 FURNACE_CORE_BLOCK_ENTITY.get(),
-                (provider, dir) -> provider.getItemCapability()
+                InventoryHandler::getItemCapabilitySided
         );
 
         // Providers

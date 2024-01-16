@@ -17,6 +17,9 @@ public class TranslationGenerator extends LanguageProvider {
         // Creative Tab
         add("itemGroup." + Reference.MOD_ID, "Modular Systems");
 
+        // Info
+        add("cuboid.multiblock", "Cuboid Multiblock");
+
         // Items -------------------------------------------------------------------------------------------------------
 
 
@@ -38,6 +41,9 @@ public class TranslationGenerator extends LanguageProvider {
         add("speed.menu", "Speed: ");
         add("efficiency.menu", "Efficiency: ");
         add("multiplicity.menu", "Multiplicity: ");
+
+        // Fuel Providers
+        add("priority.menu", "Priority");
     }
 
     private void addWithDescription(DeferredHolder<Item, ? extends Item> item, String name, String desc) {
