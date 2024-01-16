@@ -50,73 +50,9 @@ public class FurnaceCoreBlockEntity extends AbstractCuboidCoreBlockEntity {
                 ItemStack.EMPTY;
     }
 
-    /**
-     * Generates values using the provided BlockCountFunction.
-     *
-     * @param function The BlockCountFunction used to generate values.
-     */
-    @Override
-    public void generateValues(BlockCountFunction function) {
-        // Calculate from Blocks
-        for (var block : function.getBlockSet()) {
-            if(BlockValueRegistry.INSTANCE.isBlockRegistered(block)) {
-                values.addSpeed(BlockValueRegistry.INSTANCE.getBlockSpeedValue(block, function.getBlockCount(block)));
-                values.addEfficiency(BlockValueRegistry.INSTANCE.getBlockEfficiencyValue(block, function.getBlockCount(block)));
-                values.addMultiplicity(BlockValueRegistry.INSTANCE.getBlockMultiplicityValue(block, function.getBlockCount(block)));
-            }
-        }
-
-        // Calculate from Tags
-        for (var tag : function.getTagSet()) {
-            if(BlockValueRegistry.INSTANCE.hasBlockTagRegistered(tag)) {
-                values.addSpeed(BlockValueRegistry.INSTANCE.getTagSpeedValue(tag, function.getTagCount(tag)));
-                values.addEfficiency(BlockValueRegistry.INSTANCE.getTagEfficiencyValue(tag, function.getTagCount(tag)));
-                values.addMultiplicity(BlockValueRegistry.INSTANCE.getTagMultiplicityValue(tag, function.getTagCount(tag)));
-            }
-        }
-    }
-
-    /*******************************************************************************************************************
-     * Inventory Methods                                                                                            *
-     *******************************************************************************************************************/
-
-    /**
-     * Retrieves the redstone output of the cuboid core.
-     * <p>
-     * Value 0 - 16
-     *
-     * @return The redstone output value.
-     */
-    @Override
-    public int getRedstoneOutput() {
-        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(this);
-    }
-
-    /**
-     * Checks if the given item is valid for the specified slot.
-     *
-     * @param i The slot index to check.
-     * @param itemStack The ItemStack to be checked.
-     * @return true if the item is valid for the slot, false otherwise.
-     */
-    @Override
-    protected boolean isItemValidForSlot(int i, ItemStack itemStack) {
-        return i == INPUT_SLOT;
-    }
-
     /*******************************************************************************************************************
      * Syncable Methods                                                                                                *
      *******************************************************************************************************************/
-
-    @Override
-    public void setVariable(int i, double v) {
-
-    }
-
-    @Override
-    public Double getVariable(int i) {
-        return null;
-    }
 
     /**
      * Retrieves the display name of the component.

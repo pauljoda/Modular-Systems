@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -102,22 +103,6 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
      */
     public abstract ItemStack recipe(ItemStack stack);
 
-    /**
-     * Generates values using the provided BlockCountFunction.
-     *
-     * @param function The BlockCountFunction used to generate values.
-     */
-    public abstract void generateValues(BlockCountFunction function);
-
-    /**
-     * Retrieves the redstone output of the cuboid core.
-     * <p>
-     * Value 0 - 16
-     *
-     * @return The redstone output value.
-     */
-    public abstract int getRedstoneOutput();
-
     /*******************************************************************************************************************
      * Inventory Methods                                                                                                *
      *******************************************************************************************************************/
@@ -175,6 +160,18 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
                 return slot == OUTPUT_SLOT;
             }
         };
+    }
+
+    /**
+     * Checks if the given item is valid for the specified slot.
+     *
+     * @param i The slot index to check.
+     * @param itemStack The ItemStack to be checked.
+     * @return true if the item is valid for the slot, false otherwise.
+     */
+    @Override
+    protected boolean isItemValidForSlot(int i, ItemStack itemStack) {
+        return i == INPUT_SLOT;
     }
 
     /*******************************************************************************************************************
@@ -349,6 +346,31 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
 
         values.setWellFormed(false);
         markForUpdate(Block.UPDATE_ALL);
+    }
+
+    /**
+     * Generates values using the provided BlockCountFunction.
+     *
+     * @param function The BlockCountFunction used to generate values.
+     */
+    public void generateValues(BlockCountFunction function) {
+        // Calculate from Blocks
+        for (var block : function.getBlockSet()) {
+            if(BlockValueRegistry.INSTANCE.isBlockRegistered(block)) {
+                values.addSpeed(BlockValueRegistry.INSTANCE.getBlockSpeedValue(block, function.getBlockCount(block)));
+                values.addEfficiency(BlockValueRegistry.INSTANCE.getBlockEfficiencyValue(block, function.getBlockCount(block)));
+                values.addMultiplicity(BlockValueRegistry.INSTANCE.getBlockMultiplicityValue(block, function.getBlockCount(block)));
+            }
+        }
+
+        // Calculate from Tags
+        for (var tag : function.getTagSet()) {
+            if(BlockValueRegistry.INSTANCE.hasBlockTagRegistered(tag)) {
+                values.addSpeed(BlockValueRegistry.INSTANCE.getTagSpeedValue(tag, function.getTagCount(tag)));
+                values.addEfficiency(BlockValueRegistry.INSTANCE.getTagEfficiencyValue(tag, function.getTagCount(tag)));
+                values.addMultiplicity(BlockValueRegistry.INSTANCE.getTagMultiplicityValue(tag, function.getTagCount(tag)));
+            }
+        }
     }
 
     /**
@@ -676,6 +698,39 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
 
             return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
         }
+    }
+
+    /**
+     * Retrieves the redstone output of the cuboid core.
+     * <p>
+     * Value 0 - 16
+     *
+     * @return The redstone output value.
+     */
+    public int getRedstoneOutput() {
+        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(this);
+    }
+
+    /**
+     * Sets the value of the variable at the specified index with the given double value.
+     *
+     * @param i The index of the variable. Must be a non-negative integer.
+     * @param v The double value to set.
+     */
+    @Override
+    public void setVariable(int i, double v) {
+
+    }
+
+    /**
+     * Retrieves the value of the variable at the specified index.
+     *
+     * @param i The index of the variable.
+     * @return The value of the variable at the specified index.
+     */
+    @Override
+    public Double getVariable(int i) {
+        return null;
     }
 
     /**

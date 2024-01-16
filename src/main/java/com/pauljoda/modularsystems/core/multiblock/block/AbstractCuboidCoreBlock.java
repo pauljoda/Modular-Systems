@@ -9,15 +9,21 @@ import com.pauljoda.nucleus.util.ClientUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -46,6 +52,7 @@ public abstract class AbstractCuboidCoreBlock extends UpdatingBlock implements I
         this();
     }
 
+
     /**
      * Opens the container associated with the given position and allows the player to interact with it.
      *
@@ -53,7 +60,9 @@ public abstract class AbstractCuboidCoreBlock extends UpdatingBlock implements I
      * @param pPos    The position of the container.
      * @param pPlayer The player interacting with the container.
      */
-    public abstract void openContainer(Level pLevel, BlockPos pPos, Player pPlayer);
+    public void openContainer(Level pLevel, BlockPos pPos, Player pPlayer) {
+        pPlayer.openMenu((MenuProvider) pLevel.getBlockEntity(pPos), pPos);
+    }
 
     /*******************************************************************************************************************
      * Block                                                                                                           *
@@ -126,6 +135,38 @@ public abstract class AbstractCuboidCoreBlock extends UpdatingBlock implements I
         super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
     }
 
+    /**
+     * Retrieves the render shape of the block state.
+     *
+     * @param state The block state.
+     * @return The render shape of the block state.
+     */
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
+    }
+
+    @Override
+    public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
+        if (pState.getValue(LIT)) {
+            double d0 = (double)pPos.getX() + 0.5;
+            double d1 = (double)pPos.getY();
+            double d2 = (double)pPos.getZ() + 0.5;
+            if (pRandom.nextDouble() < 0.1) {
+                pLevel.playLocalSound(d0, d1, d2, SoundEvents.FURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F, false);
+            }
+
+            Direction direction = pState.getValue(FACING);
+            Direction.Axis direction$axis = direction.getAxis();
+            double d3 = 0.52;
+            double d4 = pRandom.nextDouble() * 0.6 - 0.3;
+            double d5 = direction$axis == Direction.Axis.X ? (double)direction.getStepX() * 0.52 : d4;
+            double d6 = pRandom.nextDouble() * 6.0 / 16.0;
+            double d7 = direction$axis == Direction.Axis.Z ? (double)direction.getStepZ() * 0.52 : d4;
+            pLevel.addParticle(ParticleTypes.SMOKE, d0 + d5, d1 + d6, d2 + d7, 0.0, 0.0, 0.0);
+            pLevel.addParticle(ParticleTypes.FLAME, d0 + d5, d1 + d6, d2 + d7, 0.0, 0.0, 0.0);
+        }
+    }
 
     /*******************************************************************************************************************
      * IAdvancedToolTipProvided                                                                                        *
