@@ -92,7 +92,7 @@ public class BlockValueRegistry {
     public boolean hasBlockTagRegistered(BlockState block) {
         for(TagKey<Block> tag : block.getTags().toList()) {
             // Found the tag
-            if(tagValues.containsKey(tag.toString()))
+            if(tagValues.containsKey(tag.location().toString()))
                 return true;
         }
 
@@ -220,6 +220,74 @@ public class BlockValueRegistry {
         return 0.0D;
     }
 
+    /**
+     * Retrieves the speed value for the given block state and count.
+     *
+     * This method checks if the block state is registered. If it is, it retrieves
+     * the speed function for the block and calculates the speed value based on the count.
+     * If the block state is not registered, it checks if there is a registered tag for
+     * the block. If there is, it retrieves the speed function for the tag and calculates
+     * the speed value based on the count.
+     *
+     * @param state The block state to get the value for.
+     * @param count The count of blocks.
+     * @return The speed value for the block state and count. Returns 0.0 if the block state
+     *         is not registered or if there is no registered tag for the block.
+     */
+    public double getSpeedValue(BlockState state, int count) {
+        // By Block
+        if(isBlockRegistered(state)) {
+            return getBlockSpeedValue(state.getBlock().getDescriptionId(), count);
+        } else {
+            var tagRegistered = getTagRegistered(state);
+            if(tagRegistered != null) {
+                return getTagSpeedValue(tagRegistered, count);
+            }
+        }
+        return 0.0D;
+    }
+
+    /**
+     * Retrieves the efficiency value for a given block state and count.
+     *
+     * The efficiency value is calculated based on the registered block and tag values.
+     *
+     * @param state The block state to get the value for.
+     * @param count The count of blocks.
+     * @return The efficiency value for the block state and count. Returns 0.0 if the block state is not registered.
+     */
+    public double getEfficiencyValue(BlockState state, int count) {
+        // By Block
+        if(isBlockRegistered(state)) {
+            return getBlockEfficiencyValue(state.getBlock().getDescriptionId(), count);
+        } else {
+            var tagRegistered = getTagRegistered(state);
+            if(tagRegistered != null) {
+                return getTagEfficiencyValue(tagRegistered, count);
+            }
+        }
+        return 0.0D;
+    }
+
+    /**
+     * Retrieves the multiplicity value for a given block and count.
+     *
+     * @param state The block state to get the value for.
+     * @param count The count of blocks.
+     * @return The multiplicity value for the block and count. Returns 0.0 if the block is not registered.
+     */
+    public double getMultiplicityValue(BlockState state, int count) {
+        // By Block
+        if(isBlockRegistered(state)) {
+            return getBlockMultiplicityValue(state.getBlock().getDescriptionId(), count);
+        } else {
+            var tagRegistered = getTagRegistered(state);
+            if(tagRegistered != null) {
+                return getTagMultiplicityValue(tagRegistered, count);
+            }
+        }
+        return 0.0D;
+    }
 
     /*******************************************************************************************************************
      * Loading                                                                                                         *
@@ -298,50 +366,63 @@ public class BlockValueRegistry {
         // Redstone
         blockValues.put(Blocks.REDSTONE_BLOCK.getDescriptionId(),
                 new BlockValues(
-                        new Calculation(-1, 50, 0, 3, 0, -50, 1),
-                        new Calculation(-1, 10, 0, 3, 0, -500, 1),
+                        new Calculation(-2, -50, 1),
+                        new Calculation(-50, -500, 1),
                         Calculation.FLAT));
 
         // Quartz
         blockValues.put(Blocks.QUARTZ_BLOCK.getDescriptionId(),
                 new BlockValues(
                         Calculation.FLAT,
-                        new Calculation(-1, 5, 7, 3, 0, -500, 0),
-                        new Calculation(1, 1, 0, 1, 0, 0, 3)));
+                        new Calculation(-15,-500, 0),
+                        new Calculation(0.10, 0, 3)));
 
         // Gold Block
         blockValues.put(Blocks.GOLD_BLOCK.getDescriptionId(),
                 new BlockValues(
-                        new Calculation(2, 1, 0, 1, 0, 0, 50),
-                        new Calculation(2, 1, 0, 2, 0, 0, 500),
-                        new Calculation(1, 4, 0, 1, 0, 0, 3)));
+                        new Calculation(2, 0, 50),
+                        new Calculation(20, 0, 500),
+                        new Calculation(0.25, 0, 3)));
 
         // Diamond Block
         blockValues.put(Blocks.DIAMOND_BLOCK.getDescriptionId(),
                 new BlockValues(
-                        new Calculation(-8, 1, 0, 1, 0, -100, 0),
-                        new Calculation(15, 1, 0, 1, 0, 0, 300),
-                        new Calculation(1, 1, 0, 1, 0, 0, 3)));
+                        new Calculation(-8, -100, 0),
+                        new Calculation(15, 0, 300),
+                        new Calculation(0.50,0, 3)));
+
+        // Netherite
+        blockValues.put(Blocks.NETHERITE_BLOCK.getDescriptionId(),
+                new BlockValues(
+                        new Calculation(-10, 100, 0),
+                        new Calculation(20, 0, 200),
+                        new Calculation(1, 0, 5)));
 
         // Lapis Block
         blockValues.put(Blocks.LAPIS_BLOCK.getDescriptionId(),
                 new BlockValues(
-                        new Calculation(-1, 2, 0, 1, 0, -25, 0),
-                        new Calculation(2, 1, 0, 1, 0, 0, 100),
-                        new Calculation(1, 14, 0, 1, 0, 0, 1)));
+                        new Calculation(-1, -25, 0),
+                        new Calculation(2, 0, 100),
+                        new Calculation(0.1,0, 2)));
 
         // Brick Block
         blockValues.put(Blocks.BRICKS.getDescriptionId(),
                 new BlockValues(
-                        new Calculation(10, 1, 0, 1, 0, 0, 100),
-                        new Calculation(-10, 1, 0, 2, 0, -500, 0),
-                        new Calculation(1, 2, 0, 1, 0, 0, 5)));
+                        new Calculation(5, 0, 100),
+                        new Calculation(5, 0, 500),
+                        Calculation.FLAT));
 
         // Iron Block
         blockValues.put(Blocks.IRON_BLOCK.getDescriptionId(),
                 new BlockValues(
-                        new Calculation(1, 75, 0, 3, 0, 0, 100),
-                        new Calculation(1, 15, 0, 3, 0, 0, 500),
+                        new Calculation(10, 0, 100),
+                        new Calculation(10, 0, 500),
+                        Calculation.FLAT));
+
+        blockValues.put(Blocks.COPPER_BLOCK.getDescriptionId(),
+                new BlockValues(
+                        new Calculation(10, 0, 200),
+                        new Calculation(5, 0, 1000),
                         Calculation.FLAT));
 
         // Emerald Block
@@ -349,27 +430,27 @@ public class BlockValueRegistry {
                 new BlockValues(
                         Calculation.FLAT,
                         Calculation.FLAT,
-                        new Calculation(1, 5, 0, 1, 0, 0, 10)));
+                        new Calculation(1, 0, 5)));
 
         // Stone Brick
         blockValues.put(Blocks.STONE_BRICKS.getDescriptionId(),
                 new BlockValues(
-                        new Calculation(-1, 10, 0, 1, 0, -20, 0),
-                        new Calculation(1, 5, 0, 1, 0, 0, 50),
+                        new Calculation(1, 0, 100),
+                        new Calculation(10, 0, 500),
                         Calculation.FLAT));
 
         // Coal Block
         blockValues.put(Blocks.COAL_BLOCK.getDescriptionId(),
                 new BlockValues(
-                        Calculation.FLAT,
-                        new Calculation(8, 1, 0, 1, 0, 0, 300),
+                        new Calculation(1, 0, 100),
+                        new Calculation(5, 0, 300),
                         Calculation.FLAT));
 
         // Nether Bricks
         blockValues.put(Blocks.NETHER_BRICKS.getDescriptionId(),
                 new BlockValues(
-                        new Calculation(-1, 1, 0, 1, 0, -30, 0),
-                        new Calculation(-1, 1, 0, 2, 0, -50, 0),
+                        new Calculation(-1, -30, 0),
+                        new Calculation(-10, -200, 0),
                         Calculation.FLAT));
 
         /**
@@ -379,45 +460,46 @@ public class BlockValueRegistry {
         // Cobble Stone
         tagValues.put(Tags.Blocks.COBBLESTONE.location().toString(),
                 new BlockValues(
-                        new Calculation(-1, 50, 0, 3, 0, -50, 1),
-                        new Calculation(-1, 10, 0, 3, 0, -500, 1),
+                        new Calculation(-0.10, -50, 1),
+                        new Calculation(-1, -500, 1),
                         Calculation.FLAT));
 
         // Stone
         tagValues.put(Tags.Blocks.STONE.location().toString(),
                 new BlockValues(
-                        new Calculation(-1, 100, 0, 2, 0, -40, 0),
+                        new Calculation(-0.30, -40, 0),
                         Calculation.FLAT,
                         Calculation.FLAT));
 
         // Sandstone
         tagValues.put(Tags.Blocks.SANDSTONE.location().toString(),
                 new BlockValues(
-                        new Calculation(-2, 50, 0, 2, 25, -100, 40),
-                        new Calculation(1, 1, 0, 1, 0, 0, 200),
+                        new Calculation(-0.10, -50, 1),
+                        new Calculation(-1, -500, 1),
                         Calculation.FLAT));
 
         // Netherrack
         tagValues.put(Tags.Blocks.NETHERRACK.location().toString(),
                 new BlockValues(
-                        new Calculation(-2, 2, 0, 2, 0, -100, 0),
-                        new Calculation(-1, 1, 0, 3, 0, -700, 0),
+                        new Calculation(-2, -100, 0),
+                        new Calculation(-20, -800, 0),
                         Calculation.FLAT));
 
         // Obsidian
         tagValues.put(Tags.Blocks.OBSIDIAN.location().toString(),
                 new BlockValues(
-                        new Calculation(1, 50, 0, 2, 0, 0, 50),
-                        new Calculation(1, 50, 0, 3, 0, 0, 250),
+                        new Calculation(10,  0, 50),
+                        new Calculation(20, 0, 1600),
                         Calculation.FLAT));
 
         // End Stone
         // Obsidian
         tagValues.put(Tags.Blocks.END_STONES.location().toString(),
                 new BlockValues(
-                        new Calculation(-1, 40, 0, 2, 0, -75, 0),
-                        new Calculation(-1, 16, -55, 2, 50, -250, 200),
-                        new Calculation(1, 19, 0, 1, 0, 0, 5)));
+                        new Calculation(-0.5, -75, 0),
+                        new Calculation(-10, -250, -50),
+                        new Calculation(0.10, 0, 5)));
+
 
         saveToFiles();
     }

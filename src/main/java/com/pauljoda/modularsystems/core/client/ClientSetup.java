@@ -1,5 +1,6 @@
 package com.pauljoda.modularsystems.core.client;
 
+import com.pauljoda.modularsystems.core.client.event.RenderBlockValuesEvent;
 import com.pauljoda.modularsystems.core.client.render.CuboidBankBER;
 import com.pauljoda.modularsystems.core.client.render.CuboidProxyBER;
 import com.pauljoda.modularsystems.core.lib.Reference;
@@ -13,11 +14,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
 @Mod.EventBusSubscriber(modid = Reference.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientSetup {
     @SubscribeEvent
     public static void setupClient(FMLClientSetupEvent event) {
+        NeoForge.EVENT_BUS.register(new RenderBlockValuesEvent());
         event.enqueueWork(() -> {
             // Register Screens
 

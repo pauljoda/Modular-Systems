@@ -137,7 +137,7 @@ public abstract class AbstractCuboidCoreBlock extends UpdatingBlock implements I
         var tip = new ArrayList<String>();
 
         // Add Multiblock info
-        tip.add(GuiColor.ORANGE + ClientUtils.translate("cuboid.multiblock"));
+        tip.add(GuiColor.ORANGE + ClientUtils.translate("modular_systems.cuboid.multiblock"));
         tip.addAll(IAdvancedToolTipProvider.super.getToolTip(stack));
 
         return tip;

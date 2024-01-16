@@ -18,7 +18,10 @@ public class TranslationGenerator extends LanguageProvider {
         add("itemGroup." + Reference.MOD_ID, "Modular Systems");
 
         // Info
-        add("cuboid.multiblock", "Cuboid Multiblock");
+        add("modular_systems.cuboid.multiblock", "Cuboid Multiblock");
+        add("modular_systems.blockvalues.shift", "Press <SHIFT> to view Modular Systems Values");
+        add("modular_systems.blockvalues.details", "Modular Systems Block Values:");
+        add("modular_systems.ticks", "Ticks");
 
         // Items -------------------------------------------------------------------------------------------------------
 
@@ -37,13 +40,13 @@ public class TranslationGenerator extends LanguageProvider {
 
         // Menus -------------------------------------------------------------------------------------------------------
         // Furnace Core
-        add("information.menu", "Information");
-        add("speed.menu", "Speed: ");
-        add("efficiency.menu", "Efficiency: ");
-        add("multiplicity.menu", "Multiplicity: ");
+        add("modular_systems.information.menu", "Information");
+        add("modular_systems.speed.menu", "Speed: ");
+        add("modular_systems.efficiency.menu", "Efficiency: ");
+        add("modular_systems.multiplicity.menu", "Multiplicity: ");
 
         // Fuel Providers
-        add("priority.menu", "Priority");
+        add("modular_systems.priority.menu", "Priority");
     }
 
     private void addWithDescription(DeferredHolder<Item, ? extends Item> item, String name, String desc) {

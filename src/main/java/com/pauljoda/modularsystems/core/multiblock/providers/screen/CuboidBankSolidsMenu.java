@@ -56,7 +56,7 @@ public class CuboidBankSolidsMenu extends MenuBase<CuboidBankSolidsContainer> {
             var priorityTab = new ArrayList<BaseWidget>();
 
             // Priority Title
-            priorityTab.add(new MenuWidgetText(this, 26, 6, "priority.menu", Color.ORANGE));
+            priorityTab.add(new MenuWidgetText(this, 26, 6, "modular_systems.priority.menu", Color.ORANGE));
 
             // Set Number
             priorityTab.add(new MenuWidgetSetNumber(this, 26, 25,

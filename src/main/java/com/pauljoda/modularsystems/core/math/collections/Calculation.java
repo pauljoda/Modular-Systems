@@ -4,13 +4,9 @@ import java.util.Arrays;
 
 public class Calculation {
 
-    public static Calculation FLAT = new Calculation(0, 0, 0, 0, 0, 0, 0);
+    public static Calculation FLAT = new Calculation(0, 0, 0);
 
-    protected double scaleFactorNumerator = 1;
-    protected double scaleFactorDenominator = 1;
-    protected double xOffset = 0;
-    protected double power = 1;
-    protected double yOffset = 0;
+    protected double scaleFactor = 1;
     protected double floor = 0;
     protected double ceiling = 1;
 
@@ -24,12 +20,8 @@ public class Calculation {
      * <p>
      * The floor and ceiling are used to define the range this should not break from
      */
-    public Calculation(double scaleFactorNum, double scaleFactorDom, double xAxisOffset, double pow, double yAxisOffset, double min, double max) {
-        scaleFactorNumerator = scaleFactorNum;
-        scaleFactorDenominator = scaleFactorDom != 0 ? scaleFactorDom : 1; //Never divide by zero
-        xOffset = xAxisOffset;
-        power = pow;
-        yOffset = yAxisOffset;
+    public Calculation(double scaleFactorNum, double min, double max) {
+        scaleFactor = scaleFactorNum;
         floor = min;
         ceiling = max;
     }
@@ -39,8 +31,7 @@ public class Calculation {
      * @param calculation The other
      */
     public Calculation(Calculation calculation) {
-        this(calculation.scaleFactorNumerator, calculation.scaleFactorDenominator, calculation.xOffset, calculation.power,
-                calculation.yOffset, calculation.floor, calculation.ceiling);
+        this(calculation.scaleFactor, calculation.floor, calculation.ceiling);
     }
 
     /**
@@ -49,8 +40,7 @@ public class Calculation {
      * @return F(x)
      */
     public double F(int x) {
-        return Math.max(floor, Math.min(ceiling,
-                ((scaleFactorNumerator / scaleFactorDenominator) * (Math.pow((x + xOffset), power))) + yOffset));
+        return Math.max(floor, Math.min(ceiling, x * scaleFactor));
     }
 
     /**
@@ -59,7 +49,7 @@ public class Calculation {
      * @return F(x)
      */
     public double F_NoClamp(int x) {
-        return ((scaleFactorNumerator / scaleFactorDenominator) * (Math.pow((x + xOffset), power))) + yOffset;
+        return x * scaleFactor;
     }
 
     /*******************************************************************************************************************
@@ -70,80 +60,16 @@ public class Calculation {
      * Accessor for the Scale Factor Numerator
      * @return m1
      */
-    public double getScaleFactorNumerator() {
-        return scaleFactorNumerator;
+    public double getScaleFactor() {
+        return scaleFactor;
     }
 
     /**
      * Mutator for the Scale Factor Numerator
-     * @param scaleFactorNumerator The new value for m1
+     * @param scaleFactor The new value for m1
      */
-    public void setScaleFactorNumerator(double scaleFactorNumerator) {
-        this.scaleFactorNumerator = scaleFactorNumerator;
-    }
-
-    /**
-     * Accessor for the Scale Factor Denominator
-     * @return m2
-     */
-    public double getScaleFactorDenominator() {
-        return scaleFactorDenominator;
-    }
-
-    /**
-     * Mutator for the Scale Factor Denominator
-     * @param scaleFactorDenominator The new value of m2
-     */
-    public void setScaleFactorDenominator(double scaleFactorDenominator) {
-        this.scaleFactorDenominator = scaleFactorDenominator;
-    }
-
-    /**
-     * Accessor for the X Offset
-     * @return t
-     */
-    public double getXOffset() {
-        return xOffset;
-    }
-
-    /**
-     * Mutator for the X Offset
-     * @param xOffset The new value of t
-     */
-    public void setXOffset(double xOffset) {
-        this.xOffset = xOffset;
-    }
-
-    /**
-     * Accessor for Power
-     * @return p
-     */
-    public double getPower() {
-        return power;
-    }
-
-    /**
-     * Mutator for Power
-     * @param power The new value of p
-     */
-    public void setPower(double power) {
-        this.power = power;
-    }
-
-    /**
-     * Accessor for the Y Offset
-     * @return b
-     */
-    public double getYOffset() {
-        return yOffset;
-    }
-
-    /**
-     * Mutator for the Y Offset
-     * @param yOffset The new value of b
-     */
-    public void setYOffset(double yOffset) {
-        this.yOffset = yOffset;
+    public void setScaleFactor(double scaleFactor) {
+        this.scaleFactor = scaleFactor;
     }
 
     /**
@@ -189,23 +115,18 @@ public class Calculation {
 
         Calculation that = (Calculation) o;
 
-        return  Double.compare(that.scaleFactorNumerator, scaleFactorNumerator) == 0 &&
-                Double.compare(that.scaleFactorDenominator, scaleFactorDenominator) == 0 &&
-                Double.compare(that.xOffset, xOffset) == 0 &&
-                Double.compare(that.power, power) == 0 &&
-                Double.compare(that.yOffset, yOffset) == 0 &&
+        return  Double.compare(that.scaleFactor, scaleFactor) == 0 &&
                 Double.compare(that.floor, floor) == 0 &&
                 Double.compare(that.ceiling, ceiling) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(new Object[] {scaleFactorNumerator, scaleFactorDenominator, xOffset,
-                power, yOffset, floor, ceiling});
+        return Arrays.hashCode(new Object[] {scaleFactor, floor, ceiling});
     }
 
     @Override
     public String toString() {
-        return (scaleFactorNumerator / scaleFactorDenominator) + "(x + " + xOffset + ")" + "^" + power + " + " + yOffset;
+        return String.format("Scale Factor: %s, Floor: %s, Ceiling: %s", scaleFactor, floor, ceiling);
     }
 }

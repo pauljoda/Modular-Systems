@@ -69,10 +69,10 @@ public class FurnaceCoreMenu extends MenuBase<FurnaceCoreContainer> {
             var furnaceInfo = new ArrayList<BaseWidget>();
 
             // Information
-            furnaceInfo.add(new MenuWidgetText(this, 26, 6, "information.menu", Color.ORANGE));
+            furnaceInfo.add(new MenuWidgetText(this, 26, 6, "modular_systems.information.menu", Color.ORANGE));
 
             // Speed
-            furnaceInfo.add(new MenuWidgetText(this, 5, 23, "speed.menu", Color.WHITE));
+            furnaceInfo.add(new MenuWidgetText(this, 5, 23, "modular_systems.speed.menu", Color.WHITE));
             double speed = (-1 * (((core.values.getSpeed() + 200) / 200) - 1)) != 0 ?
                     (-1 * (((core.values.getSpeed() + 200) / 200) - 1)) * 100 :
                     0.00;
@@ -86,7 +86,7 @@ public class FurnaceCoreMenu extends MenuBase<FurnaceCoreContainer> {
             furnaceInfo.add(formatSpeed);
 
             // Efficiency
-            furnaceInfo.add(new MenuWidgetText(this, 5, 48, "efficiency.menu", Color.WHITE));
+            furnaceInfo.add(new MenuWidgetText(this, 5, 48, "modular_systems.efficiency.menu", Color.WHITE));
             var efficiency = (-1 * (100 - ((1600 + core.values.getEfficiency()) / 1600) * 100) != 0) ?
                     -1 * (100 - ((1600 + core.values.getEfficiency()) / 1600) * 100) :
                     0.00D;
@@ -100,7 +100,7 @@ public class FurnaceCoreMenu extends MenuBase<FurnaceCoreContainer> {
             furnaceInfo.add(efficiencyFormat);
 
             // Multiplicity
-            furnaceInfo.add(new MenuWidgetText(this, 5, 73, "multiplicity.menu", Color.WHITE));
+            furnaceInfo.add(new MenuWidgetText(this, 5, 73, "modular_systems.multiplicity.menu", Color.WHITE));
             furnaceInfo.add(new MenuWidgetText(this, 15, 83, (core.values.getMultiplicity() + 1) + "X", Color.WHITE));
 
             tabs.addTab(furnaceInfo, 95, 100, 176, 31, new ItemStack(Items.BOOK));
