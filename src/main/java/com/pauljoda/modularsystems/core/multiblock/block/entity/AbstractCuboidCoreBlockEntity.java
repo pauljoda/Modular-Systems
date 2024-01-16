@@ -242,9 +242,13 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
             // Check structure
             for (var location : outside) {
                 // Don't check ourselves
-                if(!location.equals(getBlockPos()) &&
-                        !(getLevel().getBlockEntity(location) instanceof FuelProvider)) {
-                    if (getLevel().isEmptyBlock(location) ||
+                if(!location.equals(getBlockPos())) {
+
+                    // Check the provider is orphaned
+                    if(getLevel().getBlockEntity(location) instanceof CuboidBankBaseBlockEntity provider) {
+                        if(provider.getCore() != null)
+                            return false;
+                    } else if (getLevel().isEmptyBlock(location) ||
                             isBlockBanned(getLevel().getBlockState(location)))
                         return false;
                 }
