@@ -1,7 +1,7 @@
 package com.pauljoda.modularsystems.core.multiblock.providers.screen;
 
 import com.pauljoda.modularsystems.core.lib.Reference;
-import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBE;
 import com.pauljoda.modularsystems.core.multiblock.providers.container.CuboidBankSolidsContainer;
 import com.pauljoda.modularsystems.core.network.bidirectional.SyncableFieldPacket;
 import com.pauljoda.nucleus.client.gui.MenuBase;
@@ -67,7 +67,7 @@ public class CuboidBankSolidsMenu extends MenuBase<CuboidBankSolidsContainer> {
                     PacketManager.INSTANCE
                             .sendToServer(
                                     new SyncableFieldPacket(false,
-                                            CuboidBankBaseBlockEntity.UPDATE_PRIORITY,
+                                            CuboidBankBaseBE.UPDATE_PRIORITY,
                                             newValue,
                                             bank.getBlockPos()));
                 }

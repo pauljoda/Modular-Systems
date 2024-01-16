@@ -19,13 +19,13 @@ import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Nullable;
 
-public class CuboidBankSolidsBlockEntity extends CuboidBankBaseBlockEntity implements MenuProvider {
+public class CuboidBankSolidsBE extends CuboidBankBaseBE implements MenuProvider {
 
     protected InventoryContents inventoryContents;
 
     protected InventoryHolderCapability inventory;
 
-    public CuboidBankSolidsBlockEntity(BlockPos pos, BlockState state) {
+    public CuboidBankSolidsBE(BlockPos pos, BlockState state) {
         super(Registration.CUBOID_BANK_SOLIDS_BLOCK_ENTITY.get(), pos, state);
 
         // Init the Inventory

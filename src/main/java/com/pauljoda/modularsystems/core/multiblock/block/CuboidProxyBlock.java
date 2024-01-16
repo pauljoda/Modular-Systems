@@ -1,7 +1,7 @@
 package com.pauljoda.modularsystems.core.multiblock.block;
 
 import com.mojang.serialization.MapCodec;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBlockHolderBE;
 import com.pauljoda.nucleus.common.UpdatingBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -41,7 +41,7 @@ public class CuboidProxyBlock extends UpdatingBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new CuboidProxyBlockEntity(pPos, pState);
+        return new CuboidProxyBlockHolderBE(pPos, pState);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class CuboidProxyBlock extends UpdatingBlock {
         if (pLevel.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if(pLevel.getBlockEntity(pPos) instanceof CuboidProxyBlockEntity proxy &&
+            if(pLevel.getBlockEntity(pPos) instanceof CuboidProxyBlockHolderBE proxy &&
                 proxy.getCore() != null) {
                 var core = proxy.getCore();
                 if(core.values.isWellFormed()) {
@@ -108,7 +108,7 @@ public class CuboidProxyBlock extends UpdatingBlock {
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
         if (pNewState.getBlock() != this) {
-            if(pLevel.getBlockEntity(pPos) instanceof CuboidProxyBlockEntity proxy) {
+            if(pLevel.getBlockEntity(pPos) instanceof CuboidProxyBlockHolderBE proxy) {
                 // Alert the core
                 if(proxy.getCore() != null) {
                     var core = proxy.getCore();

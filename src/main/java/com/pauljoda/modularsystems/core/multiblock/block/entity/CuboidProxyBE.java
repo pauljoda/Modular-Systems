@@ -1,18 +1,16 @@
 package com.pauljoda.modularsystems.core.multiblock.block.entity;
 
-import com.pauljoda.modularsystems.core.lib.Registration;
-import com.pauljoda.nucleus.common.blocks.entity.UpdatingBlockEntity;
+import com.pauljoda.nucleus.common.blocks.entity.Syncable;
 import com.pauljoda.nucleus.util.TimeUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CuboidProxyBlockEntity extends UpdatingBlockEntity {
+public abstract class CuboidProxyBE extends Syncable {
 
     /*******************************************************************************************************************
      * Variables                                                                                                       *
@@ -22,16 +20,12 @@ public class CuboidProxyBlockEntity extends UpdatingBlockEntity {
     private BlockPos coreLocation = null;
     private static final String CORE_LOCATION = "CoreLocation";
 
-    // Stored BlockState
-    private BlockState storedBlockState = null;
-    private static final String STORED_BLOCK_STATE = "StoredBlockState";
-
     /*******************************************************************************************************************
      * Constructor                                                                                                       *
      *******************************************************************************************************************/
 
-    public CuboidProxyBlockEntity(BlockPos pos, BlockState state) {
-        super(Registration.CUBOID_PROXY_BLOCK_ENTITY.get(), pos, state);
+    public CuboidProxyBE(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     /*******************************************************************************************************************
@@ -43,9 +37,9 @@ public class CuboidProxyBlockEntity extends UpdatingBlockEntity {
      *
      * @return The core block entity as an AbstractCuboidCoreBlockEntity object, or null if it is not found.
      */
-    public @Nullable AbstractCuboidCoreBlockEntity getCore() {
-        return coreLocation != null && getLevel().getBlockEntity(coreLocation) instanceof AbstractCuboidCoreBlockEntity ?
-                (AbstractCuboidCoreBlockEntity) getLevel().getBlockEntity(coreLocation)
+    public @Nullable AbstractCuboidCoreBE getCore() {
+        return coreLocation != null && getLevel().getBlockEntity(coreLocation) instanceof AbstractCuboidCoreBE ?
+                (AbstractCuboidCoreBE) getLevel().getBlockEntity(coreLocation)
                 : null;
     }
 
@@ -67,33 +61,37 @@ public class CuboidProxyBlockEntity extends UpdatingBlockEntity {
         this.coreLocation = coreLocation;
     }
 
-    /**
-     * Retrieves the stored block state of the CuboidProxy block.
-     *
-     * @return the stored block state as a BlockState object
-     */
-    public BlockState getStoredBlockState() {
-        return storedBlockState;
-    }
-
-    /**
-     * Sets the stored block state of the CuboidProxy.
-     *
-     * @param storedBlockState the new block state to be stored
-     */
-    public void setStoredBlockState(BlockState storedBlockState) {
-        this.storedBlockState = storedBlockState;
-    }
-
     @Override
     public void onServerTick() {
         super.onServerTick();
         // If somehow core gone
         if(TimeUtils.onSecond(5)) {
             if(getCore() == null && getLevel() != null)
-                getLevel().setBlock(getBlockPos(), getStoredBlockState(), Block.UPDATE_ALL);
+                setCoreLocation(null);
         }
     }
+
+    /*******************************************************************************************************************
+     * Syncable Methods                                                                                                *
+     *******************************************************************************************************************/
+
+    /**
+     * Used to set the value of a field
+     *
+     * @param id    The field id
+     * @param value The value of the field
+     */
+    @Override
+    public void setVariable(int id, double value) {}
+
+    /**
+     * Used to get the field on the server, this will fetch the server value and overwrite the current
+     *
+     * @param id The field id
+     * @return The value on the server, now set to ourselves
+     */
+    @Override
+    public Double getVariable(int id) { return 0.0; }
 
     /*******************************************************************************************************************
      * BlockEntity                                                                                                     *
@@ -107,11 +105,6 @@ public class CuboidProxyBlockEntity extends UpdatingBlockEntity {
             this.coreLocation = NbtUtils.readBlockPos(tag.getCompound(CORE_LOCATION));
         else
             this.coreLocation = null;
-
-        if(tag.contains(STORED_BLOCK_STATE))
-            this.storedBlockState = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), tag.getCompound(STORED_BLOCK_STATE));
-        else
-            this.storedBlockState = null;
     }
 
     @Override
@@ -120,7 +113,5 @@ public class CuboidProxyBlockEntity extends UpdatingBlockEntity {
 
         if(coreLocation != null)
             tag.put(CORE_LOCATION, NbtUtils.writeBlockPos(coreLocation));
-        if(storedBlockState != null)
-            tag.put(STORED_BLOCK_STATE, NbtUtils.writeBlockState(storedBlockState));
     }
 }

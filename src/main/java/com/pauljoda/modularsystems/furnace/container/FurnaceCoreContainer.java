@@ -1,18 +1,11 @@
 package com.pauljoda.modularsystems.furnace.container;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBE;
 import com.pauljoda.modularsystems.core.multiblock.container.AbstractCuboidCoreContainer;
-import com.pauljoda.modularsystems.furnace.block.entity.FurnaceCoreBlockEntity;
-import com.pauljoda.nucleus.common.container.BaseContainer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.items.SlotItemHandler;
-import org.jetbrains.annotations.NotNull;
 
 public class FurnaceCoreContainer extends AbstractCuboidCoreContainer {
 
@@ -37,7 +30,7 @@ public class FurnaceCoreContainer extends AbstractCuboidCoreContainer {
      * @param cuboidCore      The FurnaceCoreBlockEntity.
      * @param data            The container data.
      */
-    public FurnaceCoreContainer(int id, Inventory playerInventory, AbstractCuboidCoreBlockEntity cuboidCore, ContainerData data) {
+    public FurnaceCoreContainer(int id, Inventory playerInventory, AbstractCuboidCoreBE cuboidCore, ContainerData data) {
         super(Registration.FURNACE_CORE_CONTAINER.get(), id, playerInventory, cuboidCore, data, Registration.FURNACE_CORE_BLOCK.get());
     }
 }

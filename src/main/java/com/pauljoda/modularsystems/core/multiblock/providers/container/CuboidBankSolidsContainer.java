@@ -1,9 +1,8 @@
 package com.pauljoda.modularsystems.core.multiblock.providers.container;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;
-import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBlockEntity;
-import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBE;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBE;
 import com.pauljoda.nucleus.common.container.BaseContainer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,7 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
  */
 public class CuboidBankSolidsContainer extends BaseContainer {
 
-    CuboidBankSolidsBlockEntity cuboidBankSolids;
+    CuboidBankSolidsBE cuboidBankSolids;
 
     /**
      * Client Constructor
@@ -26,7 +25,7 @@ public class CuboidBankSolidsContainer extends BaseContainer {
      */
     public CuboidBankSolidsContainer(int id, Inventory playerInventory, FriendlyByteBuf extraData) {
         this(id, playerInventory,
-                (CuboidBankSolidsBlockEntity) playerInventory.player.level().getBlockEntity(extraData.readBlockPos()));
+                (CuboidBankSolidsBE) playerInventory.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
     /**
@@ -37,7 +36,7 @@ public class CuboidBankSolidsContainer extends BaseContainer {
      * @param playerInventory The player inventory.
      * @param cuboid          The FurnaceCoreBlockEntity.
      */
-    public CuboidBankSolidsContainer(int id, Inventory playerInventory, CuboidBankSolidsBlockEntity cuboid) {
+    public CuboidBankSolidsContainer(int id, Inventory playerInventory, CuboidBankSolidsBE cuboid) {
         super(Registration.CUBOID_BANK_SOLIDS_CONTAINER.get(),
                 id, playerInventory, cuboid.getItemCapability(),
                 cuboid.getLevel(), cuboid.getBlockPos(), Registration.CUBOID_BANK_SOLIDS_BLOCK.get());
@@ -51,7 +50,7 @@ public class CuboidBankSolidsContainer extends BaseContainer {
     }
 
 
-    public CuboidBankBaseBlockEntity getBank() {
+    public CuboidBankBaseBE getBank() {
         return cuboidBankSolids;
     }
 }

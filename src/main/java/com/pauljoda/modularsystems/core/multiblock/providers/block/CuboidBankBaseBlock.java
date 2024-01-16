@@ -1,6 +1,6 @@
 package com.pauljoda.modularsystems.core.multiblock.providers.block;
 
-import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBE;
 import com.pauljoda.nucleus.common.UpdatingBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -60,7 +60,7 @@ public abstract class CuboidBankBaseBlock extends UpdatingBlock {
         if (pLevel.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if (pLevel.getBlockEntity(pPos) instanceof CuboidBankBaseBlockEntity) {
+            if (pLevel.getBlockEntity(pPos) instanceof CuboidBankBaseBE) {
                 this.openContainer(pLevel, pPos, pPlayer);
                 return InteractionResult.CONSUME;
             }

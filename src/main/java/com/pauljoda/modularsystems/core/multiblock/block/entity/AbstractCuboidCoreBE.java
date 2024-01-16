@@ -5,7 +5,7 @@ import com.pauljoda.modularsystems.core.math.function.BlockCountFunction;
 import com.pauljoda.modularsystems.core.multiblock.FuelProvider;
 import com.pauljoda.modularsystems.core.multiblock.StandardCuboidValues;
 import com.pauljoda.modularsystems.core.multiblock.block.AbstractCuboidCoreBlock;
-import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBE;
 import com.pauljoda.modularsystems.core.registry.BlockValueRegistry;
 import com.pauljoda.nucleus.capabilities.InventoryContents;
 import com.pauljoda.nucleus.capabilities.InventoryHolderCapability;
@@ -32,7 +32,7 @@ import java.util.List;
 
 import static com.pauljoda.nucleus.common.blocks.BlockFourWayRotating.FOUR_WAY;
 
-public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler implements MenuProvider {
+public abstract class AbstractCuboidCoreBE extends InventoryHandler implements MenuProvider {
 
     /*******************************************************************************************************************
      * Variables                                                                                                       *
@@ -85,7 +85,7 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
      * @param pos              The position of the block.
      * @param state            The state of the block.
      */
-    public AbstractCuboidCoreBlockEntity(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    public AbstractCuboidCoreBE(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
 
         values = new StandardCuboidValues();
@@ -127,13 +127,13 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
         return new InventoryContents() {
             @Override
             public int getInventorySize() {
-                return AbstractCuboidCoreBlockEntity.this.getInventorySize();
+                return AbstractCuboidCoreBE.this.getInventorySize();
             }
         };
     }
 
     /**
-     * Retrieves the capability for handling items in the inventory of the {@link AbstractCuboidCoreBlockEntity}.
+     * Retrieves the capability for handling items in the inventory of the {@link AbstractCuboidCoreBE}.
      *
      * @return An instance of {@link IItemHandlerModifiable} representing the capability for handling items.
      */
@@ -142,12 +142,12 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
         return new InventoryHolderCapability(getInventoryContents()) {
             @Override
             protected int getInventorySize() {
-                return AbstractCuboidCoreBlockEntity.this.getInventorySize();
+                return AbstractCuboidCoreBE.this.getInventorySize();
             }
 
             @Override
             protected boolean isItemValidForSlot(int index, ItemStack stack) {
-                return AbstractCuboidCoreBlockEntity.this.isItemValidForSlot(index, stack);
+                return AbstractCuboidCoreBE.this.isItemValidForSlot(index, stack);
             }
 
             @Override
@@ -245,7 +245,7 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
                 if(!location.equals(getBlockPos())) {
 
                     // Check the provider is orphaned
-                    if(getLevel().getBlockEntity(location) instanceof CuboidBankBaseBlockEntity provider) {
+                    if(getLevel().getBlockEntity(location) instanceof CuboidBankBaseBE provider) {
                         if(provider.getCore() != null)
                             return false;
                     } else if (getLevel().isEmptyBlock(location) ||
@@ -294,7 +294,8 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
         for (var loc : outside) {
             // If not ourselves
             if(!loc.equals(getBlockPos())) {
-                if(getLevel().getBlockEntity(loc) instanceof CuboidBankBaseBlockEntity bank) {
+                if(getLevel().getBlockEntity(loc) instanceof CuboidProxyBE bank &&
+                        !(bank instanceof CuboidProxyBlockHolderBE)) {
                     bank.setCoreLocation(getBlockPos());
                     bank.markForUpdate(Block.UPDATE_ALL);
                 } else {
@@ -304,7 +305,7 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
                     getLevel().setBlock(loc, Registration.CUBOID_PROXY_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
                     var be = getLevel().getBlockEntity(loc);
                     // Make sure set
-                    if(be instanceof CuboidProxyBlockEntity proxy) {
+                    if(be instanceof CuboidProxyBlockHolderBE proxy) {
                         proxy.setCoreLocation(getBlockPos());
                         proxy.setStoredBlockState(blockState);
                         proxy.markForUpdate(Block.UPDATE_ALL);
@@ -338,10 +339,10 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
         for (var loc : outside) {
             // Not us
             if(!loc.equals(getBlockPos()) && !getLevel().isEmptyBlock(loc)) {
-                if(getLevel().getBlockEntity(loc) instanceof CuboidProxyBlockEntity proxy) {
+                if(getLevel().getBlockEntity(loc) instanceof CuboidProxyBlockHolderBE proxy) {
                     var blockState = proxy.getStoredBlockState();
                     getLevel().setBlock(loc, blockState, Block.UPDATE_ALL);
-                } else if(getLevel().getBlockEntity(loc) instanceof CuboidBankBaseBlockEntity bank) {
+                } else if(getLevel().getBlockEntity(loc) instanceof CuboidProxyBE bank) {
                     bank.setCoreLocation(null);
                     bank.markForUpdate(Block.UPDATE_ALL);
                 }
@@ -738,7 +739,7 @@ public abstract class AbstractCuboidCoreBlockEntity extends InventoryHandler imp
     }
 
     /**
-     * Saves the additional data of the {@link AbstractCuboidCoreBlockEntity} into the specified {@link CompoundTag}.
+     * Saves the additional data of the {@link AbstractCuboidCoreBE} into the specified {@link CompoundTag}.
      *
      * @param compound The {@link CompoundTag} to store the data into.
      */

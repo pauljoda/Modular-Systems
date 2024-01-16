@@ -1,9 +1,7 @@
 package com.pauljoda.modularsystems.furnace.block.entity;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
-import com.pauljoda.modularsystems.core.math.function.BlockCountFunction;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;
-import com.pauljoda.modularsystems.core.registry.BlockValueRegistry;
+import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBE;
 import com.pauljoda.modularsystems.furnace.container.FurnaceCoreContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -19,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.Nullable;
 
-public class FurnaceCoreBlockEntity extends AbstractCuboidCoreBlockEntity {
+public class FurnaceCoreBE extends AbstractCuboidCoreBE {
 
     RecipeManager.CachedCheck<Container, SmeltingRecipe> furnaceRecipeCache;
 
@@ -29,7 +27,7 @@ public class FurnaceCoreBlockEntity extends AbstractCuboidCoreBlockEntity {
      * @param pos              The position of the block.
      * @param state            The state of the block.
      */
-    public FurnaceCoreBlockEntity(BlockPos pos, BlockState state) {
+    public FurnaceCoreBE(BlockPos pos, BlockState state) {
         super(Registration.FURNACE_CORE_BLOCK_ENTITY.get(), pos, state);
 
         furnaceRecipeCache = RecipeManager.createCheck(RecipeType.SMELTING);

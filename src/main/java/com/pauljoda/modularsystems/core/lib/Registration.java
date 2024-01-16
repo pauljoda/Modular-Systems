@@ -1,12 +1,12 @@
 package com.pauljoda.modularsystems.core.lib;
 
 import com.pauljoda.modularsystems.core.multiblock.block.CuboidProxyBlock;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBlockHolderBE;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBE;
 import com.pauljoda.modularsystems.furnace.block.FurnaceCoreBlock;
-import com.pauljoda.modularsystems.furnace.block.entity.FurnaceCoreBlockEntity;
+import com.pauljoda.modularsystems.furnace.block.entity.FurnaceCoreBE;
 import com.pauljoda.modularsystems.furnace.container.FurnaceCoreContainer;
 import com.pauljoda.modularsystems.core.multiblock.providers.block.CuboidBankSolidsBlock;
-import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBlockEntity;
 import com.pauljoda.modularsystems.core.multiblock.providers.container.CuboidBankSolidsContainer;
 import com.pauljoda.nucleus.common.blocks.entity.item.InventoryHandler;
 import net.minecraft.core.Direction;
@@ -92,20 +92,20 @@ public class Registration {
      *******************************************************************************************************************/
 
     // Cuboid Proxy
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CuboidProxyBlockEntity>> CUBOID_PROXY_BLOCK_ENTITY =
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CuboidProxyBlockHolderBE>> CUBOID_PROXY_BLOCK_ENTITY =
             BLOCK_ENTITY_TYPES.register("cuboid_proxy",
-                    () -> BlockEntityType.Builder.of(CuboidProxyBlockEntity::new, CUBOID_PROXY_BLOCK.get()).build(null));
+                    () -> BlockEntityType.Builder.of(CuboidProxyBlockHolderBE::new, CUBOID_PROXY_BLOCK.get()).build(null));
 
     // Furnace Core
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FurnaceCoreBlockEntity>> FURNACE_CORE_BLOCK_ENTITY =
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FurnaceCoreBE>> FURNACE_CORE_BLOCK_ENTITY =
             BLOCK_ENTITY_TYPES.register("furnace_core",
-                    () -> BlockEntityType.Builder.of(FurnaceCoreBlockEntity::new, FURNACE_CORE_BLOCK.get()).build(null));
+                    () -> BlockEntityType.Builder.of(FurnaceCoreBE::new, FURNACE_CORE_BLOCK.get()).build(null));
 
     // Providers
     // Solids
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CuboidBankSolidsBlockEntity>> CUBOID_BANK_SOLIDS_BLOCK_ENTITY =
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CuboidBankSolidsBE>> CUBOID_BANK_SOLIDS_BLOCK_ENTITY =
             BLOCK_ENTITY_TYPES.register("cuboid_bank_solids",
-                    () -> BlockEntityType.Builder.of(CuboidBankSolidsBlockEntity::new, CUBOID_BANK_SOLIDS_BLOCK.get()).build(null));
+                    () -> BlockEntityType.Builder.of(CuboidBankSolidsBE::new, CUBOID_BANK_SOLIDS_BLOCK.get()).build(null));
 
     /*******************************************************************************************************************
      * Container                                                                                                       *
@@ -167,7 +167,7 @@ public class Registration {
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 CUBOID_BANK_SOLIDS_BLOCK_ENTITY.get(),
-                (CuboidBankSolidsBlockEntity provider, @Nullable Direction dir) -> provider.getItemCapability()
+                (CuboidBankSolidsBE provider, @Nullable Direction dir) -> provider.getItemCapability()
         );
     }
 }

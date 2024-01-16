@@ -1,7 +1,7 @@
 package com.pauljoda.modularsystems.core.multiblock.providers.block;
 
 import com.mojang.serialization.MapCodec;
-import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBE;
 import com.pauljoda.nucleus.capabilities.InventoryHolderCapability;
 import com.pauljoda.nucleus.common.IAdvancedToolTipProvider;
 import com.pauljoda.nucleus.util.ClientUtils;
@@ -50,7 +50,7 @@ public class CuboidBankSolidsBlock extends CuboidBankBaseBlock implements IAdvan
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new CuboidBankSolidsBlockEntity(pPos, pState);
+        return new CuboidBankSolidsBE(pPos, pState);
     }
 
     /**
@@ -65,7 +65,7 @@ public class CuboidBankSolidsBlock extends CuboidBankBaseBlock implements IAdvan
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
         if (!pLevel.isClientSide && pNewState.getBlock() != this) {
-            if(pLevel.getBlockEntity(pPos) instanceof CuboidBankSolidsBlockEntity bank) {
+            if(pLevel.getBlockEntity(pPos) instanceof CuboidBankSolidsBE bank) {
                 // Drop Ourselves
                 var inventory = (InventoryHolderCapability) bank.getItemCapability();
                 Containers.dropContents(pLevel, pPos, inventory.inventoryContents.inventory);

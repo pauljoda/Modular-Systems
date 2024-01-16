@@ -1,6 +1,6 @@
 package com.pauljoda.modularsystems.core.multiblock.block;
 
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBE;
 import com.pauljoda.nucleus.capabilities.InventoryHolderCapability;
 import com.pauljoda.nucleus.client.gui.GuiColor;
 import com.pauljoda.nucleus.common.IAdvancedToolTipProvider;
@@ -107,7 +107,7 @@ public abstract class AbstractCuboidCoreBlock extends UpdatingBlock implements I
         if (pLevel.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if(pLevel.getBlockEntity(pPos) instanceof AbstractCuboidCoreBlockEntity cuboid) {
+            if(pLevel.getBlockEntity(pPos) instanceof AbstractCuboidCoreBE cuboid) {
                 if(cuboid.values.isWellFormed()) {
                     this.openContainer(pLevel, pPos, pPlayer);
                     return InteractionResult.CONSUME;
@@ -123,7 +123,7 @@ public abstract class AbstractCuboidCoreBlock extends UpdatingBlock implements I
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
         if (pNewState.getBlock() != this) {
-            if(pLevel.getBlockEntity(pPos) instanceof AbstractCuboidCoreBlockEntity core) {
+            if(pLevel.getBlockEntity(pPos) instanceof AbstractCuboidCoreBE core) {
                 // Drop our stuff
                 var inventory = (InventoryHolderCapability) core.getItemCapability();
                 Containers.dropContents(pLevel, pPos, inventory.inventoryContents.inventory);

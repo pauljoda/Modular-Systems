@@ -1,7 +1,6 @@
 package com.pauljoda.modularsystems.core.multiblock.container;
 
-import com.pauljoda.modularsystems.core.lib.Registration;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBlockEntity;
+import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBE;
 import com.pauljoda.nucleus.common.container.BaseContainer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class AbstractCuboidCoreContainer extends BaseContainer {
 
-    protected AbstractCuboidCoreBlockEntity core;
+    protected AbstractCuboidCoreBE core;
 
     protected ContainerData data;
 
@@ -30,7 +29,7 @@ public abstract class AbstractCuboidCoreContainer extends BaseContainer {
      */
     public AbstractCuboidCoreContainer(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf extraData, Block block) {
         this(type, id, playerInventory,
-                (AbstractCuboidCoreBlockEntity) playerInventory.player.level().getBlockEntity(extraData.readBlockPos()),
+                (AbstractCuboidCoreBE) playerInventory.player.level().getBlockEntity(extraData.readBlockPos()),
                 new SimpleContainerData(4), block);
     }
 
@@ -44,7 +43,7 @@ public abstract class AbstractCuboidCoreContainer extends BaseContainer {
      * @param data The container data.
      */
     public AbstractCuboidCoreContainer(MenuType<?> type, int id, Inventory playerInventory,
-                                       AbstractCuboidCoreBlockEntity cuboidCore, ContainerData data, Block block) {
+                                       AbstractCuboidCoreBE cuboidCore, ContainerData data, Block block) {
         super(type,
                 id, playerInventory, cuboidCore.getItemCapability(),
                 cuboidCore.getLevel(), cuboidCore.getBlockPos(),
@@ -121,7 +120,7 @@ public abstract class AbstractCuboidCoreContainer extends BaseContainer {
      *
      * @return The FurnaceCoreBlockEntity.
      */
-    public AbstractCuboidCoreBlockEntity getCore() {
+    public AbstractCuboidCoreBE getCore() {
         return core;
     }
 

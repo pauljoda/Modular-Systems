@@ -1,12 +1,8 @@
 package com.pauljoda.modularsystems.core.client.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBlockEntity;
-import com.pauljoda.nucleus.util.RenderUtils;
+import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBE;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -18,12 +14,8 @@ import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
-import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
-import java.util.Arrays;
-
-public class CuboidBankBER implements BlockEntityRenderer<CuboidBankBaseBlockEntity> {
+public class CuboidBankBER implements BlockEntityRenderer<CuboidBankBaseBE> {
 
     private final BlockRenderDispatcher blockRenderer;
 
@@ -38,7 +30,7 @@ public class CuboidBankBER implements BlockEntityRenderer<CuboidBankBaseBlockEnt
     }
 
     @Override
-    public void render(CuboidBankBaseBlockEntity pBlockEntity,
+    public void render(CuboidBankBaseBE pBlockEntity,
                        float pPartialTick, PoseStack pPoseStack,
                        MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         pPoseStack.pushPose();

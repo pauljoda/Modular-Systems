@@ -1,21 +1,17 @@
 package com.pauljoda.modularsystems.core.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBlockEntity;
-import net.minecraft.client.gui.screens.Overlay;
+import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBlockHolderBE;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.neoforged.neoforge.client.model.data.ModelData;
 
-public class CuboidProxyBER implements BlockEntityRenderer<CuboidProxyBlockEntity> {
+public class CuboidProxyBER implements BlockEntityRenderer<CuboidProxyBlockHolderBE> {
 
     private final BlockRenderDispatcher blockRenderer;
 
@@ -26,7 +22,7 @@ public class CuboidProxyBER implements BlockEntityRenderer<CuboidProxyBlockEntit
         this.blockRenderer = context.getBlockRenderDispatcher();
     }
     @Override
-    public void render(CuboidProxyBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack,
+    public void render(CuboidProxyBlockHolderBE pBlockEntity, float pPartialTick, PoseStack pPoseStack,
                        MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         pPoseStack.pushPose();
 
