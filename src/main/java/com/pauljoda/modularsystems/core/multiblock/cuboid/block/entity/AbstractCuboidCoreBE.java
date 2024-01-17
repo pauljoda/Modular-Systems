@@ -10,6 +10,7 @@ import com.pauljoda.modularsystems.core.registry.BlockValueRegistry;
 import com.pauljoda.nucleus.capabilities.item.InventoryContents;
 import com.pauljoda.nucleus.capabilities.item.InventoryHolderCapability;
 import com.pauljoda.nucleus.common.blocks.entity.item.InventoryHandler;
+import com.pauljoda.nucleus.common.container.IInventoryCallback;
 import com.pauljoda.nucleus.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 
@@ -50,6 +52,8 @@ public abstract class AbstractCuboidCoreBE extends InventoryHandler implements M
 
     // Values
     public StandardCuboidValues values;
+
+    protected InventoryHolderCapability inventory;
 
     public final ContainerData coreData = new ContainerData() {
         @Override
@@ -89,6 +93,30 @@ public abstract class AbstractCuboidCoreBE extends InventoryHandler implements M
         super(tileEntityTypeIn, pos, state);
 
         values = new StandardCuboidValues();
+
+        inventory = new InventoryHolderCapability(getInventoryContents()) {
+            @Override
+            protected int getInventorySize() {
+                return AbstractCuboidCoreBE.this.getInventorySize();
+            }
+
+            @Override
+            protected boolean isItemValidForSlot(int index, ItemStack stack) {
+                return AbstractCuboidCoreBE.this.isItemValidForSlot(index, stack);
+            }
+
+            @Override
+            public boolean isInputSlot(int slot) {
+                return slot == INPUT_SLOT;
+            }
+
+            @Override
+            public boolean isOutputSlot(int slot) {
+                return slot == OUTPUT_SLOT;
+            }
+        };
+
+        inventory.addCallback((inventory, slotNumber) -> markForUpdate(Block.UPDATE_ALL));
     }
 
     /*******************************************************************************************************************
@@ -139,27 +167,7 @@ public abstract class AbstractCuboidCoreBE extends InventoryHandler implements M
      */
     @Override
     public IItemHandlerModifiable getItemCapability() {
-        return new InventoryHolderCapability(getInventoryContents()) {
-            @Override
-            protected int getInventorySize() {
-                return AbstractCuboidCoreBE.this.getInventorySize();
-            }
-
-            @Override
-            protected boolean isItemValidForSlot(int index, ItemStack stack) {
-                return AbstractCuboidCoreBE.this.isItemValidForSlot(index, stack);
-            }
-
-            @Override
-            public boolean isInputSlot(int slot) {
-                return slot == INPUT_SLOT;
-            }
-
-            @Override
-            public boolean isOutputSlot(int slot) {
-                return slot == OUTPUT_SLOT;
-            }
-        };
+        return inventory;
     }
 
     /**
@@ -171,7 +179,7 @@ public abstract class AbstractCuboidCoreBE extends InventoryHandler implements M
      */
     @Override
     protected boolean isItemValidForSlot(int i, ItemStack itemStack) {
-        return i == INPUT_SLOT;
+        return i == INPUT_SLOT && !recipe(itemStack).isEmpty();
     }
 
     /*******************************************************************************************************************

@@ -6,6 +6,7 @@ import com.pauljoda.modularsystems.furnace.container.FurnaceCoreContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -41,9 +42,10 @@ public class FurnaceCoreBE extends AbstractCuboidCoreBE {
      */
     @Override
     public ItemStack recipe(ItemStack stack) {
-        return furnaceRecipeCache.getRecipeFor(new RecipeWrapper(this.getItemCapability()),
-                getLevel()).isPresent() ?
-                furnaceRecipeCache.getRecipeFor(new RecipeWrapper(this.getItemCapability()),
+        var recipeHolder = new SimpleContainer(stack,
+                inventory.getStackInSlot(OUTPUT_SLOT));
+        return furnaceRecipeCache.getRecipeFor(recipeHolder, getLevel()).isPresent() ?
+                furnaceRecipeCache.getRecipeFor(recipeHolder,
                         getLevel()).get().value().getResultItem(getLevel().registryAccess()) :
                 ItemStack.EMPTY;
     }
