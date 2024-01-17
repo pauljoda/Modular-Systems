@@ -2,7 +2,7 @@ package com.pauljoda.modularsystems.core.multiblock.providers.block;
 
 import com.mojang.serialization.MapCodec;
 import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBE;
-import com.pauljoda.nucleus.capabilities.InventoryHolderCapability;
+import com.pauljoda.nucleus.capabilities.item.InventoryHolderCapability;
 import com.pauljoda.nucleus.common.IAdvancedToolTipProvider;
 import com.pauljoda.nucleus.util.ClientUtils;
 import net.minecraft.ChatFormatting;

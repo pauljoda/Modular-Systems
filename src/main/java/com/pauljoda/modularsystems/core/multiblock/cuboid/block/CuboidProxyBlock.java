@@ -1,7 +1,7 @@
-package com.pauljoda.modularsystems.core.multiblock.block;
+package com.pauljoda.modularsystems.core.multiblock.cuboid.block;
 
 import com.mojang.serialization.MapCodec;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBlockHolderBE;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.CuboidProxyBlockHolderBE;
 import com.pauljoda.nucleus.common.UpdatingBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;

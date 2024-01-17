@@ -1,7 +1,6 @@
-package com.pauljoda.modularsystems.core.multiblock.block.entity;
+package com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
-import com.pauljoda.nucleus.common.blocks.entity.UpdatingBlockEntity;
 import com.pauljoda.nucleus.util.TimeUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -10,7 +9,6 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class CuboidProxyBlockHolderBE extends CuboidProxyBE {
 

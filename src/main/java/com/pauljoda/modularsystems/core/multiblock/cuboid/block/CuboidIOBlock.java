@@ -1,26 +1,34 @@
-package com.pauljoda.modularsystems.core.multiblock.providers.block;
+package com.pauljoda.modularsystems.core.multiblock.cuboid.block;
 
-import com.google.common.collect.ImmutableMap;
-import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBE;
+import com.mojang.serialization.MapCodec;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.CuboidIOBE;
+import com.pauljoda.nucleus.common.IAdvancedToolTipProvider;
 import com.pauljoda.nucleus.common.UpdatingBlock;
+import com.pauljoda.nucleus.util.ClientUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Function;
+import java.util.List;
 
-public abstract class CuboidBankBaseBlock extends UpdatingBlock {
+public class CuboidIOBlock extends UpdatingBlock implements IAdvancedToolTipProvider {
 
     public static VoxelShape SHAPE = Shapes.or(
             Block.box(0, 14, 0, 16, 16, 2),
@@ -35,34 +43,29 @@ public abstract class CuboidBankBaseBlock extends UpdatingBlock {
             Block.box(14, 2, 0, 16, 14, 2),
             Block.box(14, 2, 14, 16, 14, 16),
             Block.box(0, 2, 14, 2, 14, 16),
-            Block.box(6, 12, 1, 10, 13, 2),
-            Block.box(6, 3, 1, 10, 4, 2),
-            Block.box(6, 4, 1, 7, 12, 2),
-            Block.box(9, 4, 1, 10, 12, 2),
-            Block.box(7, 4, 1.8, 9, 12, 1.8),
-            Block.box(1, 12, 6, 2, 13, 10),
-            Block.box(1, 3, 6, 2, 4, 10),
-            Block.box(1, 4, 6, 2, 12, 7),
-            Block.box(1, 4, 9, 2, 12, 10),
-            Block.box(1.8, 4, 7, 1.8, 12, 9),
-            Block.box(6, 12, 14, 10, 13, 15),
-            Block.box(6, 3, 14, 10, 4, 15),
-            Block.box(6, 4, 14, 7, 12, 15),
-            Block.box(9, 4, 14, 10, 12, 15),
-            Block.box(7, 4, 14.2, 9, 12, 14.2),
-            Block.box(14, 12, 6, 15, 13, 10),
-            Block.box(14, 3, 6, 15, 4, 10),
-            Block.box(14, 4, 9, 15, 12, 10),
-            Block.box(14, 4, 6, 15, 12, 7),
-            Block.box(14.2, 4, 7, 14.2, 12, 9),
             Block.box(2, 2, 2, 14, 14, 14));
 
-    public CuboidBankBaseBlock() {
+    public CuboidIOBlock() {
         super(Properties.of().strength(2.0F).noOcclusion());
     }
 
-    public CuboidBankBaseBlock(Properties props) {
+    public CuboidIOBlock(Properties props) {
         this();
+    }
+
+    /*******************************************************************************************************************
+     * Block                                                                                                           *
+     *******************************************************************************************************************/
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(CuboidIOBlock::new);
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new CuboidIOBE(pPos, pState);
     }
 
     /**
@@ -72,11 +75,9 @@ public abstract class CuboidBankBaseBlock extends UpdatingBlock {
      * @param pPos    The position of the container.
      * @param pPlayer The player interacting with the container.
      */
-    protected abstract void openContainer(Level pLevel, BlockPos pPos, Player pPlayer);
-
-    /*******************************************************************************************************************
-     * Block                                                                                                           *
-     *******************************************************************************************************************/
+    protected void openContainer(Level pLevel, BlockPos pPos, Player pPlayer) {
+        pPlayer.openMenu((MenuProvider) pLevel.getBlockEntity(pPos), pPos);
+    }
 
     /**
      * Retrieves the render shape of the block state.
@@ -119,11 +120,50 @@ public abstract class CuboidBankBaseBlock extends UpdatingBlock {
         if (pLevel.isClientSide) {
             return InteractionResult.SUCCESS;
         } else {
-            if (pLevel.getBlockEntity(pPos) instanceof CuboidBankBaseBE) {
+            if (pLevel.getBlockEntity(pPos) instanceof CuboidIOBE) {
                 this.openContainer(pLevel, pPos, pPlayer);
                 return InteractionResult.CONSUME;
             }
         }
         return InteractionResult.PASS;
+    }
+
+    /**
+     * Removes a block from the world, performing necessary actions such as dropping items and alerting the core in the case of a CuboidBankSolidsBlock.
+     *
+     * @param pState The current block state.
+     * @param pLevel The level in which the block exists.
+     * @param pPos   The position of the block.
+     * @param pNewState The new block state after removal.
+     * @param pMovedByPiston Whether the block was moved by a piston.
+     */
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
+        if (!pLevel.isClientSide && pNewState.getBlock() != this) {
+            if(pLevel.getBlockEntity(pPos) instanceof CuboidIOBE ioBlock) {
+                // Alert the core
+                if(ioBlock.getCore() != null) {
+                    var core = ioBlock.getCore();
+                    core.deconstructMultiblock();
+                }
+            }
+        }
+        super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
+    }
+
+    /*******************************************************************************************************************
+     * IAdvancedToolTipProvided                                                                                        *
+     *******************************************************************************************************************/
+
+    /**
+     * Get the tool tip to present when shift is pressed
+     *
+     * @param itemStack The itemstack
+     * @return The list to display
+     */
+    @Nullable
+    @Override
+    public List<String> getAdvancedToolTip(@NotNull ItemStack itemStack) {
+        return List.of(ChatFormatting.GREEN + ClientUtils.translate("block.modular_systems.cuboid_io.desc"));
     }
 }

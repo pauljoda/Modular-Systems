@@ -1,7 +1,7 @@
-package com.pauljoda.modularsystems.core.multiblock.block;
+package com.pauljoda.modularsystems.core.multiblock.cuboid.block;
 
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBE;
-import com.pauljoda.nucleus.capabilities.InventoryHolderCapability;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.AbstractCuboidCoreBE;
+import com.pauljoda.nucleus.capabilities.item.InventoryHolderCapability;
 import com.pauljoda.nucleus.client.gui.GuiColor;
 import com.pauljoda.nucleus.common.IAdvancedToolTipProvider;
 import com.pauljoda.nucleus.common.UpdatingBlock;
@@ -51,7 +51,6 @@ public abstract class AbstractCuboidCoreBlock extends UpdatingBlock implements I
     public AbstractCuboidCoreBlock(Properties props) {
         this();
     }
-
 
     /**
      * Opens the container associated with the given position and allows the player to interact with it.

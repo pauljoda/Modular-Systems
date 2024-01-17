@@ -1,7 +1,10 @@
 package com.pauljoda.modularsystems.core.lib;
 
-import com.pauljoda.modularsystems.core.multiblock.block.CuboidProxyBlock;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBlockHolderBE;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.CuboidIOBlock;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.CuboidProxyBlock;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.CuboidIOBE;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.CuboidProxyBlockHolderBE;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.container.CuboidIOContainer;
 import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBE;
 import com.pauljoda.modularsystems.furnace.block.FurnaceCoreBlock;
 import com.pauljoda.modularsystems.furnace.block.entity.FurnaceCoreBE;
@@ -87,6 +90,12 @@ public class Registration {
     public static final DeferredHolder<Item, BlockItem> CUBOID_BANK_SOLIDS_BLOCK_ITEM =
             ITEMS.register("cuboid_bank_solids", () -> new BlockItem(CUBOID_BANK_SOLIDS_BLOCK.get(), new Item.Properties()));
 
+    // IO
+    public static final DeferredHolder<Block, CuboidIOBlock> CUBOID_IO_BLOCK =
+            BLOCKS.register("cuboid_io", () -> new CuboidIOBlock());
+    public static final DeferredHolder<Item, BlockItem> CUBOID_IO_BLOCK_ITEM =
+            ITEMS.register("cuboid_io", () -> new BlockItem(CUBOID_IO_BLOCK.get(), new Item.Properties()));
+
     /*******************************************************************************************************************
      * Block Entity                                                                                                    *
      *******************************************************************************************************************/
@@ -107,6 +116,11 @@ public class Registration {
             BLOCK_ENTITY_TYPES.register("cuboid_bank_solids",
                     () -> BlockEntityType.Builder.of(CuboidBankSolidsBE::new, CUBOID_BANK_SOLIDS_BLOCK.get()).build(null));
 
+    // IO
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CuboidIOBE>> CUBOID_IO_BLOCK_ENTITY =
+            BLOCK_ENTITY_TYPES.register("cuboid_io",
+                    () -> BlockEntityType.Builder.of(CuboidIOBE::new, CUBOID_IO_BLOCK.get()).build(null));
+
     /*******************************************************************************************************************
      * Container                                                                                                       *
      *******************************************************************************************************************/
@@ -121,6 +135,11 @@ public class Registration {
     public static final DeferredHolder<MenuType<?>, MenuType<CuboidBankSolidsContainer>> CUBOID_BANK_SOLIDS_CONTAINER =
             CONTAINERS.register("cuboid_bank_solids",
                     () -> IMenuTypeExtension.create(CuboidBankSolidsContainer::new));
+
+    // IO
+    public static final DeferredHolder<MenuType<?>, MenuType<CuboidIOContainer>> CUBOID_IO_CONTAINER =
+            CONTAINERS.register("cuboid_io",
+                    () -> IMenuTypeExtension.create(CuboidIOContainer::new));
 
     /*******************************************************************************************************************
      * Entity                                                                                                          *
@@ -141,6 +160,9 @@ public class Registration {
                 // Providers
                 // Solids
                 output.accept(CUBOID_BANK_SOLIDS_BLOCK_ITEM.get());
+
+                // IO
+                output.accept(CUBOID_IO_BLOCK_ITEM.get());
             }).build());
 
     /*******************************************************************************************************************
@@ -168,6 +190,13 @@ public class Registration {
                 Capabilities.ItemHandler.BLOCK,
                 CUBOID_BANK_SOLIDS_BLOCK_ENTITY.get(),
                 (CuboidBankSolidsBE provider, @Nullable Direction dir) -> provider.getItemCapability()
+        );
+
+        // IO
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                CUBOID_IO_BLOCK_ENTITY.get(),
+                (provider, dir) -> provider.getCore() != null ? provider.getCore().getItemCapabilitySided(dir) : null
         );
     }
 }

@@ -40,6 +40,9 @@ public class LootTableGenerator extends BaseLootTableGenerator {
         // Providers
         // Solids
         createSimpleTable(Registration.CUBOID_BANK_SOLIDS_BLOCK.get());
+
+        // IO
+        createSimpleTable(Registration.CUBOID_IO_BLOCK.get());
     }
 
     @Override

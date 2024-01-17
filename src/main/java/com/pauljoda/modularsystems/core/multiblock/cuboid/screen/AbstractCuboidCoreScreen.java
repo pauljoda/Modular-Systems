@@ -1,8 +1,6 @@
-package com.pauljoda.modularsystems.core.multiblock.screen;
+package com.pauljoda.modularsystems.core.multiblock.cuboid.screen;
 
-import com.pauljoda.modularsystems.core.lib.Reference;
-import com.pauljoda.modularsystems.core.multiblock.container.AbstractCuboidCoreContainer;
-import com.pauljoda.modularsystems.furnace.container.FurnaceCoreContainer;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.container.AbstractCuboidCoreContainer;
 import com.pauljoda.nucleus.client.gui.MenuBase;
 import com.pauljoda.nucleus.client.gui.widget.BaseWidget;
 import com.pauljoda.nucleus.client.gui.widget.display.MenuTabCollection;

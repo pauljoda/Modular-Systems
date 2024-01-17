@@ -1,7 +1,7 @@
 package com.pauljoda.modularsystems.furnace.block.entity;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBE;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.AbstractCuboidCoreBE;
 import com.pauljoda.modularsystems.furnace.container.FurnaceCoreContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

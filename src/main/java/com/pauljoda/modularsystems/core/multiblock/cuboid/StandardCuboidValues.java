@@ -1,4 +1,4 @@
-package com.pauljoda.modularsystems.core.multiblock;
+package com.pauljoda.modularsystems.core.multiblock.cuboid;
 
 import com.pauljoda.nucleus.common.Savable;
 import net.minecraft.core.BlockPos;

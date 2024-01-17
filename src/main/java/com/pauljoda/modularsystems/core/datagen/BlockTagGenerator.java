@@ -24,12 +24,14 @@ public class BlockTagGenerator extends BlockTagsProvider {
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(Registration.CUBOID_PROXY_BLOCK.get())
                 .add(Registration.FURNACE_CORE_BLOCK.get())
-                .add(Registration.CUBOID_BANK_SOLIDS_BLOCK.get());
+                .add(Registration.CUBOID_BANK_SOLIDS_BLOCK.get())
+                .add(Registration.CUBOID_IO_BLOCK.get());
 
         tag(BlockTags.create(new ResourceLocation("forge:relocation_not_supported")))
                 .add(Registration.CUBOID_PROXY_BLOCK.get())
                 .add(Registration.FURNACE_CORE_BLOCK.get())
-                .add(Registration.CUBOID_BANK_SOLIDS_BLOCK.get());
+                .add(Registration.CUBOID_BANK_SOLIDS_BLOCK.get())
+                .add(Registration.CUBOID_IO_BLOCK.get());
     }
 
     @Override

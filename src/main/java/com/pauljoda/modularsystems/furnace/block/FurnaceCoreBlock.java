@@ -1,7 +1,7 @@
 package com.pauljoda.modularsystems.furnace.block;
 
 import com.mojang.serialization.MapCodec;
-import com.pauljoda.modularsystems.core.multiblock.block.AbstractCuboidCoreBlock;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.AbstractCuboidCoreBlock;
 import com.pauljoda.modularsystems.furnace.block.entity.FurnaceCoreBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.BaseEntityBlock;

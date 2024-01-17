@@ -1,16 +1,13 @@
 package com.pauljoda.modularsystems.core.multiblock.providers.block.entity;
 
 import com.pauljoda.modularsystems.core.multiblock.FuelProvider;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBE;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBE;
-import com.pauljoda.nucleus.common.blocks.entity.Syncable;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.CuboidProxyBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class CuboidBankBaseBE extends CuboidProxyBE implements FuelProvider {
 
@@ -42,13 +39,13 @@ public abstract class CuboidBankBaseBE extends CuboidProxyBE implements FuelProv
      * @param pTag The CompoundTag containing the data to load
      */
     @Override
-    public void load(CompoundTag pTag) {
+    public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
         priority = pTag.getInt(PRIORITY);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
+    protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
         pTag.putInt(PRIORITY, priority);
     }

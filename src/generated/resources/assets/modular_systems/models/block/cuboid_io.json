@@ -1,0 +1,433 @@
+{
+  "parent": "minecraft:block/cube",
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "texture": "#hopper"
+        },
+        "east": {
+          "texture": "#hopper"
+        },
+        "north": {
+          "texture": "#hopper"
+        },
+        "south": {
+          "texture": "#hopper"
+        },
+        "up": {
+          "texture": "#hopper",
+          "uv": [
+            0.0,
+            16.0,
+            16.0,
+            14.0
+          ]
+        },
+        "west": {
+          "texture": "#hopper"
+        }
+      },
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        2
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#hopper"
+        },
+        "east": {
+          "texture": "#hopper",
+          "uv": [
+            2.0,
+            0.0,
+            14.0,
+            0.0
+          ]
+        },
+        "up": {
+          "texture": "#hopper"
+        },
+        "west": {
+          "texture": "#hopper"
+        }
+      },
+      "from": [
+        0,
+        14,
+        2
+      ],
+      "to": [
+        2,
+        16,
+        14
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#hopper",
+          "uv": [
+            0.0,
+            2.0,
+            2.0,
+            14.0
+          ]
+        },
+        "east": {
+          "texture": "#hopper"
+        },
+        "up": {
+          "texture": "#hopper"
+        },
+        "west": {
+          "texture": "#hopper"
+        }
+      },
+      "from": [
+        14,
+        14,
+        2
+      ],
+      "to": [
+        16,
+        16,
+        14
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#hopper",
+          "uv": [
+            0.0,
+            14.0,
+            16.0,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#hopper"
+        },
+        "north": {
+          "texture": "#hopper"
+        },
+        "south": {
+          "texture": "#hopper"
+        },
+        "up": {
+          "texture": "#hopper",
+          "uv": [
+            0.0,
+            2.0,
+            16.0,
+            0.0
+          ]
+        },
+        "west": {
+          "texture": "#hopper"
+        }
+      },
+      "from": [
+        0,
+        14,
+        14
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#hopper"
+        },
+        "east": {
+          "texture": "#hopper"
+        },
+        "north": {
+          "texture": "#hopper"
+        },
+        "south": {
+          "texture": "#hopper"
+        },
+        "up": {
+          "texture": "#hopper",
+          "uv": [
+            0.0,
+            2.0,
+            16.0,
+            0.0
+          ]
+        },
+        "west": {
+          "texture": "#hopper"
+        }
+      },
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        2,
+        2
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#hopper"
+        },
+        "east": {
+          "texture": "#hopper"
+        },
+        "north": {
+          "texture": "#hopper"
+        },
+        "south": {
+          "texture": "#hopper"
+        },
+        "up": {
+          "texture": "#hopper",
+          "uv": [
+            0.0,
+            2.0,
+            16.0,
+            0.0
+          ]
+        },
+        "west": {
+          "texture": "#hopper"
+        }
+      },
+      "from": [
+        0,
+        0,
+        14
+      ],
+      "to": [
+        16,
+        2,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#hopper"
+        },
+        "east": {
+          "texture": "#hopper"
+        },
+        "up": {
+          "texture": "#hopper"
+        },
+        "west": {
+          "texture": "#hopper"
+        }
+      },
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        2,
+        2,
+        14
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#hopper"
+        },
+        "east": {
+          "texture": "#hopper"
+        },
+        "up": {
+          "texture": "#hopper"
+        },
+        "west": {
+          "texture": "#hopper"
+        }
+      },
+      "from": [
+        14,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        2,
+        14
+      ]
+    },
+    {
+      "faces": {
+        "east": {
+          "texture": "#hopper"
+        },
+        "north": {
+          "texture": "#hopper"
+        },
+        "south": {
+          "texture": "#hopper"
+        },
+        "west": {
+          "texture": "#hopper"
+        }
+      },
+      "from": [
+        0,
+        2,
+        0
+      ],
+      "to": [
+        2,
+        14,
+        2
+      ]
+    },
+    {
+      "faces": {
+        "east": {
+          "texture": "#hopper"
+        },
+        "north": {
+          "texture": "#hopper"
+        },
+        "south": {
+          "texture": "#hopper",
+          "uv": [
+            0.0,
+            2.0,
+            2.0,
+            14.0
+          ]
+        },
+        "west": {
+          "texture": "#hopper"
+        }
+      },
+      "from": [
+        14,
+        2,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        2
+      ]
+    },
+    {
+      "faces": {
+        "east": {
+          "texture": "#hopper"
+        },
+        "north": {
+          "texture": "#hopper"
+        },
+        "south": {
+          "texture": "#hopper"
+        },
+        "west": {
+          "texture": "#hopper"
+        }
+      },
+      "from": [
+        14,
+        2,
+        14
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "east": {
+          "texture": "#hopper"
+        },
+        "north": {
+          "texture": "#hopper",
+          "uv": [
+            0.0,
+            2.0,
+            2.0,
+            14.0
+          ]
+        },
+        "south": {
+          "texture": "#hopper"
+        },
+        "west": {
+          "texture": "#hopper"
+        }
+      },
+      "from": [
+        0,
+        2,
+        14
+      ],
+      "to": [
+        2,
+        14,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "texture": "#core"
+        },
+        "east": {
+          "texture": "#core"
+        },
+        "north": {
+          "texture": "#core"
+        },
+        "south": {
+          "texture": "#core"
+        },
+        "up": {
+          "texture": "#core"
+        },
+        "west": {
+          "texture": "#core"
+        }
+      },
+      "from": [
+        2,
+        2,
+        2
+      ],
+      "to": [
+        14,
+        14,
+        14
+      ]
+    }
+  ],
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "core": "minecraft:block/dispenser_front_vertical",
+    "hopper": "minecraft:block/hopper_top",
+    "particle": "minecraft:block/hopper_top"
+  }
+}

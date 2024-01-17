@@ -1,4 +1,4 @@
-package com.pauljoda.modularsystems.core.multiblock.block.entity;
+package com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity;
 
 import com.pauljoda.nucleus.common.blocks.entity.Syncable;
 import com.pauljoda.nucleus.util.TimeUtils;

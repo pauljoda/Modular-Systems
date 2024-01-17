@@ -1,8 +1,8 @@
 package com.pauljoda.modularsystems.furnace.container;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBE;
-import com.pauljoda.modularsystems.core.multiblock.container.AbstractCuboidCoreContainer;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.AbstractCuboidCoreBE;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.container.AbstractCuboidCoreContainer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.*;

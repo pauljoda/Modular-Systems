@@ -1,7 +1,7 @@
 package com.pauljoda.modularsystems.core.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.pauljoda.modularsystems.core.multiblock.block.entity.CuboidProxyBlockHolderBE;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.CuboidProxyBlockHolderBE;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;

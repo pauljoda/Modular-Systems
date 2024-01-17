@@ -1,6 +1,6 @@
-package com.pauljoda.modularsystems.core.multiblock.container;
+package com.pauljoda.modularsystems.core.multiblock.cuboid.container;
 
-import com.pauljoda.modularsystems.core.multiblock.block.entity.AbstractCuboidCoreBE;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.AbstractCuboidCoreBE;
 import com.pauljoda.nucleus.common.container.BaseContainer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

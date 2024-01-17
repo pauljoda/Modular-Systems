@@ -2,13 +2,12 @@ package com.pauljoda.modularsystems.core.datagen;
 
 import com.pauljoda.modularsystems.core.lib.Reference;
 import com.pauljoda.modularsystems.core.lib.Registration;
-import com.pauljoda.modularsystems.core.multiblock.block.AbstractCuboidCoreBlock;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.AbstractCuboidCoreBlock;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelBuilder;
@@ -47,6 +46,12 @@ public class BlockStateGenerator extends BlockStateProvider {
 
         // Solid Fuel Bank
         addCuboidBank(Registration.CUBOID_BANK_SOLIDS_BLOCK.get(), mcLoc("block/coal_block"));
+
+        // IO
+        var model = getModelWith3DRim(Registration.CUBOID_IO_BLOCK.get());
+        model = getModelWithCore(model, mcLoc("block/dispenser_front_vertical"));
+        model.renderType("cutout");
+        getVariantBuilder(Registration.CUBOID_IO_BLOCK.get()).partialState().setModels(new ConfiguredModel(model));
     }
 
     /**
@@ -166,7 +171,6 @@ public class BlockStateGenerator extends BlockStateProvider {
      * @param coreTexture The resource location of the core texture.
      */
     protected void addCuboidBank(Block block, ResourceLocation coreTexture) {
-        // Solid Fuel Bank
         var model = getModelWith3DRim(block);
         model = getModelWithIndicators(model);
         model = getModelWithCore(model, coreTexture);

@@ -1,14 +1,14 @@
-package com.pauljoda.modularsystems.core.multiblock.block.entity;
+package com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
 import com.pauljoda.modularsystems.core.math.function.BlockCountFunction;
 import com.pauljoda.modularsystems.core.multiblock.FuelProvider;
-import com.pauljoda.modularsystems.core.multiblock.StandardCuboidValues;
-import com.pauljoda.modularsystems.core.multiblock.block.AbstractCuboidCoreBlock;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.StandardCuboidValues;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.block.AbstractCuboidCoreBlock;
 import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankBaseBE;
 import com.pauljoda.modularsystems.core.registry.BlockValueRegistry;
-import com.pauljoda.nucleus.capabilities.InventoryContents;
-import com.pauljoda.nucleus.capabilities.InventoryHolderCapability;
+import com.pauljoda.nucleus.capabilities.item.InventoryContents;
+import com.pauljoda.nucleus.capabilities.item.InventoryHolderCapability;
 import com.pauljoda.nucleus.common.blocks.entity.item.InventoryHandler;
 import com.pauljoda.nucleus.util.LevelUtils;
 import net.minecraft.core.BlockPos;
@@ -244,11 +244,11 @@ public abstract class AbstractCuboidCoreBE extends InventoryHandler implements M
                 // Don't check ourselves
                 if(!location.equals(getBlockPos())) {
 
-                    // Check the provider is orphaned
-                    if(getLevel().getBlockEntity(location) instanceof CuboidBankBaseBE provider) {
-                        if(provider.getCore() != null)
+                    // Check the proxy is orphaned
+                    if(getLevel().getBlockEntity(location) instanceof CuboidProxyBE proxy) {
+                        if(proxy.getCore() != null)
                             return false;
-                    } else if (getLevel().isEmptyBlock(location) ||
+                    }else if (getLevel().isEmptyBlock(location) ||
                             isBlockBanned(getLevel().getBlockState(location)))
                         return false;
                 }

@@ -2,8 +2,8 @@ package com.pauljoda.modularsystems.core.multiblock.providers.block.entity;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
 import com.pauljoda.modularsystems.core.multiblock.providers.container.CuboidBankSolidsContainer;
-import com.pauljoda.nucleus.capabilities.InventoryContents;
-import com.pauljoda.nucleus.capabilities.InventoryHolderCapability;
+import com.pauljoda.nucleus.capabilities.item.InventoryContents;
+import com.pauljoda.nucleus.capabilities.item.InventoryHolderCapability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CuboidBankSolidsBE extends CuboidBankBaseBE implements MenuProvider {
@@ -169,7 +170,7 @@ public class CuboidBankSolidsBE extends CuboidBankBaseBE implements MenuProvider
      * @param pTag The CompoundTag to save the additional data to
      */
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
+    protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
         inventoryContents.save(pTag);
     }
@@ -180,7 +181,7 @@ public class CuboidBankSolidsBE extends CuboidBankBaseBE implements MenuProvider
      * @param pTag The CompoundTag containing the data to load
      */
     @Override
-    public void load(CompoundTag pTag) {
+    public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
         inventoryContents.load(pTag);
     }

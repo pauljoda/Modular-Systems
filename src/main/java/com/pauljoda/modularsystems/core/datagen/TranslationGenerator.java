@@ -38,6 +38,11 @@ public class TranslationGenerator extends LanguageProvider {
                 "Solid Fuel Provider",
                 "Provides solid fuel to a cuboid multiblock");
 
+        // IO
+        addWithDescription(Registration.CUBOID_IO_BLOCK_ITEM,
+                "IO Expansion",
+                "Add to a cuboid multiblock to import and export from the multiblock, pushes and pulls");
+
         // Menus -------------------------------------------------------------------------------------------------------
         // Furnace Core
         add("modular_systems.information.menu", "Information");
@@ -47,6 +52,10 @@ public class TranslationGenerator extends LanguageProvider {
 
         // Fuel Providers
         add("modular_systems.priority.menu", "Priority");
+
+        // IO
+        add("modular_systems.push.menu", "Push");
+        add("modular_systems.pull.menu", "Pull");
     }
 
     private void addWithDescription(DeferredHolder<Item, ? extends Item> item, String name, String desc) {

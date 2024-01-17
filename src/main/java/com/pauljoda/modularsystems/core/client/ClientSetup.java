@@ -5,6 +5,7 @@ import com.pauljoda.modularsystems.core.client.render.CuboidBankBER;
 import com.pauljoda.modularsystems.core.client.render.CuboidProxyBER;
 import com.pauljoda.modularsystems.core.lib.Reference;
 import com.pauljoda.modularsystems.core.lib.Registration;
+import com.pauljoda.modularsystems.core.multiblock.cuboid.screen.CuboidIOMenu;
 import com.pauljoda.modularsystems.furnace.screen.FurnaceCoreMenu;
 import com.pauljoda.modularsystems.core.multiblock.providers.screen.CuboidBankSolidsMenu;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -30,6 +31,9 @@ public class ClientSetup {
             // Providers
             // Solids
             MenuScreens.register(Registration.CUBOID_BANK_SOLIDS_CONTAINER.get(), CuboidBankSolidsMenu::new);
+
+            // IO
+            MenuScreens.register(Registration.CUBOID_IO_CONTAINER.get(), CuboidIOMenu::new);
         });
     }
 

@@ -37,6 +37,8 @@ public class RecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_furnace", has(Blocks.FURNACE))
                 .save(outputs);
 
+        // Banks
+        // Solids
         ShapedRecipeBuilder
                 .shaped(RecipeCategory.MISC, Registration.CUBOID_BANK_SOLIDS_BLOCK_ITEM.get())
                 .pattern("ISI")
@@ -44,6 +46,18 @@ public class RecipeGenerator extends RecipeProvider {
                 .pattern("ISI")
                 .define('I', Tags.Items.INGOTS_IRON)
                 .define('S', Tags.Items.STONE)
+                .define('E', Blocks.CHEST)
+                .unlockedBy("has_chest", has(Blocks.CHEST))
+                .save(outputs);
+
+        // IO
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, Registration.CUBOID_IO_BLOCK_ITEM.get())
+                .pattern("III")
+                .pattern("SES")
+                .pattern("III")
+                .define('I', Tags.Items.INGOTS_IRON)
+                .define('S', Blocks.HOPPER)
                 .define('E', Blocks.CHEST)
                 .unlockedBy("has_chest", has(Blocks.CHEST))
                 .save(outputs);

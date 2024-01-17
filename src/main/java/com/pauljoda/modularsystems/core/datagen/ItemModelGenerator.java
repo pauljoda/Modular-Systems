@@ -29,6 +29,9 @@ public class ItemModelGenerator extends ItemModelProvider {
         // Providers
         // Solid
         fromBlock(Registration.CUBOID_BANK_SOLIDS_BLOCK.get());
+
+        // IO
+        fromBlock(Registration.CUBOID_IO_BLOCK.get());
     }
 
     public void fromBlock(Block block) {
