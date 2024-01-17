@@ -44,6 +44,12 @@ base {
     archivesName = mod_id
 }
 
+minecraft {
+    accessTransformers {
+        file('src/main/resources/META-INF/accesstransformer.cfg')
+    }
+}
+
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 runs {
