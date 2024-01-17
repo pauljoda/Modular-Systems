@@ -46,13 +46,20 @@ public class BlockStateGenerator extends BlockStateProvider {
                 mcLoc("block/hopper_top"));
 
         // Solid Fuel Bank
-        var solidModel = getModelWith3DRim(Registration.CUBOID_BANK_SOLIDS_BLOCK.get());
-        solidModel = getModelWithIndicators(solidModel);
-        solidModel = getModelWithCore(solidModel, mcLoc("block/coal_block"));
-        solidModel.renderType("cutout");
-        getVariantBuilder(Registration.CUBOID_BANK_SOLIDS_BLOCK.get()).partialState().setModels(new ConfiguredModel(solidModel));
+        addCuboidBank(Registration.CUBOID_BANK_SOLIDS_BLOCK.get(), mcLoc("block/coal_block"));
     }
 
+    /**
+     * Adds a cuboid core block model to the block state provider.
+     *
+     * @param block            The block to add the cuboid core model to.
+     * @param up               The resource location of the top texture.
+     * @param down             The resource location of the bottom texture.
+     * @param frontOff         The resource location of the front texture when the cuboid is off.
+     * @param frontOn          The resource location of the front texture when the cuboid is on.
+     * @param side             The resource location of the side texture.
+     * @param border           The resource location of the border texture.
+     */
     protected void addCuboidCore(Block block, ResourceLocation up, ResourceLocation down,
                                  ResourceLocation frontOff, ResourceLocation frontOn,
                                  ResourceLocation side,
@@ -150,6 +157,21 @@ public class BlockStateGenerator extends BlockStateProvider {
                                 .modelFile(state.getValue(AbstractCuboidCoreBlock.LIT) ? cuboidCoreModelOn : cuboidCoreModelOff)
                                 .rotationY((int) state.getValue(AbstractCuboidCoreBlock.FACING).getOpposite().toYRot())
                                 .build());
+    }
+
+    /**
+     * Adds a cuboid bank block model to the block state provider.
+     *
+     * @param block       The block to add the cuboid bank model to.
+     * @param coreTexture The resource location of the core texture.
+     */
+    protected void addCuboidBank(Block block, ResourceLocation coreTexture) {
+        // Solid Fuel Bank
+        var model = getModelWith3DRim(block);
+        model = getModelWithIndicators(model);
+        model = getModelWithCore(model, coreTexture);
+        model.renderType("cutout");
+        getVariantBuilder(block).partialState().setModels(new ConfiguredModel(model));
     }
 
     /**
