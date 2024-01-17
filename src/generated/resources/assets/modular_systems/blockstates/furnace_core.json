@@ -1,7 +1,7 @@
 {
   "variants": {
     "facing=east,lit=false": {
-      "model": "modular_systems:block/furnace_core_off",
+      "model": "modular_systems:block/furnace_core",
       "y": 90
     },
     "facing=east,lit=true": {
@@ -9,13 +9,13 @@
       "y": 90
     },
     "facing=north,lit=false": {
-      "model": "modular_systems:block/furnace_core_off"
+      "model": "modular_systems:block/furnace_core"
     },
     "facing=north,lit=true": {
       "model": "modular_systems:block/furnace_core_on"
     },
     "facing=south,lit=false": {
-      "model": "modular_systems:block/furnace_core_off",
+      "model": "modular_systems:block/furnace_core",
       "y": 180
     },
     "facing=south,lit=true": {
@@ -23,7 +23,7 @@
       "y": 180
     },
     "facing=west,lit=false": {
-      "model": "modular_systems:block/furnace_core_off",
+      "model": "modular_systems:block/furnace_core",
       "y": 270
     },
     "facing=west,lit=true": {

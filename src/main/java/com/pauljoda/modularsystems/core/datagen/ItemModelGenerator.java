@@ -24,8 +24,7 @@ public class ItemModelGenerator extends ItemModelProvider {
         // Blocks ------------------------------------------------------------------------------------------------------
 
         // Furnace Core
-        withExistingParent(BuiltInRegistries.BLOCK.getKey(Registration.FURNACE_CORE_BLOCK.get()).getPath(),
-                modLoc(String.format("block/%s", "furnace_core_off")));
+        fromBlock(Registration.FURNACE_CORE_BLOCK.get());
 
         // Providers
         // Solid
