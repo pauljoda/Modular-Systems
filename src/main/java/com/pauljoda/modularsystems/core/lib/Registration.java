@@ -6,11 +6,18 @@ import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.CuboidIOB
 import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.CuboidProxyBlockHolderBE;
 import com.pauljoda.modularsystems.core.multiblock.cuboid.container.CuboidIOContainer;
 import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBE;
+import com.pauljoda.modularsystems.core.recipe.blockvalues.BlockValueRecipeType;
+import com.pauljoda.modularsystems.core.recipe.blockvalues.BlockValuesRecipeSerializer;
+import com.pauljoda.modularsystems.core.recipe.stonework.StoneWorkRecipeSerializer;
+import com.pauljoda.modularsystems.core.recipe.stonework.StoneWorkRecipeType;
 import com.pauljoda.modularsystems.furnace.block.FurnaceCoreBlock;
 import com.pauljoda.modularsystems.furnace.block.entity.FurnaceCoreBE;
 import com.pauljoda.modularsystems.furnace.container.FurnaceCoreContainer;
 import com.pauljoda.modularsystems.core.multiblock.providers.block.CuboidBankSolidsBlock;
 import com.pauljoda.modularsystems.core.multiblock.providers.container.CuboidBankSolidsContainer;
+import com.pauljoda.modularsystems.stonework.block.entity.StoneWorkCoreBE;
+import com.pauljoda.modularsystems.stonework.block.StoneWorkCoreBlock;
+import com.pauljoda.modularsystems.stonework.container.StoneWorkContainer;
 import com.pauljoda.nucleus.common.blocks.entity.item.InventoryHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -20,6 +27,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
@@ -54,6 +63,11 @@ public class Registration {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Reference.MOD_ID);
 
+    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES =
+            DeferredRegister.create(Registries.RECIPE_TYPE, Reference.MOD_ID);
+
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS =
+            DeferredRegister.create(Registries.RECIPE_SERIALIZER, Reference.MOD_ID);
 
     public static void init(IEventBus bus) {
         BLOCKS.register(bus);
@@ -62,6 +76,8 @@ public class Registration {
         CONTAINERS.register(bus);
         ENTITIES.register(bus);
         CREATIVE_MODE_TABS.register(bus);
+        RECIPE_TYPES.register(bus);
+        RECIPE_SERIALIZERS.register(bus);
     }
 
     /*******************************************************************************************************************
@@ -83,6 +99,13 @@ public class Registration {
             BLOCKS.register("furnace_core", () -> new FurnaceCoreBlock());
     public static final DeferredHolder<Item, BlockItem> FURNACE_CORE_BLOCK_ITEM =
             ITEMS.register("furnace_core", () -> new BlockItem(FURNACE_CORE_BLOCK.get(), new Item.Properties()));
+
+    // Stone Work Core
+    public static final DeferredHolder<Block, StoneWorkCoreBlock> STONE_WORK_CORE_BLOCK =
+            BLOCKS.register("stone_work_core", () -> new StoneWorkCoreBlock());
+    public static final DeferredHolder<Item, BlockItem> STONE_WORK_CORE_BLOCK_ITEM =
+            ITEMS.register("stone_work_core", () -> new BlockItem(STONE_WORK_CORE_BLOCK.get(), new Item.Properties()));
+
     // Providers
     // Solids
     public static final DeferredHolder<Block, CuboidBankSolidsBlock> CUBOID_BANK_SOLIDS_BLOCK =
@@ -110,6 +133,11 @@ public class Registration {
             BLOCK_ENTITY_TYPES.register("furnace_core",
                     () -> BlockEntityType.Builder.of(FurnaceCoreBE::new, FURNACE_CORE_BLOCK.get()).build(null));
 
+    // Stone Work Core
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<StoneWorkCoreBE>> STONE_WORK_CORE_BLOCK_ENTITY =
+            BLOCK_ENTITY_TYPES.register("stone_work_core",
+                    () -> BlockEntityType.Builder.of(StoneWorkCoreBE::new, STONE_WORK_CORE_BLOCK.get()).build(null));
+
     // Providers
     // Solids
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CuboidBankSolidsBE>> CUBOID_BANK_SOLIDS_BLOCK_ENTITY =
@@ -130,6 +158,11 @@ public class Registration {
             CONTAINERS.register("furnace_core",
                     () -> IMenuTypeExtension.create(FurnaceCoreContainer::new));
 
+    // Stone Work Core
+    public static final DeferredHolder<MenuType<?>, MenuType<StoneWorkContainer>> STONE_WORK_CORE_CONTAINER =
+            CONTAINERS.register("stone_work_core",
+                    () -> IMenuTypeExtension.create(StoneWorkContainer::new));
+
     // Providers
     // Solids
     public static final DeferredHolder<MenuType<?>, MenuType<CuboidBankSolidsContainer>> CUBOID_BANK_SOLIDS_CONTAINER =
@@ -142,8 +175,20 @@ public class Registration {
                     () -> IMenuTypeExtension.create(CuboidIOContainer::new));
 
     /*******************************************************************************************************************
-     * Entity                                                                                                          *
+     * Recipes                                                                                                         *
      *******************************************************************************************************************/
+
+    // Stone Works
+    public static final DeferredHolder<RecipeType<?>, StoneWorkRecipeType> STONE_WORK_RECIPE_TYPE =
+            RECIPE_TYPES.register("stone_work", StoneWorkRecipeType::new);
+    public static final DeferredHolder<RecipeSerializer<?>, StoneWorkRecipeSerializer> STONE_WORK_RECIPE_SERIALIZER =
+            RECIPE_SERIALIZERS.register("stone_work", StoneWorkRecipeSerializer::new);
+
+    // Block Values
+    public static final DeferredHolder<RecipeType<?>, BlockValueRecipeType> BLOCK_VALUE_RECIPE_TYPE =
+            RECIPE_TYPES.register("block_values", BlockValueRecipeType::new);
+    public static final DeferredHolder<RecipeSerializer<?>, BlockValuesRecipeSerializer> BLOCK_VALUE_RECIPE_SERIALIZER =
+            RECIPE_SERIALIZERS.register("block_values", BlockValuesRecipeSerializer::new);
 
     /*******************************************************************************************************************
      * Creative Tabs                                                                                                   *
@@ -156,6 +201,7 @@ public class Registration {
             .displayItems((parameters, output) -> {
                 // Furnace Core
                 output.accept(FURNACE_CORE_BLOCK_ITEM.get());
+                output.accept(STONE_WORK_CORE_BLOCK_ITEM.get());
 
                 // Providers
                 // Solids
@@ -182,6 +228,13 @@ public class Registration {
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 FURNACE_CORE_BLOCK_ENTITY.get(),
+                InventoryHandler::getItemCapabilitySided
+        );
+
+        // Stone Work Core
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                STONE_WORK_CORE_BLOCK_ENTITY.get(),
                 InventoryHandler::getItemCapabilitySided
         );
 

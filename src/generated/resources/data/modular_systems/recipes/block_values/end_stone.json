@@ -1,0 +1,19 @@
+{
+  "type": "modular_systems:block_values",
+  "efficiencyCalculation": {
+    "ceiling": -50.0,
+    "floor": -250.0,
+    "scaleFactor": -10.0
+  },
+  "inputBlock": "minecraft:end_stone",
+  "multiplicityCalculation": {
+    "ceiling": 5.0,
+    "floor": 0.0,
+    "scaleFactor": 0.1
+  },
+  "speedCalculation": {
+    "ceiling": 0.0,
+    "floor": -75.0,
+    "scaleFactor": -0.5
+  }
+}

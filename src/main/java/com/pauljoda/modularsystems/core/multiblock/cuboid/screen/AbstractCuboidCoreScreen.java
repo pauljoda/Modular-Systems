@@ -6,6 +6,7 @@ import com.pauljoda.nucleus.client.gui.widget.BaseWidget;
 import com.pauljoda.nucleus.client.gui.widget.display.MenuTabCollection;
 import com.pauljoda.nucleus.client.gui.widget.display.MenuWidgetText;
 import com.pauljoda.nucleus.client.gui.widget.display.MenuWidgetTextureAnimated;
+import com.pauljoda.nucleus.util.ClientUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -71,31 +72,28 @@ public class AbstractCuboidCoreScreen<T extends AbstractCuboidCoreContainer> ext
             furnaceInfo.add(new MenuWidgetText(this, 26, 6, "modular_systems.information.menu", Color.ORANGE));
 
             // Speed
-            furnaceInfo.add(new MenuWidgetText(this, 5, 23, "modular_systems.speed.menu", Color.WHITE));
-            double speed = (-1 * (((core.values.getSpeed() + 200) / 200) - 1)) != 0 ?
-                    (-1 * (((core.values.getSpeed() + 200) / 200) - 1)) * 100 :
-                    0.00;
-            var speedColor = speed > 0 ?
+            furnaceInfo.add(new MenuWidgetText(this, 5, 23, "modular_systems.process_time.menu", Color.WHITE));
+            double speed = core.getAdjustedProcessTime();
+            var speedColor = speed < 200 ?
                     Color.GREEN :
-                    speed == 0 ?
+                    speed == 200 ?
                             Color.WHITE :
                             Color.RED;
             var formatSpeed = new MenuWidgetText(this, 15, 33, "", speedColor);
-            formatSpeed.setLabel(String.format("%.2f", speed) + "%");
+            formatSpeed.setLabel(String.format("%.2f", speed) + " " + ClientUtils.translate("modular_systems.ticks"));
             furnaceInfo.add(formatSpeed);
 
             // Efficiency
             furnaceInfo.add(new MenuWidgetText(this, 5, 48, "modular_systems.efficiency.menu", Color.WHITE));
-            var efficiency = (-1 * (100 - ((1600 + core.values.getEfficiency()) / 1600) * 100) != 0) ?
-                    -1 * (100 - ((1600 + core.values.getEfficiency()) / 1600) * 100) :
-                    0.00D;
-            var efficiencyColor = efficiency > 0 ?
+            var efficiency = core.values.getEfficiency();
+            var efficiencyColor = efficiency >= 0 ?
                     Color.GREEN :
                     efficiency == 0 ?
                             Color.WHITE :
                             Color.RED;
+            var efficiencyPrefix = efficiency > 0 ? "+" : "";
             var efficiencyFormat = new MenuWidgetText(this, 15, 58, "", efficiencyColor);
-            efficiencyFormat.setLabel(String.format("%.2f", efficiency));
+            efficiencyFormat.setLabel(efficiencyPrefix + String.format("%.2f", efficiency) + " " + ClientUtils.translate("modular_systems.ticks"));
             furnaceInfo.add(efficiencyFormat);
 
             // Multiplicity

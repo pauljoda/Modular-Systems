@@ -22,8 +22,7 @@ public class RenderBlockValuesEvent {
         if(advancedTooltips) {
             // Must have values
             if(event.getItemStack().getItem() instanceof BlockItem blockItem &&
-                    (BlockValueRegistry.INSTANCE.isBlockRegistered(blockItem.getBlock().defaultBlockState()) ||
-                            BlockValueRegistry.INSTANCE.hasBlockTagRegistered(blockItem.getBlock().defaultBlockState()))) {
+                    BlockValueRegistry.INSTANCE.isBlockRegistered(blockItem.getBlock().defaultBlockState(), Minecraft.getInstance().level)) {
 
                 // Stub to show advanced
                 if (!ClientUtils.isShiftPressed()) {
@@ -31,9 +30,9 @@ public class RenderBlockValuesEvent {
                 } else {
                     BlockState blockState = blockItem.getBlock().defaultBlockState();
 
-                    double speedValue = BlockValueRegistry.INSTANCE.getSpeedValue(blockState, 1);
-                    double efficiencyValue = BlockValueRegistry.INSTANCE.getEfficiencyValue(blockState, 1);
-                    double multiplicityValue = BlockValueRegistry.INSTANCE.getMultiplicityValue(blockState, 1);
+                    double speedValue = BlockValueRegistry.INSTANCE.getSpeedValue(blockState, Minecraft.getInstance().level,1);
+                    double efficiencyValue = BlockValueRegistry.INSTANCE.getEfficiencyValue(blockState, Minecraft.getInstance().level, 1);
+                    double multiplicityValue = BlockValueRegistry.INSTANCE.getMultiplicityValue(blockState, Minecraft.getInstance().level, 1);
 
                     event.getToolTip().add(Component.literal(ClientUtils.translate("modular_systems.blockvalues.details")));
                     event.getToolTip().add(Component.literal(GuiColor.RED + ClientUtils.translate("modular_systems.speed.menu") + speedValue + " " + ClientUtils.translate("modular_systems.ticks")));

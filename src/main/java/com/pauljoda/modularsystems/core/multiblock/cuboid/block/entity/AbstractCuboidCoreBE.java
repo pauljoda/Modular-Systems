@@ -15,6 +15,8 @@ import com.pauljoda.nucleus.util.LevelUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -278,8 +280,7 @@ public abstract class AbstractCuboidCoreBE extends InventoryHandler implements M
      */
     public boolean isBlockBanned(BlockState blockState) {
         return blockState.hasBlockEntity() ||
-                !(BlockValueRegistry.INSTANCE.isBlockRegistered(blockState) ||
-                        BlockValueRegistry.INSTANCE.hasBlockTagRegistered(blockState));
+                !BlockValueRegistry.INSTANCE.isBlockRegistered(blockState, getLevel());
     }
 
     /**
@@ -308,7 +309,7 @@ public abstract class AbstractCuboidCoreBE extends InventoryHandler implements M
                     bank.markForUpdate(Block.UPDATE_ALL);
                 } else {
                     var blockState = getLevel().getBlockState(loc);
-                    blockCountFunction.addBlock(blockState);
+                    blockCountFunction.addBlock(blockState, getLevel());
 
                     getLevel().setBlock(loc, Registration.CUBOID_PROXY_BLOCK.get().defaultBlockState(), Block.UPDATE_ALL);
                     var be = getLevel().getBlockEntity(loc);
@@ -369,19 +370,10 @@ public abstract class AbstractCuboidCoreBE extends InventoryHandler implements M
     public void generateValues(BlockCountFunction function) {
         // Calculate from Blocks
         for (var block : function.getBlockSet()) {
-            if(BlockValueRegistry.INSTANCE.isBlockRegistered(block)) {
-                values.addSpeed(BlockValueRegistry.INSTANCE.getBlockSpeedValue(block, function.getBlockCount(block)));
-                values.addEfficiency(BlockValueRegistry.INSTANCE.getBlockEfficiencyValue(block, function.getBlockCount(block)));
-                values.addMultiplicity(BlockValueRegistry.INSTANCE.getBlockMultiplicityValue(block, function.getBlockCount(block)));
-            }
-        }
-
-        // Calculate from Tags
-        for (var tag : function.getTagSet()) {
-            if(BlockValueRegistry.INSTANCE.hasBlockTagRegistered(tag)) {
-                values.addSpeed(BlockValueRegistry.INSTANCE.getTagSpeedValue(tag, function.getTagCount(tag)));
-                values.addEfficiency(BlockValueRegistry.INSTANCE.getTagEfficiencyValue(tag, function.getTagCount(tag)));
-                values.addMultiplicity(BlockValueRegistry.INSTANCE.getTagMultiplicityValue(tag, function.getTagCount(tag)));
+            if(BlockValueRegistry.INSTANCE.isBlockRegistered(block, getLevel())) {
+                values.addSpeed(BlockValueRegistry.INSTANCE.getBlockSpeedValue(block, getLevel(), function.getBlockCount(block)));
+                values.addEfficiency(BlockValueRegistry.INSTANCE.getBlockEfficiencyValue(block, getLevel(), function.getBlockCount(block)));
+                values.addMultiplicity(BlockValueRegistry.INSTANCE.getBlockMultiplicityValue(block, getLevel(), function.getBlockCount(block)));
             }
         }
     }
@@ -577,7 +569,7 @@ public abstract class AbstractCuboidCoreBE extends InventoryHandler implements M
      * @param fuelTime The fuel time to adjust.
      * @return The adjusted fuel time.
      */
-    protected int getAdjustedFuelTime(double fuelTime) {
+    public int getAdjustedFuelTime(double fuelTime) {
         var scaledTicks = ((BASE_FUEL_TIME + values.getEfficiency()) / BASE_FUEL_TIME) * fuelTime;
         scaledTicks = scaledTicks / (values.getMultiplicity() + 1);
         return (int) Math.max(Math.round(scaledTicks), 5);
@@ -588,7 +580,7 @@ public abstract class AbstractCuboidCoreBE extends InventoryHandler implements M
      *
      * @return The adjusted process time.
      */
-    protected int getAdjustedProcessTime() {
+    public int getAdjustedProcessTime() {
         return (int) Math.max(BASE_WORK_TIME + values.getSpeed(), 1);
     }
 
@@ -766,5 +758,16 @@ public abstract class AbstractCuboidCoreBE extends InventoryHandler implements M
     public void load(CompoundTag compound) {
         super.load(compound);
         values.load(compound);
+    }
+
+    /**
+     * Retrieves the display name of the component.
+     *
+     * @return The display name of the component.
+     */
+
+    @Override
+    public Component getDisplayName() {
+        return Component.translatable(getBlockState().getBlock().getDescriptionId());
     }
 }

@@ -22,15 +22,7 @@ public class ModularSystems {
 
         // Registration
         Registration.init(modEventBus);
-
-        Reference.CONFIG_LOCATION = String.format("%s%s%s%s",
-                FMLPaths.CONFIGDIR.get().toString(),
-                File.separator,
-                Reference.MOD_ID,
-                File.separator);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> BlockValueRegistry.INSTANCE.init());
-    }
+    private void commonSetup(final FMLCommonSetupEvent event) {}
 }

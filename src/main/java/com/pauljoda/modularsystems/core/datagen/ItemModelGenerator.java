@@ -26,6 +26,9 @@ public class ItemModelGenerator extends ItemModelProvider {
         // Furnace Core
         fromBlock(Registration.FURNACE_CORE_BLOCK.get());
 
+        // Stone Work
+        fromBlock(Registration.STONE_WORK_CORE_BLOCK.get());
+
         // Providers
         // Solid
         fromBlock(Registration.CUBOID_BANK_SOLIDS_BLOCK.get());

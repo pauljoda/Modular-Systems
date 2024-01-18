@@ -8,6 +8,7 @@ import com.pauljoda.modularsystems.core.lib.Registration;
 import com.pauljoda.modularsystems.core.multiblock.cuboid.screen.CuboidIOMenu;
 import com.pauljoda.modularsystems.furnace.screen.FurnaceCoreMenu;
 import com.pauljoda.modularsystems.core.multiblock.providers.screen.CuboidBankSolidsMenu;
+import com.pauljoda.modularsystems.stonework.screen.StoneWorkCoreMenu;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.neoforged.api.distmarker.Dist;
@@ -27,6 +28,9 @@ public class ClientSetup {
 
             // Furnace Core
             MenuScreens.register(Registration.FURNACE_CORE_CONTAINER.get(), FurnaceCoreMenu::new);
+
+            // Stone Work Core
+            MenuScreens.register(Registration.STONE_WORK_CORE_CONTAINER.get(), StoneWorkCoreMenu::new);
 
             // Providers
             // Solids

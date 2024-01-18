@@ -1,25 +1,13 @@
 package com.pauljoda.modularsystems.core.registry;
 
-import com.google.gson.reflect.TypeToken;
-import com.pauljoda.modularsystems.ModularSystems;
-import com.pauljoda.modularsystems.core.collections.BlockValues;
-import com.pauljoda.modularsystems.core.lib.Reference;
-import com.pauljoda.modularsystems.core.math.collections.Calculation;
-import com.pauljoda.nucleus.util.JsonUtils;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import com.pauljoda.modularsystems.core.lib.Registration;
+import com.pauljoda.modularsystems.core.recipe.blockvalues.BlockContainerWrapper;
+import com.pauljoda.modularsystems.core.recipe.blockvalues.BlockValueRecipe;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.Tags;
-
-import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class BlockValueRegistry {
 
@@ -27,34 +15,17 @@ public class BlockValueRegistry {
     public static BlockValueRegistry INSTANCE = new BlockValueRegistry();
 
     /*******************************************************************************************************************
-     * Save Locations                                                                                                  *
-     *******************************************************************************************************************/
-    // Blocks
-    private String getBlockSaveLocation() {
-        return String.format("%sRegistries%sblockValues.json", Reference.CONFIG_LOCATION, File.separator);
-    }
-
-    // Tags
-    private String getTagSaveLocation() {
-        return String.format("%sRegistries%stagValues.json", Reference.CONFIG_LOCATION, File.separator);
-    }
-
-    /*******************************************************************************************************************
      * Maps                                                                                                            *
      *******************************************************************************************************************/
     // Blocks
-    private HashMap<String, BlockValues> blockValues;
-    // Tags
-    private HashMap<String, BlockValues> tagValues;
-
+    protected final RecipeManager.CachedCheck<BlockContainerWrapper, BlockValueRecipe> blockValues;
     /**
      * The BlockValueRegistry class is responsible for initializing and managing
      * the block and tag values for the module.
      */
 
     public BlockValueRegistry() {
-        blockValues = new LinkedHashMap<>();
-        tagValues = new LinkedHashMap<>();
+        blockValues = RecipeManager.createCheck(Registration.BLOCK_VALUE_RECIPE_TYPE.get());
     }
 
     /*******************************************************************************************************************
@@ -68,65 +39,42 @@ public class BlockValueRegistry {
      * @return True if the block is registered, false otherwise.
      */
 
-    public boolean isBlockRegistered(BlockState block) {
-        return blockValues.containsKey(block.getBlock().getDescriptionId());
+    public boolean isBlockRegistered(BlockState block, Level level) {
+        return blockValues.getRecipeFor(new BlockContainerWrapper(block), level).isPresent();
     }
 
     /**
      * Checks if the given block is registered.
      *
-     * @param block The block state to check.
+     * @param block The block to check.
+     * @param level The level to check in.
      * @return True if the block is registered, false otherwise.
      */
-
-    public boolean isBlockRegistered(String block) {
-        return blockValues.containsKey(block);
+    public boolean isBlockRegistered(ResourceLocation block, Level level) {
+        return isBlockRegistered(BuiltInRegistries.BLOCK.get(block).defaultBlockState(), level);
     }
 
     /**
-     * Checks if the given block has a registered block tag.
+     * Retrieves the BlockValueRecipe associated with a given block and level.
      *
-     * @param block The block state to check.
-     * @return True if the block has a registered block tag, false otherwise.
+     * @param block The BlockState to get the BlockValueRecipe for.
+     * @param level The Level to check in.
+     * @return The RecipeHolder<BlockValueRecipe> object containing the BlockValueRecipe associated with the block and level.
+     *         Returns null if no recipe is found.
      */
-    public boolean hasBlockTagRegistered(BlockState block) {
-        for(TagKey<Block> tag : block.getTags().toList()) {
-            // Found the tag
-            if(tagValues.containsKey(tag.location().toString()))
-                return true;
-        }
-
-        // Didn't find anything
-        return false;
+    public BlockValueRecipe getBlockValueRecipe(BlockState block, Level level) {
+        return blockValues.getRecipeFor(new BlockContainerWrapper(block), level).orElse(null).value();
     }
 
     /**
-     * Checks if the given block has a registered block tag.
+     * Retrieves the BlockValueRecipe for the given block state and level.
      *
-     * @param tag The block state to check.
-     * @return True if the block has a registered block tag, false otherwise.
+     * @param block The block state to get the recipe for.
+     * @param level The level to get the recipe in.
+     * @return The BlockValueRecipe corresponding to the block state and level, or null if not found.
      */
-    public boolean hasBlockTagRegistered(String tag) {
-        return tagValues.containsKey(tag);
-    }
-
-    /**
-     * Retrieves the tag that is registered for the given block.
-     *
-     * This will return the first that matches, any block that matches multiple tags should either
-     * add the block as a value, or register earlier
-     *
-     * @param block The block state to check.
-     * @return The tag that is registered for the block, or null if no tag is registered.
-     */
-    public @Nullable  String getTagRegistered(BlockState block) {
-        for(TagKey<Block> tag : block.getTags().toList()) {
-            // Found the tag
-            if(tagValues.containsKey(tag.toString()))
-                return tag.toString();
-        }
-        // There is nothing registered
-        return null;
+    public BlockValueRecipe getBlockValueRecipe(ResourceLocation block, Level level) {
+        return getBlockValueRecipe(BuiltInRegistries.BLOCK.get(block).defaultBlockState(), level);
     }
 
     /**
@@ -136,10 +84,10 @@ public class BlockValueRegistry {
      * @param count The count of blocks.
      * @return The speed value for the block and count. Returns 0.0 if the block is not registered.
      */
-    public double getBlockSpeedValue(String block, int count) {
-        if(isBlockRegistered(block)) {
-            var values = blockValues.get(block);
-            return values.getSpeedFunction().F(count);
+    public double getBlockSpeedValue(ResourceLocation block, Level level, int count) {
+        if(isBlockRegistered(block, level)) {
+            var values = getBlockValueRecipe(block, level);
+            return values == null ? 0.0 : values.speedCalculation().F(count);
         }
         return 0.0;
     }
@@ -153,370 +101,71 @@ public class BlockValueRegistry {
      * @param count The count of blocks.
      * @return The efficiency value for the block and count. Returns 0.0 if the block is not registered.
      */
-    public double getBlockEfficiencyValue(String block, int count) {
-        if(isBlockRegistered(block)) {
-            var values = blockValues.get(block);
-            return values.getEfficiencyFunction().F(count);
+    public double getBlockEfficiencyValue(ResourceLocation block, Level level, int count) {
+        if(isBlockRegistered(block, level)) {
+            var values = getBlockValueRecipe(block, level);
+            return values == null ? 0.0 : values.efficiencyCalculation().F(count);
         }
         return 0.0;
     }
 
     /**
-     * Retrieves the multiplicity value for a given block and count.
+     * Retrieves the block multiplicity value for a given block, level, and block count.
      *
-     * @param block The block to get the value for.
+     * @param block The block to get the multiplicity value for.
+     * @param level The level to check in.
      * @param count The count of blocks.
-     * @return The multiplicity value for the block and count. Returns 0.0 if the block is not registered.
+     * @return The multiplicity value for the block, level, and count. Returns 0.0 if the block is not registered or the multiplicity value is not found.
      */
-    public double getBlockMultiplicityValue(String block, int count) {
-        if(isBlockRegistered(block)) {
-            var values = blockValues.get(block);
-            return values.getMultiplicityFunction().F(count);
+    public double getBlockMultiplicityValue(ResourceLocation block, Level level, int count) {
+        if(isBlockRegistered(block, level)) {
+            var values = getBlockValueRecipe(block, level);
+            return values == null ? 0.0 : values.multiplicityCalculation().F(count);
         }
         return 0.0;
     }
 
     /**
-     * Retrieves the speed value for a given tag and count.
-     *
-     * @param tag The tag to retrieve the speed value for.
-     * @param count The count of blocks.
-     * @return The speed value for the tag and count. Returns 0.0 if the tag is not registered.
-     */
-    public double getTagSpeedValue(String tag, int count) {
-        if(hasBlockTagRegistered(tag)) {
-            var values = tagValues.get(tag);
-            return values.getSpeedFunction().F(count);
-        }
-        return 0.0D;
-    }
-
-    /**
-     * Calculates the efficiency value for a given tag and count.
-     *
-     * @param tag   The tag to get the value for.
-     * @param count The count of blocks.
-     * @return The efficiency value for the tag and count. Returns 0.0 if the tag is not registered.
-     */
-    public double getTagEfficiencyValue(String tag, int count) {
-        if(hasBlockTagRegistered(tag)) {
-            var values = tagValues.get(tag);
-            return values.getEfficiencyFunction().F(count);
-        }
-        return 0.0D;
-    }
-    /**
-     * Retrieves the multiplicity value for a given tag and count.
-     *
-     * @param tag The tag to get the value for.
-     * @param count The count of blocks.
-     * @return The multiplicity value for the tag and count. Returns 0.0 if the tag is not registered.
-     */
-    public double getTagMultiplicityValue(String tag, int count) {
-        if(hasBlockTagRegistered(tag)) {
-            var values = tagValues.get(tag);
-            return values.getMultiplicityFunction().F(count);
-        }
-        return 0.0D;
-    }
-
-    /**
-     * Retrieves the speed value for the given block state and count.
-     *
-     * This method checks if the block state is registered. If it is, it retrieves
-     * the speed function for the block and calculates the speed value based on the count.
-     * If the block state is not registered, it checks if there is a registered tag for
-     * the block. If there is, it retrieves the speed function for the tag and calculates
-     * the speed value based on the count.
+     * Retrieves the speed value for a given block state and count.
      *
      * @param state The block state to get the value for.
+     * @param level The level to get the value in.
      * @param count The count of blocks.
-     * @return The speed value for the block state and count. Returns 0.0 if the block state
-     *         is not registered or if there is no registered tag for the block.
+     * @return The speed value for the block state and count. Returns 0.0 if the block is not registered.
      */
-    public double getSpeedValue(BlockState state, int count) {
-        // By Block
-        if(isBlockRegistered(state)) {
-            return getBlockSpeedValue(state.getBlock().getDescriptionId(), count);
-        } else {
-            var tagRegistered = getTagRegistered(state);
-            if(tagRegistered != null) {
-                return getTagSpeedValue(tagRegistered, count);
-            }
-        }
-        return 0.0D;
+    public double getSpeedValue(BlockState state, Level level, int count) {
+        return isBlockRegistered(state, level) ?
+                getBlockSpeedValue(BuiltInRegistries.BLOCK.getKey(state.getBlock()), level, count) :
+                0.0D;
     }
 
     /**
-     * Retrieves the efficiency value for a given block state and count.
+     * Retrieves the efficiency value for a given block and count.
      *
-     * The efficiency value is calculated based on the registered block and tag values.
+     * The efficiency value is calculated based on the registered block values.
      *
      * @param state The block state to get the value for.
+     * @param level The level to check in.
      * @param count The count of blocks.
-     * @return The efficiency value for the block state and count. Returns 0.0 if the block state is not registered.
+     * @return The efficiency value for the block and count. Returns 0.0 if the block is not registered.
      */
-    public double getEfficiencyValue(BlockState state, int count) {
-        // By Block
-        if(isBlockRegistered(state)) {
-            return getBlockEfficiencyValue(state.getBlock().getDescriptionId(), count);
-        } else {
-            var tagRegistered = getTagRegistered(state);
-            if(tagRegistered != null) {
-                return getTagEfficiencyValue(tagRegistered, count);
-            }
-        }
-        return 0.0D;
+    public double getEfficiencyValue(BlockState state, Level level, int count) {
+        return isBlockRegistered(state, level) ?
+                getBlockEfficiencyValue(BuiltInRegistries.BLOCK.getKey(state.getBlock()), level, count) :
+                0.0D;
     }
 
     /**
-     * Retrieves the multiplicity value for a given block and count.
+     * Returns the multiplicity value for a given block state, level, and count.
      *
      * @param state The block state to get the value for.
+     * @param level The level to get the value in.
      * @param count The count of blocks.
-     * @return The multiplicity value for the block and count. Returns 0.0 if the block is not registered.
+     * @return The multiplicity value for the block state, level, and count. Returns 0.0 if the block is not registered.
      */
-    public double getMultiplicityValue(BlockState state, int count) {
-        // By Block
-        if(isBlockRegistered(state)) {
-            return getBlockMultiplicityValue(state.getBlock().getDescriptionId(), count);
-        } else {
-            var tagRegistered = getTagRegistered(state);
-            if(tagRegistered != null) {
-                return getTagMultiplicityValue(tagRegistered, count);
-            }
-        }
-        return 0.0D;
-    }
-
-    /*******************************************************************************************************************
-     * Loading                                                                                                         *
-     *******************************************************************************************************************/
-
-    /**
-     * Initializes the block value registry.
-     *
-     * This method loads the block and tag values from JSON files. If the files do not exist or there is an error reading the files,
-     * default values are generated. The block values are stored in the private field blockValues and the tag values are stored in
-     * the private field tagValues.
-     */
-
-    public void init() {
-        if (!loadFromFile())
-            generateDefaults();
-        else
-            ModularSystems.LOGGER.info("Block values loaded");
-    }
-
-    /**
-     * Loads the block and tag values from JSON files.
-     *
-     * This method reads the block values and tag values from separate JSON files using the JsonUtils class. The block values
-     * are stored in the private field blockValues and the tag values are stored in the private field tagValues. If the files
-     * do not exist or there is an error reading the files, the blockValues and tagValues fields will remain null.
-     *
-     * @return true if the block and tag values were loaded successfully, false otherwise
-     */
-    private boolean loadFromFile() {
-        ModularSystems.LOGGER.info("Loading blocks values from file...");
-        blockValues = JsonUtils.<LinkedHashMap<String, BlockValues>>readFromJson(new TypeToken<LinkedHashMap<String, BlockValues>>(){},
-                getBlockSaveLocation());
-
-        tagValues = JsonUtils.<LinkedHashMap<String, BlockValues>>readFromJson(new TypeToken<LinkedHashMap<String, BlockValues>>(){},
-                getTagSaveLocation());
-
-        return blockValues != null && tagValues != null;
-    }
-
-    /**
-     * Saves the block and tag values to separate JSON files.
-     * If the save locations do not exist, the method creates the parent directories of the paths.
-     */
-    private void saveToFiles() {
-        // Check for Directory
-        checkAndCreatePath(getBlockSaveLocation());
-
-        if (!blockValues.isEmpty())
-            JsonUtils.writeToJson(blockValues, getBlockSaveLocation());
-
-        if(!tagValues.isEmpty())
-            JsonUtils.writeToJson(tagValues, getTagSaveLocation());
-    }
-
-    /**
-     * Generates the default block and tag values.
-     *
-     * This method initializes the 'blockValues' and 'tagValues' maps with default values for various blocks and tags.
-     * It sets the block values for specific block types using the block's description ID. The tag values are set using the
-     * tag's location.
-     *
-     * The default values for each block and tag are defined through 'Calculation' objects and are added to the respective
-     * maps with the block or tag key.
-     *
-     * This method is private and is called by the 'init' method during the initialization of the block value registry.
-     */
-    private void generateDefaults() {
-        blockValues = new LinkedHashMap<>();
-        tagValues = new LinkedHashMap<>();
-
-        /**
-         * Blocks
-         */
-
-        // Redstone
-        blockValues.put(Blocks.REDSTONE_BLOCK.getDescriptionId(),
-                new BlockValues(
-                        new Calculation(-2, -50, 1),
-                        new Calculation(-50, -500, 1),
-                        Calculation.FLAT));
-
-        // Quartz
-        blockValues.put(Blocks.QUARTZ_BLOCK.getDescriptionId(),
-                new BlockValues(
-                        Calculation.FLAT,
-                        new Calculation(-15,-500, 0),
-                        new Calculation(0.10, 0, 3)));
-
-        // Gold Block
-        blockValues.put(Blocks.GOLD_BLOCK.getDescriptionId(),
-                new BlockValues(
-                        new Calculation(2, 0, 50),
-                        new Calculation(20, 0, 500),
-                        new Calculation(0.25, 0, 3)));
-
-        // Diamond Block
-        blockValues.put(Blocks.DIAMOND_BLOCK.getDescriptionId(),
-                new BlockValues(
-                        new Calculation(-8, -100, 0),
-                        new Calculation(15, 0, 300),
-                        new Calculation(0.50,0, 3)));
-
-        // Netherite
-        blockValues.put(Blocks.NETHERITE_BLOCK.getDescriptionId(),
-                new BlockValues(
-                        new Calculation(-10, 100, 0),
-                        new Calculation(20, 0, 200),
-                        new Calculation(1, 0, 5)));
-
-        // Lapis Block
-        blockValues.put(Blocks.LAPIS_BLOCK.getDescriptionId(),
-                new BlockValues(
-                        new Calculation(-1, -25, 0),
-                        new Calculation(2, 0, 100),
-                        new Calculation(0.1,0, 2)));
-
-        // Brick Block
-        blockValues.put(Blocks.BRICKS.getDescriptionId(),
-                new BlockValues(
-                        new Calculation(5, 0, 100),
-                        new Calculation(5, 0, 500),
-                        Calculation.FLAT));
-
-        // Iron Block
-        blockValues.put(Blocks.IRON_BLOCK.getDescriptionId(),
-                new BlockValues(
-                        new Calculation(10, 0, 100),
-                        new Calculation(10, 0, 500),
-                        Calculation.FLAT));
-
-        blockValues.put(Blocks.COPPER_BLOCK.getDescriptionId(),
-                new BlockValues(
-                        new Calculation(10, 0, 200),
-                        new Calculation(5, 0, 1000),
-                        Calculation.FLAT));
-
-        // Emerald Block
-        blockValues.put(Blocks.EMERALD_BLOCK.getDescriptionId(),
-                new BlockValues(
-                        Calculation.FLAT,
-                        Calculation.FLAT,
-                        new Calculation(1, 0, 5)));
-
-        // Stone Brick
-        blockValues.put(Blocks.STONE_BRICKS.getDescriptionId(),
-                new BlockValues(
-                        new Calculation(1, 0, 100),
-                        new Calculation(10, 0, 500),
-                        Calculation.FLAT));
-
-        // Coal Block
-        blockValues.put(Blocks.COAL_BLOCK.getDescriptionId(),
-                new BlockValues(
-                        new Calculation(1, 0, 100),
-                        new Calculation(5, 0, 300),
-                        Calculation.FLAT));
-
-        // Nether Bricks
-        blockValues.put(Blocks.NETHER_BRICKS.getDescriptionId(),
-                new BlockValues(
-                        new Calculation(-1, -30, 0),
-                        new Calculation(-10, -200, 0),
-                        Calculation.FLAT));
-
-        /**
-         * Tags
-         */
-
-        // Cobble Stone
-        tagValues.put(Tags.Blocks.COBBLESTONE.location().toString(),
-                new BlockValues(
-                        new Calculation(-0.10, -50, 1),
-                        new Calculation(-1, -500, 1),
-                        Calculation.FLAT));
-
-        // Stone
-        tagValues.put(Tags.Blocks.STONE.location().toString(),
-                new BlockValues(
-                        new Calculation(-0.30, -40, 0),
-                        Calculation.FLAT,
-                        Calculation.FLAT));
-
-        // Sandstone
-        tagValues.put(Tags.Blocks.SANDSTONE.location().toString(),
-                new BlockValues(
-                        new Calculation(-0.10, -50, 1),
-                        new Calculation(-1, -500, 1),
-                        Calculation.FLAT));
-
-        // Netherrack
-        tagValues.put(Tags.Blocks.NETHERRACK.location().toString(),
-                new BlockValues(
-                        new Calculation(-2, -100, 0),
-                        new Calculation(-20, -800, 0),
-                        Calculation.FLAT));
-
-        // Obsidian
-        tagValues.put(Tags.Blocks.OBSIDIAN.location().toString(),
-                new BlockValues(
-                        new Calculation(10,  0, 50),
-                        new Calculation(20, 0, 1600),
-                        Calculation.FLAT));
-
-        // End Stone
-        // Obsidian
-        tagValues.put(Tags.Blocks.END_STONES.location().toString(),
-                new BlockValues(
-                        new Calculation(-0.5, -75, 0),
-                        new Calculation(-10, -250, -50),
-                        new Calculation(0.10, 0, 5)));
-
-
-        saveToFiles();
-    }
-
-    /**
-     * Checks if the given path exists. If it does not exist, creates the parent directories of the path.
-     *
-     * @param pathString The string representation of the path
-     */
-    private void checkAndCreatePath(String pathString) {
-        Path path = Paths.get(pathString);
-        if (Files.notExists(path)) {
-            try {
-                Files.createDirectories(path.getParent());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public double getMultiplicityValue(BlockState state, Level level, int count) {
+        return isBlockRegistered(state, level) ?
+                getBlockMultiplicityValue(BuiltInRegistries.BLOCK.getKey(state.getBlock()), level, count) :
+                0.0D;
     }
 }

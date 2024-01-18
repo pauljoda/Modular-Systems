@@ -37,6 +37,9 @@ public class LootTableGenerator extends BaseLootTableGenerator {
         // Furnace Core
         createSimpleTable(Registration.FURNACE_CORE_BLOCK.get());
 
+        // Stone WOrk
+        createSimpleTable(Registration.STONE_WORK_CORE_BLOCK.get());
+
         // Providers
         // Solids
         createSimpleTable(Registration.CUBOID_BANK_SOLIDS_BLOCK.get());

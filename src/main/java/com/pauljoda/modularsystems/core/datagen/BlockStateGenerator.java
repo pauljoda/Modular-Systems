@@ -44,6 +44,15 @@ public class BlockStateGenerator extends BlockStateProvider {
                 mcLoc("block/furnace_side"),
                 mcLoc("block/hopper_top"));
 
+        // Stone Work Core
+        addCuboidCore(Registration.STONE_WORK_CORE_BLOCK.get(),
+                mcLoc("block/blast_furnace_top"),
+                mcLoc("block/blast_furnace_top"),
+                mcLoc("block/blast_furnace_front"),
+                mcLoc("block/blast_furnace_front_on"),
+                mcLoc("block/blast_furnace_side"),
+                mcLoc("block/hopper_top"));
+
         // Solid Fuel Bank
         addCuboidBank(Registration.CUBOID_BANK_SOLIDS_BLOCK.get(), mcLoc("block/coal_block"));
 

@@ -1,0 +1,19 @@
+{
+  "type": "modular_systems:block_values",
+  "efficiencyCalculation": {
+    "ceiling": 500.0,
+    "floor": 0.0,
+    "scaleFactor": 20.0
+  },
+  "inputBlock": "minecraft:gold_block",
+  "multiplicityCalculation": {
+    "ceiling": 3.0,
+    "floor": 0.0,
+    "scaleFactor": 0.25
+  },
+  "speedCalculation": {
+    "ceiling": 50.0,
+    "floor": 0.0,
+    "scaleFactor": 2.0
+  }
+}

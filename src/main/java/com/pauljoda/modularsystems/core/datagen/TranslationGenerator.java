@@ -30,7 +30,12 @@ public class TranslationGenerator extends LanguageProvider {
         // Furnace Core
         addWithDescription(Registration.FURNACE_CORE_BLOCK_ITEM,
                 "Modular Furnace Core",
-                "Create a cuboid with the core as part of one of the faces");
+                "Cuboid Multiblock - Smelts items with same recipe as the furnace");
+
+        // Stone Work
+        addWithDescription(Registration.STONE_WORK_CORE_BLOCK_ITEM,
+                "Modular Stone Works Core",
+                "Cuboid Multiblock - Processes stone blocks");
 
         // Providers
         // Solids
@@ -47,6 +52,7 @@ public class TranslationGenerator extends LanguageProvider {
         // Furnace Core
         add("modular_systems.information.menu", "Information");
         add("modular_systems.speed.menu", "Speed: ");
+        add("modular_systems.process_time.menu", "Process Time: ");
         add("modular_systems.efficiency.menu", "Efficiency: ");
         add("modular_systems.multiplicity.menu", "Multiplicity: ");
 

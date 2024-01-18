@@ -51,19 +51,8 @@ public class FurnaceCoreBE extends AbstractCuboidCoreBE {
     }
 
     /*******************************************************************************************************************
-     * Syncable Methods                                                                                                *
+     * Menu     Methods                                                                                                *
      *******************************************************************************************************************/
-
-    /**
-     * Retrieves the display name of the component.
-     *
-     * @return The display name of the component.
-     */
-
-    @Override
-    public Component getDisplayName() {
-        return Component.translatable("block.modular_systems.furnace_core");
-    }
 
     /**
      * Creates a menu for the given container ID, player inventory, and player.

@@ -1,38 +1,23 @@
 package com.pauljoda.modularsystems.core.math.collections;
 
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.FriendlyByteBuf;
+
 import java.util.Arrays;
 
-public class Calculation {
+public record Calculation(double scaleFactor, double floor, double ceiling) {
+
+    public static final Codec<Calculation> CODEC =
+            RecordCodecBuilder.create(calculationInstance ->
+                calculationInstance.group(
+                        Codec.DOUBLE.fieldOf("scaleFactor").forGetter(Calculation::scaleFactor),
+                        Codec.DOUBLE.fieldOf("floor").forGetter(Calculation::floor),
+                        Codec.DOUBLE.fieldOf("ceiling").forGetter(Calculation::ceiling)
+                ).apply(calculationInstance, Calculation::new));
 
     public static Calculation FLAT = new Calculation(0, 0, 0);
-
-    protected double scaleFactor = 1;
-    protected double floor = 0;
-    protected double ceiling = 1;
-
-    /**
-     * Create a calculation object using the given parameters
-     * <p>
-     * A function will be created that will allow user to define behaviors
-     * <p>
-     * The function relates to:
-     * y = (m / m1)(x + t)^p + b
-     * <p>
-     * The floor and ceiling are used to define the range this should not break from
-     */
-    public Calculation(double scaleFactorNum, double min, double max) {
-        scaleFactor = scaleFactorNum;
-        floor = min;
-        ceiling = max;
-    }
-
-    /**
-     * Used to create a new instance, copying the values of the other
-     * @param calculation The other
-     */
-    public Calculation(Calculation calculation) {
-        this(calculation.scaleFactor, calculation.floor, calculation.ceiling);
-    }
 
     /**
      * Calculate the result using the defined function
@@ -52,6 +37,31 @@ public class Calculation {
         return x * scaleFactor;
     }
 
+    /**
+     * Writes the current Calculation object to a FriendlyByteBuf for network transmission.
+     *
+     * @param buffer The FriendlyByteBuf to write the data to
+     */
+    public static void toNetwork(FriendlyByteBuf buffer, Calculation calculation) {
+        buffer.writeDouble(calculation.scaleFactor);
+        buffer.writeDouble(calculation.ceiling);
+        buffer.writeDouble(calculation.floor);
+    }
+
+    /**
+     * Constructs a Calculation object by reading data from a FriendlyByteBuf.
+     *
+     * @param buffer The buffer containing the data to read.
+     * @return A new Calculation object initialized with the read data.
+     */
+    public static Calculation fromNetwork(FriendlyByteBuf buffer) {
+        var scaleFactor = buffer.readDouble();
+        var ceiling = buffer.readDouble();
+        var floor = buffer.readDouble();
+
+        return new Calculation(scaleFactor, ceiling, floor);
+    }
+
     /*******************************************************************************************************************
      **************************************** Accessors and Mutators ***************************************************
      *******************************************************************************************************************/
@@ -60,48 +70,25 @@ public class Calculation {
      * Accessor for the Scale Factor Numerator
      * @return m1
      */
-    public double getScaleFactor() {
+    public double scaleFactor() {
         return scaleFactor;
     }
 
-    /**
-     * Mutator for the Scale Factor Numerator
-     * @param scaleFactor The new value for m1
-     */
-    public void setScaleFactor(double scaleFactor) {
-        this.scaleFactor = scaleFactor;
-    }
 
     /**
      * The lower limit of the function
      * @return The lowest possible value
      */
-    public double getFloor() {
+    public double floor() {
         return floor;
-    }
-
-    /**
-     * Set the lower limit
-     * @param floor The new lowest value
-     */
-    public void setFloor(double floor) {
-        this.floor = floor;
     }
 
     /**
      * The upper limit of the function
      * @return The highest value
      */
-    public double getCeiling() {
+    public double ceiling() {
         return ceiling;
-    }
-
-    /**
-     * Set the new highest value
-     * @param ceiling The new highest value
-     */
-    public void setCeiling(double ceiling) {
-        this.ceiling = ceiling;
     }
 
     /*******************************************************************************************************************
@@ -115,9 +102,9 @@ public class Calculation {
 
         Calculation that = (Calculation) o;
 
-        return  Double.compare(that.scaleFactor, scaleFactor) == 0 &&
-                Double.compare(that.floor, floor) == 0 &&
-                Double.compare(that.ceiling, ceiling) == 0;
+        return  Double.compare(that.scaleFactor(), scaleFactor) == 0 &&
+                Double.compare(that.floor(), floor) == 0 &&
+                Double.compare(that.ceiling(), ceiling) == 0;
     }
 
     @Override
