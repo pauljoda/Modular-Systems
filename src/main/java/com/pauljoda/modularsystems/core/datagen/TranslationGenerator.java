@@ -48,7 +48,7 @@ public class TranslationGenerator extends LanguageProvider {
                 "IO Expansion",
                 "Add to a cuboid multiblock to import and export from the multiblock, pushes and pulls");
 
-        // Menus -------------------------------------------------------------------------------------------------------
+        // region Menus
         // Furnace Core
         add("modular_systems.information.menu", "Information");
         add("modular_systems.speed.menu", "Speed: ");
@@ -62,6 +62,11 @@ public class TranslationGenerator extends LanguageProvider {
         // IO
         add("modular_systems.push.menu", "Push");
         add("modular_systems.pull.menu", "Pull");
+        // endregion
+
+        // region JEI
+        add("modular_systems.blockvalues.jei.title", "Cuboid Block Values");
+        // endregion
     }
 
     private void addWithDescription(DeferredHolder<Item, ? extends Item> item, String name, String desc) {

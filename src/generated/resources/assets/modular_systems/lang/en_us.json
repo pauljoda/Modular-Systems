@@ -9,6 +9,7 @@
   "block.modular_systems.stone_work_core.desc": "Cuboid Multiblock - Processes stone blocks",
   "itemGroup.modular_systems": "Modular Systems",
   "modular_systems.blockvalues.details": "Modular Systems Block Values:",
+  "modular_systems.blockvalues.jei.title": "Cuboid Block Values",
   "modular_systems.blockvalues.shift": "Press <SHIFT> to view Modular Systems Values",
   "modular_systems.cuboid.multiblock": "Cuboid Multiblock",
   "modular_systems.efficiency.menu": "Efficiency: ",
