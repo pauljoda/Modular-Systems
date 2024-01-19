@@ -1,19 +1,21 @@
 {
   "type": "modular_systems:block_values",
   "efficiencyCalculation": {
-    "ceiling": 0.0,
-    "floor": -800.0,
-    "scaleFactor": -20.0
+    "ceiling": 1.0,
+    "floor": -500.0,
+    "scaleFactor": -50.0
   },
-  "inputBlock": "minecraft:netherrack",
+  "inputBlock": {
+    "tag": "forge:storage_blocks/redstone"
+  },
   "multiplicityCalculation": {
     "ceiling": 0.0,
     "floor": 0.0,
     "scaleFactor": 0.0
   },
   "speedCalculation": {
-    "ceiling": 0.0,
-    "floor": -100.0,
+    "ceiling": 1.0,
+    "floor": -50.0,
     "scaleFactor": -2.0
   }
 }

@@ -16,10 +16,8 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.client.extensions.IGuiGraphicsExtension;
 
 import java.awt.*;
@@ -85,18 +83,13 @@ public class BlockValueCategory implements IRecipeCategory<BlockValueRecipe> {
      */
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, BlockValueRecipe recipe, IFocusGroup focuses) {
-        var input = Ingredient.of(BuiltInRegistries.BLOCK.get(recipe.inputBlock()));
-        builder.addSlot(RecipeIngredientRole.INPUT, 0, 0).addIngredients(input);
+        var input = recipe.inputBlock();
+        builder.addSlot(RecipeIngredientRole.INPUT, (150 / 2) - 8, 0).addIngredients(input);
     }
 
     @Override
     public void draw(BlockValueRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         var font = Minecraft.getInstance().font;
-
-        // Block Name
-        var inputStack = new ItemStack(BuiltInRegistries.BLOCK.get(recipe.inputBlock()));
-        guiGraphics.drawString(font, inputStack.getDisplayName().getString(), (150 / 2) - font.width(inputStack.getDisplayName().getString()) / 2, 3, IGuiGraphicsExtension.DEFAULT_BACKGROUND_COLOR, false);
-
 
         // Speed
         guiGraphics.drawString(font, ClientUtils.translate("modular_systems.speed.menu"), 0, 17, Color.RED.getRGB(), false);

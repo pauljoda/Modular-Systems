@@ -86,43 +86,8 @@ public class RecipeGenerator extends RecipeProvider {
         // Stone Works
         stoneWork(outputs, Tags.Items.COBBLESTONE, Blocks.STONE, "all_cobble_to_stone");
 
-        // Block Values
-        blockValue(outputs,
-                Blocks.REDSTONE_BLOCK,
-                new Calculation(-2, -50, 1),
-                new Calculation(-50, -500, 1),
-                Calculation.FLAT,
-                "redstone_block");
-        blockValue(outputs,
-                Blocks.QUARTZ_BLOCK,
-                Calculation.FLAT,
-                new Calculation(-15,-500, 0),
-                new Calculation(0.10, 0, 3),
-                "quartz_block");
-        blockValue(outputs,
-                Blocks.GOLD_BLOCK,
-                new Calculation(2, 0, 50),
-                new Calculation(20, 0, 500),
-                new Calculation(0.25, 0, 3),
-                "gold_block");
-        blockValue(outputs,
-                Blocks.DIAMOND_BLOCK,
-                new Calculation(-8, -100, 0),
-                new Calculation(15, 0, 300),
-                new Calculation(0.50,0, 3),
-                "diamond_block");
-        blockValue(outputs,
-                Blocks.NETHERITE_BLOCK,
-                new Calculation(-10, -150, 0),
-                new Calculation(20, 0, 200),
-                new Calculation(1, 0, 5),
-                "netherite_block");
-        blockValue(outputs,
-                Blocks.LAPIS_BLOCK,
-                new Calculation(-1, -25, 0),
-                new Calculation(2, 0, 100),
-                new Calculation(0.1,0, 2),
-                "lapis_block");
+        // region Block Values
+        // region By Block
         blockValue(outputs,
                 Blocks.BRICKS,
                 new Calculation(5, 0, 100),
@@ -130,77 +95,118 @@ public class RecipeGenerator extends RecipeProvider {
                 Calculation.FLAT,
                 "brick_block");
         blockValue(outputs,
-                Blocks.IRON_BLOCK,
-                new Calculation(10, 0, 100),
-                new Calculation(10, 0, 500),
-                Calculation.FLAT,
-                "iron_block");
-        blockValue(outputs,
-                Blocks.COPPER_BLOCK,
-                new Calculation(10, 0, 200),
-                new Calculation(5, 0, 1000),
-                Calculation.FLAT,
-                "copper_block");
-        blockValue(outputs,
-                Blocks.EMERALD_BLOCK,
-                Calculation.FLAT,
-                Calculation.FLAT,
-                new Calculation(1, 0, 5),
-                "emerald_block");
-        blockValue(outputs,
                 Blocks.STONE_BRICKS,
                 new Calculation(1, 0, 100),
                 new Calculation(10, 0, 500),
                 Calculation.FLAT,
                 "stone_brick");
         blockValue(outputs,
-                Blocks.COAL_BLOCK,
-                new Calculation(1, 0, 100),
-                new Calculation(5, 0, 300),
-                Calculation.FLAT,
-                "coal_block");
-        blockValue(outputs,
                 Blocks.NETHER_BRICKS,
                 new Calculation(-1, -30, 0),
                 new Calculation(-10, -200, 0),
                 Calculation.FLAT,
                 "nether_brick");
+        // endregion
+
+        // region By Tag
         blockValue(outputs,
-                Blocks.COBBLESTONE,
+                Tags.Items.COBBLESTONE,
                 new Calculation(-0.10, -50, 1),
                 new Calculation(-1, -500, 1),
                 Calculation.FLAT,
-                "cobblestone");
+                "cobblestone_tag");
         blockValue(outputs,
-                Blocks.STONE,
+                Tags.Items.STONE,
                 new Calculation(-0.30, -40, 0),
                 Calculation.FLAT,
                 Calculation.FLAT,
-                "stone");
+                "stone_tag");
         blockValue(outputs,
-                Blocks.SANDSTONE,
+                Tags.Items.SANDSTONE,
                 new Calculation(-0.10, -50, 1),
                 new Calculation(-1, -500, 1),
                 Calculation.FLAT,
-                "sandstone");
+                "sandstone_tag");
         blockValue(outputs,
-                Blocks.NETHERRACK,
+                Tags.Items.NETHERRACK,
                 new Calculation(-2, -100, 0),
                 new Calculation(-20, -800, 0),
                 Calculation.FLAT,
-                "netherrack");
+                "netherrack_tag");
         blockValue(outputs,
-                Blocks.OBSIDIAN,
-                new Calculation(10,  0, 50),
+                Tags.Items.OBSIDIAN,
+                new Calculation(10, 0, 50),
                 new Calculation(20, 0, 1600),
                 Calculation.FLAT,
-                "obsidian");
+                "obsidian_tag");
         blockValue(outputs,
-                Blocks.END_STONE,
+                Tags.Items.END_STONES,
                 new Calculation(-0.5, -75, 0),
                 new Calculation(-10, -250, -50),
                 new Calculation(0.10, 0, 5),
-                "end_stone");
+                "end_stone_tag");
+        blockValue(outputs,
+                Tags.Items.STORAGE_BLOCKS_COAL,
+                new Calculation(1, 0, 100),
+                new Calculation(5, 0, 300),
+                Calculation.FLAT,
+                "coal_block_tag");
+        blockValue(outputs,
+                Tags.Items.STORAGE_BLOCKS_IRON,
+                new Calculation(10, 0, 100),
+                new Calculation(10, 0, 500),
+                Calculation.FLAT,
+                "iron_block_tag");
+        blockValue(outputs,
+                Tags.Items.STORAGE_BLOCKS_COPPER,
+                new Calculation(10, 0, 200),
+                new Calculation(5, 0, 1000),
+                Calculation.FLAT,
+                "copper_block_tag");
+        blockValue(outputs,
+                Tags.Items.STORAGE_BLOCKS_EMERALD,
+                Calculation.FLAT,
+                Calculation.FLAT,
+                new Calculation(1, 0, 5),
+                "emerald_block_tag");
+        blockValue(outputs,
+                Tags.Items.STORAGE_BLOCKS_REDSTONE,
+                new Calculation(-2, -50, 1),
+                new Calculation(-50, -500, 1),
+                Calculation.FLAT,
+                "redstone_block_tag");
+        blockValue(outputs,
+                Tags.Items.STORAGE_BLOCKS_QUARTZ,
+                Calculation.FLAT,
+                new Calculation(-15, -500, 0),
+                new Calculation(0.10, 0, 3),
+                "quartz_block_tag");
+        blockValue(outputs,
+                Tags.Items.STORAGE_BLOCKS_QUARTZ,
+                new Calculation(2, 0, 50),
+                new Calculation(20, 0, 500),
+                new Calculation(0.25, 0, 3),
+                "gold_block_tag");
+        blockValue(outputs,
+                Tags.Items.STORAGE_BLOCKS_DIAMOND,
+                new Calculation(-8, -100, 0),
+                new Calculation(15, 0, 300),
+                new Calculation(0.50, 0, 3),
+                "diamond_block_tag");
+        blockValue(outputs,
+                Tags.Items.STORAGE_BLOCKS_NETHERITE,
+                new Calculation(-10, -150, 0),
+                new Calculation(20, 0, 200),
+                new Calculation(1, 0, 5),
+                "netherite_block_tag");
+        blockValue(outputs,
+                Tags.Items.STORAGE_BLOCKS_LAPIS,
+                new Calculation(-1, -25, 0),
+                new Calculation(2, 0, 100),
+                new Calculation(0.1, 0, 2),
+                "lapis_block_tag");
+        // endregion
+        // endregion
     }
 
     /**
@@ -232,15 +238,33 @@ public class RecipeGenerator extends RecipeProvider {
     /**
      * Adds a block value recipe to the provided output with the given parameters.
      *
-     * @param output      The recipe output to add the recipe to.
-     * @param block       The block to calculate the value for.
-     * @param speed       The calculation for the speed.
-     * @param efficiency  The calculation for the efficiency.
+     * @param output       The recipe output to add the recipe to.
+     * @param block        The block to calculate the value for.
+     * @param speed        The calculation for the speed.
+     * @param efficiency   The calculation for the efficiency.
      * @param multiplicity The calculation for the multiplicity.
-     * @param name        The name of the recipe.
+     * @param name         The name of the recipe.
      */
     protected static void blockValue(RecipeOutput output,
                                      Block block,
+                                     Calculation speed, Calculation efficiency, Calculation multiplicity,
+                                     String name) {
+        BlockValueRecipeBuilder.of(block, speed, efficiency, multiplicity)
+                .save(output, new ResourceLocation(Reference.MOD_ID, String.format("block_values/%s", name)));
+    }
+
+    /**
+     * Adds a block value recipe to the provided output with the given parameters.
+     *
+     * @param output       The recipe output to add the recipe to.
+     * @param block        The block to calculate the value for.
+     * @param speed        The calculation for the speed.
+     * @param efficiency   The calculation for the efficiency.
+     * @param multiplicity The calculation for the multiplicity.
+     * @param name         The name of the recipe.
+     */
+    protected static void blockValue(RecipeOutput output,
+                                     TagKey<Item> block,
                                      Calculation speed, Calculation efficiency, Calculation multiplicity,
                                      String name) {
         BlockValueRecipeBuilder.of(block, speed, efficiency, multiplicity)

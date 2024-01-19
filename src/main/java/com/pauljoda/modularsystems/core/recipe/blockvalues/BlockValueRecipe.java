@@ -1,19 +1,18 @@
 package com.pauljoda.modularsystems.core.recipe.blockvalues;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
-import com.pauljoda.modularsystems.core.recipe.blockvalues.BlockContainerWrapper;
 import com.pauljoda.modularsystems.core.math.collections.Calculation;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 
-public record BlockValueRecipe(ResourceLocation inputBlock,
+public record BlockValueRecipe(Ingredient inputBlock,
                                Calculation speedCalculation,
                                Calculation efficiencyCalculation,
                                Calculation multiplicityCalculation) implements Recipe<BlockContainerWrapper> {
@@ -30,7 +29,7 @@ public record BlockValueRecipe(ResourceLocation inputBlock,
      */
     @Override
     public boolean matches(BlockContainerWrapper pContainer, Level pLevel) {
-        return pContainer.heldBlock().getBlock() == BuiltInRegistries.BLOCK.get(inputBlock);
+        return inputBlock.test(new ItemStack(pContainer.heldBlock().getBlock()));
     }
 
     /**
@@ -39,7 +38,7 @@ public record BlockValueRecipe(ResourceLocation inputBlock,
      * @return The input block.
      */
     @Override
-    public ResourceLocation inputBlock() {
+    public Ingredient inputBlock() {
         return inputBlock;
     }
 

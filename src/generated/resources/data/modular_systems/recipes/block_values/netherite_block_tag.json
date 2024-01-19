@@ -5,7 +5,9 @@
     "floor": 0.0,
     "scaleFactor": 20.0
   },
-  "inputBlock": "minecraft:netherite_block",
+  "inputBlock": {
+    "tag": "forge:storage_blocks/netherite"
+  },
   "multiplicityCalculation": {
     "ceiling": 5.0,
     "floor": 0.0,

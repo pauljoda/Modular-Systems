@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.pauljoda.modularsystems.core.math.collections.Calculation;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 
 public class BlockValuesRecipeSerializer implements RecipeSerializer<BlockValueRecipe> {
@@ -15,7 +16,7 @@ public class BlockValuesRecipeSerializer implements RecipeSerializer<BlockValueR
     public static final Codec<BlockValueRecipe> CODEC =
             RecordCodecBuilder.create(blockValueRecipeInstance ->
                     blockValueRecipeInstance.group(
-                            ResourceLocation.CODEC.fieldOf("inputBlock").forGetter(BlockValueRecipe::inputBlock),
+                            Ingredient.CODEC.fieldOf("inputBlock").forGetter(BlockValueRecipe::inputBlock),
                             Calculation.CODEC.fieldOf("speedCalculation").forGetter(BlockValueRecipe::speedCalculation),
                             Calculation.CODEC.fieldOf("efficiencyCalculation").forGetter(BlockValueRecipe::efficiencyCalculation),
                             Calculation.CODEC.fieldOf("multiplicityCalculation").forGetter(BlockValueRecipe::multiplicityCalculation)
@@ -40,7 +41,7 @@ public class BlockValuesRecipeSerializer implements RecipeSerializer<BlockValueR
      */
     @Override
     public BlockValueRecipe fromNetwork(FriendlyByteBuf pBuffer) {
-        var block = pBuffer.readResourceLocation();
+        var block = Ingredient.fromNetwork(pBuffer);
         var speed = Calculation.fromNetwork(pBuffer);
         var efficiency = Calculation.fromNetwork(pBuffer);
         var multiplicity = Calculation.fromNetwork(pBuffer);
@@ -55,7 +56,7 @@ public class BlockValuesRecipeSerializer implements RecipeSerializer<BlockValueR
      */
     @Override
     public void toNetwork(FriendlyByteBuf pBuffer, BlockValueRecipe pRecipe) {
-        pBuffer.writeResourceLocation(pRecipe.inputBlock());
+        pRecipe.inputBlock().toNetwork(pBuffer);
         Calculation.toNetwork(pBuffer, pRecipe.speedCalculation());
         Calculation.toNetwork(pBuffer, pRecipe.efficiencyCalculation());
         Calculation.toNetwork(pBuffer, pRecipe.multiplicityCalculation());

@@ -5,7 +5,9 @@
     "floor": 0.0,
     "scaleFactor": 10.0
   },
-  "inputBlock": "minecraft:stone_bricks",
+  "inputBlock": {
+    "item": "minecraft:stone_bricks"
+  },
   "multiplicityCalculation": {
     "ceiling": 0.0,
     "floor": 0.0,

@@ -3,9 +3,11 @@
   "efficiencyCalculation": {
     "ceiling": 1.0,
     "floor": -500.0,
-    "scaleFactor": -50.0
+    "scaleFactor": -1.0
   },
-  "inputBlock": "minecraft:redstone_block",
+  "inputBlock": {
+    "tag": "forge:cobblestone"
+  },
   "multiplicityCalculation": {
     "ceiling": 0.0,
     "floor": 0.0,
@@ -14,6 +16,6 @@
   "speedCalculation": {
     "ceiling": 1.0,
     "floor": -50.0,
-    "scaleFactor": -2.0
+    "scaleFactor": -0.1
   }
 }
