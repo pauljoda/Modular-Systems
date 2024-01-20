@@ -10,6 +10,9 @@ import net.minecraft.world.level.block.Block;
 
 public class StoneWorkRecipeSerializer implements RecipeSerializer<StoneWorkRecipe> {
 
+    /**
+     * The Codec for serializing and deserializing StoneWorkRecipe objects.
+     */
     public static final Codec<StoneWorkRecipe> CODEC =
             RecordCodecBuilder.create(stoneWorkRecipeInstance ->
                 stoneWorkRecipeInstance.group(
@@ -18,11 +21,22 @@ public class StoneWorkRecipeSerializer implements RecipeSerializer<StoneWorkReci
                 ).apply(stoneWorkRecipeInstance, StoneWorkRecipe::new)
             );
 
+    /**
+     * Returns the codec for the StoneWorkRecipe class.
+     *
+     * @return The codec for StoneWorkRecipe.
+     */
     @Override
     public Codec<StoneWorkRecipe> codec() {
         return CODEC;
     }
 
+    /**
+     * Converts the data received from the network into a StoneWorkRecipe object.
+     *
+     * @param pBuffer The buffer containing the data received from the network.
+     * @return The StoneWorkRecipe object created from the data.
+     */
     @Override
     public StoneWorkRecipe fromNetwork(FriendlyByteBuf pBuffer) {
         var input = Ingredient.fromNetwork(pBuffer);
@@ -30,6 +44,12 @@ public class StoneWorkRecipeSerializer implements RecipeSerializer<StoneWorkReci
         return new StoneWorkRecipe(input, output);
     }
 
+    /**
+     * Writes the StoneWorkRecipe to a network buffer.
+     *
+     * @param pBuffer The network buffer to write to.
+     * @param pRecipe The StoneWorkRecipe to write.
+     */
     @Override
     public void toNetwork(FriendlyByteBuf pBuffer, StoneWorkRecipe pRecipe) {
         pRecipe.input().toNetwork(pBuffer);

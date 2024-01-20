@@ -2,12 +2,9 @@ package com.pauljoda.modularsystems.core.recipe.blockvalues;
 
 import com.pauljoda.modularsystems.core.lib.Registration;
 import com.pauljoda.modularsystems.core.math.collections.Calculation;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import com.pauljoda.nucleus.recipe.CustomRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -15,7 +12,7 @@ import net.minecraft.world.level.Level;
 public record BlockValueRecipe(Ingredient inputBlock,
                                Calculation speedCalculation,
                                Calculation efficiencyCalculation,
-                               Calculation multiplicityCalculation) implements Recipe<BlockContainerWrapper> {
+                               Calculation multiplicityCalculation) implements CustomRecipe<BlockContainerWrapper> {
 
     /*******************************************************************************************************************
      * Recipe                                                                                                          *
@@ -80,30 +77,5 @@ public record BlockValueRecipe(Ingredient inputBlock,
     @Override
     public RecipeType<?> getType() {
         return Registration.BLOCK_VALUE_RECIPE_TYPE.get();
-    }
-
-    /*******************************************************************************************************************
-     * Not Needed                                                                                                      *
-     *******************************************************************************************************************/
-
-    @Override
-    public ItemStack assemble(BlockContainerWrapper pContainer, RegistryAccess pRegistryAccess) {
-        return ItemStack.EMPTY;
-    }
-
-    /**
-     * Used to determine if this recipe can fit in a grid of the given width/height
-     *
-     * @param pWidth
-     * @param pHeight
-     */
-    @Override
-    public boolean canCraftInDimensions(int pWidth, int pHeight) {
-        return true;
-    }
-
-    @Override
-    public ItemStack getResultItem(RegistryAccess pRegistryAccess) {
-        return ItemStack.EMPTY;
     }
 }
