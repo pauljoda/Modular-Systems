@@ -46,17 +46,17 @@ public class RecipeGenerator extends RecipeProvider {
                 .unlockedBy("has_furnace", has(Blocks.FURNACE))
                 .save(outputs);
 
-        // Furnace Core
-        ShapedRecipeBuilder
-                .shaped(RecipeCategory.MISC, Registration.STONE_WORK_CORE_BLOCK_ITEM.get())
-                .pattern("ISI")
-                .pattern("SES")
-                .pattern("ISI")
-                .define('I', Tags.Items.INGOTS_IRON)
-                .define('S', Tags.Items.STONE)
-                .define('E', Blocks.BLAST_FURNACE)
-                .unlockedBy("has_furnace", has(Blocks.BLAST_FURNACE))
-                .save(outputs);
+        // Stone Work Core
+//        ShapedRecipeBuilder
+//                .shaped(RecipeCategory.MISC, Registration.STONE_WORK_CORE_BLOCK_ITEM.get())
+//                .pattern("ISI")
+//                .pattern("SES")
+//                .pattern("ISI")
+//                .define('I', Tags.Items.INGOTS_IRON)
+//                .define('S', Tags.Items.STONE)
+//                .define('E', Blocks.BLAST_FURNACE)
+//                .unlockedBy("has_furnace", has(Blocks.BLAST_FURNACE))
+//                .save(outputs);
 
         // Banks
         // Solids
@@ -84,7 +84,7 @@ public class RecipeGenerator extends RecipeProvider {
                 .save(outputs);
 
         // Stone Works
-        stoneWork(outputs, Tags.Items.COBBLESTONE, Blocks.STONE, "all_cobble_to_stone");
+        //stoneWork(outputs, Tags.Items.COBBLESTONE, Blocks.STONE, "all_cobble_to_stone");
 
         // region Block Values
         // region By Block
@@ -94,6 +94,12 @@ public class RecipeGenerator extends RecipeProvider {
                 new Calculation(5, 0, 500),
                 Calculation.FLAT,
                 "brick_block");
+        blockValue(outputs,
+                Blocks.BASALT,
+                new Calculation(-1, -20, 0),
+                Calculation.FLAT,
+                Calculation.FLAT,
+                "basalt");
         blockValue(outputs,
                 Blocks.STONE_BRICKS,
                 new Calculation(1, 0, 100),
