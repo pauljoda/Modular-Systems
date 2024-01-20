@@ -1,0 +1,92 @@
+{
+  "parent": "minecraft:block/cube",
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "cullface": "down",
+          "texture": "#down"
+        },
+        "east": {
+          "cullface": "east",
+          "texture": "#east"
+        },
+        "north": {
+          "cullface": "north",
+          "texture": "#north"
+        },
+        "south": {
+          "cullface": "south",
+          "texture": "#south"
+        },
+        "up": {
+          "cullface": "up",
+          "texture": "#up"
+        },
+        "west": {
+          "cullface": "west",
+          "texture": "#west"
+        }
+      },
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ]
+    },
+    {
+      "faces": {
+        "down": {
+          "cullface": "down",
+          "texture": "#border"
+        },
+        "east": {
+          "cullface": "east",
+          "texture": "#border"
+        },
+        "north": {
+          "cullface": "north",
+          "texture": "#border"
+        },
+        "south": {
+          "cullface": "south",
+          "texture": "#border"
+        },
+        "up": {
+          "cullface": "up",
+          "texture": "#border"
+        },
+        "west": {
+          "cullface": "west",
+          "texture": "#border"
+        }
+      },
+      "from": [
+        -0.015,
+        -0.015,
+        -0.015
+      ],
+      "to": [
+        16.015,
+        16.015,
+        16.015
+      ]
+    }
+  ],
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "border": "minecraft:block/hopper_top",
+    "down": "minecraft:block/blast_furnace_top",
+    "east": "minecraft:block/blast_furnace_side",
+    "north": "minecraft:block/blast_furnace_front_on",
+    "particle": "minecraft:block/blast_furnace_front_on",
+    "south": "minecraft:block/blast_furnace_side",
+    "up": "minecraft:block/blast_furnace_top",
+    "west": "minecraft:block/blast_furnace_side"
+  }
+}

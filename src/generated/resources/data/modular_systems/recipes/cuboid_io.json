@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": {
+      "item": "minecraft:chest"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "S": {
+      "item": "minecraft:hopper"
+    }
+  },
+  "pattern": [
+    "III",
+    "SES",
+    "III"
+  ],
+  "result": {
+    "item": "modular_systems:cuboid_io"
+  }
+}

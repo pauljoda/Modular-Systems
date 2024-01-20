@@ -1,0 +1,21 @@
+{
+  "type": "modular_systems:block_values",
+  "efficiencyCalculation": {
+    "ceiling": 500.0,
+    "floor": 0.0,
+    "scaleFactor": 5.0
+  },
+  "inputBlock": {
+    "item": "minecraft:bricks"
+  },
+  "multiplicityCalculation": {
+    "ceiling": 0.0,
+    "floor": 0.0,
+    "scaleFactor": 0.0
+  },
+  "speedCalculation": {
+    "ceiling": 100.0,
+    "floor": 0.0,
+    "scaleFactor": 5.0
+  }
+}
