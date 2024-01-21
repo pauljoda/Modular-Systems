@@ -4,22 +4,22 @@
     {
       "faces": {
         "down": {
-          "texture": "#hopper"
+          "texture": "#all"
         },
         "east": {
-          "texture": "#hopper"
+          "texture": "#all"
         },
         "north": {
-          "texture": "#hopper"
+          "texture": "#all"
         },
         "south": {
-          "texture": "#hopper"
+          "texture": "#all"
         },
         "up": {
-          "texture": "#hopper"
+          "texture": "#all"
         },
         "west": {
-          "texture": "#hopper"
+          "texture": "#all"
         }
       },
       "from": [
@@ -34,10 +34,8 @@
       ]
     }
   ],
-  "render_type": "minecraft:cutout",
+  "render_type": "minecraft:translucent",
   "textures": {
-    "all": "minecraft:block/hopper_top",
-    "hopper": "minecraft:block/hopper_top",
-    "particle": "minecraft:block/hopper_top"
+    "all": "modular_systems:block/cuboid_proxy/4c"
   }
 }

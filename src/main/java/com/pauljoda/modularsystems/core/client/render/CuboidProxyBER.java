@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.util.RandomSource;
 import net.neoforged.neoforge.client.model.data.ModelData;
 
 public class CuboidProxyBER implements BlockEntityRenderer<CuboidProxyBlockHolderBE> {
@@ -28,8 +29,17 @@ public class CuboidProxyBER implements BlockEntityRenderer<CuboidProxyBlockHolde
 
         if(pBlockEntity.getStoredBlockState() != null) {
             var state = pBlockEntity.getStoredBlockState();
-            blockRenderer.renderSingleBlock(state, pPoseStack, pBuffer, 15728640, OverlayTexture.NO_OVERLAY,
-                    ModelData.EMPTY, RenderType.cutout());
+            blockRenderer.getModelRenderer().tesselateWithAO(
+                    pBlockEntity.getLevel(),
+                    blockRenderer.getBlockModel(state),
+                    state,
+                    pBlockEntity.getBlockPos(),
+                    pPoseStack,
+                    pBuffer.getBuffer(RenderType.cutout()),
+                    false,
+                    RandomSource.create(),
+                    state.getSeed(pBlockEntity.getBlockPos()),
+                    pPackedOverlay);
         }
 
         pPoseStack.popPose();

@@ -7,6 +7,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,7 +57,9 @@ public class CuboidProxyBlockHolderBE extends CuboidProxyBE {
         // If somehow core gone
         if(TimeUtils.onSecond(5)) {
             if(getCore() == null && getLevel() != null)
-                getLevel().setBlock(getBlockPos(), getStoredBlockState(), Block.UPDATE_ALL);
+                getLevel().setBlock(getBlockPos(),
+                        getStoredBlockState() == null ? Blocks.AIR.defaultBlockState() : getStoredBlockState(),
+                        Block.UPDATE_ALL);
         }
     }
 

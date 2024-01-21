@@ -2,7 +2,7 @@ package com.pauljoda.modularsystems.core.multiblock.cuboid.block;
 
 import com.mojang.serialization.MapCodec;
 import com.pauljoda.modularsystems.core.multiblock.cuboid.block.entity.CuboidProxyBlockHolderBE;
-import com.pauljoda.nucleus.common.UpdatingBlock;
+import com.pauljoda.nucleus.connected.UpdatingConnectedTextureBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class CuboidProxyBlock extends UpdatingBlock {
+public class CuboidProxyBlock extends UpdatingConnectedTextureBlock {
 
     /**
      * Main Constructor

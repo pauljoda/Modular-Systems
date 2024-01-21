@@ -3,17 +3,18 @@ package com.pauljoda.modularsystems.core.datagen;
 import com.pauljoda.modularsystems.core.lib.Reference;
 import com.pauljoda.modularsystems.core.lib.Registration;
 import com.pauljoda.modularsystems.core.multiblock.cuboid.block.AbstractCuboidCoreBlock;
+import com.pauljoda.nucleus.data.BaseBlockStateGenerator;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelBuilder;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 
-public class BlockStateGenerator extends BlockStateProvider {
+public class BlockStateGenerator extends BaseBlockStateGenerator {
 
     public BlockStateGenerator(PackOutput output, ExistingFileHelper exFileHelper) {
         super(output, Reference.MOD_ID, exFileHelper);
@@ -22,18 +23,19 @@ public class BlockStateGenerator extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         // Proxy
-        float offset = 0.005F;
-        var proxy = models().getBuilder("block/cuboid_proxy")
-                .parent(models().getExistingFile(mcLoc("block")))
-                .element().from(-offset, -offset, -offset).to(16 + offset, 16 + offset, 16 + offset)
-                .allFaces(((direction, faceBuilder) -> {
-                    faceBuilder.texture("#hopper");
-                }))
-                .end()
-                .texture("hopper", mcLoc("block/hopper_top"))
-                .texture("all", mcLoc("block/hopper_top"))
-                .texture("particle", mcLoc("block/hopper_top")).renderType("cutout");
-        getVariantBuilder(Registration.CUBOID_PROXY_BLOCK.get()).partialState().setModels(new ConfiguredModel(proxy));
+        addConnectedTextureModels(Registration.CUBOID_PROXY_BLOCK.get(), Reference.MOD_ID);
+//        float offset = 0.005F;
+//        var proxy = models().getBuilder("block/cuboid_proxy")
+//                .parent(models().getExistingFile(mcLoc("block")))
+//                .element().from(-offset, -offset, -offset).to(16 + offset, 16 + offset, 16 + offset)
+//                .allFaces(((direction, faceBuilder) -> {
+//                    faceBuilder.texture("#hopper");
+//                }))
+//                .end()
+//                .texture("hopper", mcLoc("block/hopper_top"))
+//                .texture("all", mcLoc("block/hopper_top"))
+//                .texture("particle", mcLoc("block/hopper_top")).renderType("cutout");
+//        getVariantBuilder(Registration.CUBOID_PROXY_BLOCK.get()).partialState().setModels(new ConfiguredModel(proxy));
 
         // Furnace core
         addCuboidCore(Registration.FURNACE_CORE_BLOCK.get(),
@@ -63,6 +65,7 @@ public class BlockStateGenerator extends BlockStateProvider {
         getVariantBuilder(Registration.CUBOID_IO_BLOCK.get()).partialState().setModels(new ConfiguredModel(model));
     }
 
+    // region Cuboid Core
     /**
      * Adds a cuboid core block model to the block state provider.
      *
@@ -104,66 +107,10 @@ public class BlockStateGenerator extends BlockStateProvider {
         float offset = 0.015F;
 
         // Off model
-        var cuboidCoreModelOff = models().getBuilder(modelLocationOff)
-                .parent(models().getExistingFile(mcLoc("block/cube")))
-
-                .element().from(0, 0, 0).to(16, 16, 16)
-                .allFaces((direction, faceBuilder) -> {
-                    switch (direction) {
-                        case UP -> faceBuilder.texture("#up").cullface(Direction.UP);
-                        case DOWN -> faceBuilder.texture("#down").cullface(Direction.DOWN);
-                        case NORTH -> faceBuilder.texture("#north").cullface(Direction.NORTH);
-                        case SOUTH -> faceBuilder.texture("#south").cullface(Direction.SOUTH);
-                        case EAST -> faceBuilder.texture("#east").cullface(Direction.EAST);
-                        case WEST -> faceBuilder.texture("#west").cullface(Direction.WEST);
-                    }
-                })
-                .end()
-
-                .element().from(-offset, -offset, -offset).to(16 + offset, 16 + offset, 16 + offset)
-                .allFaces(((direction, faceBuilder) -> faceBuilder.texture("#border").cullface(direction)))
-                .end()
-
-                .texture("up", up)
-                .texture("down", down)
-                .texture("north", frontOff)
-                .texture("east", east)
-                .texture("south", south)
-                .texture("west", west)
-                .texture("border", border)
-                .texture("particle", frontOff)
-                .renderType("cutout");
+        var cuboidCoreModelOff = createCuboidCoreModel(modelLocationOff, up, down, frontOff, south, east, west, border, offset);
 
         // On Model
-        var cuboidCoreModelOn = models().getBuilder(modelLocationOn)
-                .parent(models().getExistingFile(mcLoc("block/cube")))
-
-                .element().from(0, 0, 0).to(16, 16, 16)
-                .allFaces((direction, faceBuilder) -> {
-                    switch (direction) {
-                        case UP -> faceBuilder.texture("#up").cullface(Direction.UP);
-                        case DOWN -> faceBuilder.texture("#down").cullface(Direction.DOWN);
-                        case NORTH -> faceBuilder.texture("#north").cullface(Direction.NORTH);
-                        case SOUTH -> faceBuilder.texture("#south").cullface(Direction.SOUTH);
-                        case EAST -> faceBuilder.texture("#east").cullface(Direction.EAST);
-                        case WEST -> faceBuilder.texture("#west").cullface(Direction.WEST);
-                    }
-                })
-                .end()
-
-                .element().from(-offset, -offset, -offset).to(16 + offset, 16 + offset, 16 + offset)
-                .allFaces(((direction, faceBuilder) -> faceBuilder.texture("#border").cullface(direction)))
-                .end()
-
-                .texture("up", up)
-                .texture("down", down)
-                .texture("north", frontOn)
-                .texture("east", east)
-                .texture("south", south)
-                .texture("west", west)
-                .texture("border", border)
-                .texture("particle", frontOn)
-                .renderType("cutout");
+        var cuboidCoreModelOn = createCuboidCoreModel(modelLocationOn, up, down, frontOn, south, east, west, border, offset);
 
         getVariantBuilder(block)
                 .forAllStates(state ->
@@ -172,6 +119,50 @@ public class BlockStateGenerator extends BlockStateProvider {
                                 .rotationY((int) state.getValue(AbstractCuboidCoreBlock.FACING).getOpposite().toYRot())
                                 .build());
     }
+
+    /**
+     * Creates a cuboid core block model.
+     *
+     * @param modelLocation The location of the model file.
+     * @param up            The resource location of the top texture.
+     * @param down          The resource location of the bottom texture.
+     * @param front         The resource location of the front texture.
+     * @param south         The resource location of the south face texture.
+     * @param east          The resource location of the east face texture.
+     * @param west          The resource location of the west face texture.
+     * @param border        The resource location of the border texture.
+     * @param offset        The offset value for the cuboid.
+     * @return A ModelFile object representing the cuboid core block model.
+     */
+    private ModelFile createCuboidCoreModel(String modelLocation,
+                                            ResourceLocation up, ResourceLocation down,
+                                            ResourceLocation front, ResourceLocation south,
+                                            ResourceLocation east, ResourceLocation west,
+                                            ResourceLocation border, float offset) {
+        return models().getBuilder(modelLocation)
+                .parent(models().getExistingFile(mcLoc("block/cube")))
+
+                .element().from(0, 0, 0).to(16, 16, 16)
+                .allFaces(BaseBlockStateGenerator::buildDirectionFaces)
+                .end()
+
+                .element().from(-offset, -offset, -offset).to(16 + offset, 16 + offset, 16 + offset)
+                .allFaces(((direction, faceBuilder) -> faceBuilder.texture("#border").cullface(direction)))
+                .end()
+
+                .texture("up", up)
+                .texture("down", down)
+                .texture("north", front)
+                .texture("east", east)
+                .texture("south", south)
+                .texture("west", west)
+                .texture("border", border)
+                .texture("particle", front)
+                .renderType("cutout");
+    }
+
+    //endregion
+    // region Cuboid Bank
 
     /**
      * Adds a cuboid bank block model to the block state provider.
@@ -544,4 +535,5 @@ public class BlockStateGenerator extends BlockStateProvider {
                 .face(Direction.DOWN).texture("#core").uvs(2, 2, 14, 14).end()
                 .end();
     }
+    // endregion
 }

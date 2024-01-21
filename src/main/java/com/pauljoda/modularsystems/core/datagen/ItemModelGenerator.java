@@ -23,6 +23,10 @@ public class ItemModelGenerator extends ItemModelProvider {
 
         // Blocks ------------------------------------------------------------------------------------------------------
 
+        // Proxy
+        withExistingParent(BuiltInRegistries.BLOCK.getKey(Registration.CUBOID_PROXY_BLOCK.get()).getPath(),
+                modLoc(String.format("block/%s/c0", BuiltInRegistries.BLOCK.getKey(Registration.CUBOID_PROXY_BLOCK.get()).getPath())));
+
         // Furnace Core
         fromBlock(Registration.FURNACE_CORE_BLOCK.get());
 

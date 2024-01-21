@@ -1,0 +1,53 @@
+{
+  "parent": "minecraft:block/block",
+  "elements": [
+    {
+      "faces": {
+        "down": {
+          "cullface": "down",
+          "texture": "#down"
+        },
+        "east": {
+          "cullface": "east",
+          "texture": "#east"
+        },
+        "north": {
+          "cullface": "north",
+          "texture": "#north"
+        },
+        "south": {
+          "cullface": "south",
+          "texture": "#south"
+        },
+        "up": {
+          "cullface": "up",
+          "texture": "#up"
+        },
+        "west": {
+          "cullface": "west",
+          "texture": "#west"
+        }
+      },
+      "from": [
+        -0.005,
+        -0.005,
+        -0.005
+      ],
+      "to": [
+        16.005,
+        16.005,
+        16.005
+      ]
+    }
+  ],
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "down": "modular_systems:block/cuboid_proxy/2c_ue",
+    "east": "modular_systems:block/cuboid_proxy/4c",
+    "north": "modular_systems:block/cuboid_proxy/2c_uw",
+    "particle": "modular_systems:block/cuboid_proxy/0c",
+    "south": "modular_systems:block/cuboid_proxy/4c",
+    "up": "modular_systems:block/cuboid_proxy/4c",
+    "west": "modular_systems:block/cuboid_proxy/2c_ue"
+  }
+}
