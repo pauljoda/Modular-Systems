@@ -47,16 +47,16 @@ public class RecipeGenerator extends RecipeProvider {
                 .save(outputs);
 
         // Stone Work Core
-//        ShapedRecipeBuilder
-//                .shaped(RecipeCategory.MISC, Registration.STONE_WORK_CORE_BLOCK_ITEM.get())
-//                .pattern("ISI")
-//                .pattern("SES")
-//                .pattern("ISI")
-//                .define('I', Tags.Items.INGOTS_IRON)
-//                .define('S', Tags.Items.STONE)
-//                .define('E', Blocks.BLAST_FURNACE)
-//                .unlockedBy("has_furnace", has(Blocks.BLAST_FURNACE))
-//                .save(outputs);
+        ShapedRecipeBuilder
+                .shaped(RecipeCategory.MISC, Registration.STONE_WORK_CORE_BLOCK_ITEM.get())
+                .pattern("ISI")
+                .pattern("SES")
+                .pattern("ISI")
+                .define('I', Tags.Items.INGOTS_IRON)
+                .define('S', Tags.Items.STONE)
+                .define('E', Blocks.BLAST_FURNACE)
+                .unlockedBy("has_furnace", has(Blocks.BLAST_FURNACE))
+                .save(outputs);
 
         // Banks
         // Solids
@@ -84,7 +84,11 @@ public class RecipeGenerator extends RecipeProvider {
                 .save(outputs);
 
         // Stone Works
-        //stoneWork(outputs, Tags.Items.COBBLESTONE, Blocks.STONE, "all_cobble_to_stone");
+        stoneWork(outputs, Tags.Items.STONE, Blocks.COBBLESTONE, "stone_cobblestone");
+        stoneWork(outputs, Tags.Items.COBBLESTONE, Blocks.GRAVEL, "cobble_gravel");
+        stoneWork(outputs, Tags.Items.GRAVEL, Blocks.SAND, "gravel_sand");
+        stoneWork(outputs, Tags.Items.SAND, Blocks.GLASS, "sand_glass");
+        stoneWork(outputs, Tags.Items.GLASS, Blocks.GLASS, "glass_back_to_glass");
 
         // region Block Values
         // region By Block

@@ -1,0 +1,10 @@
+{
+  "type": "modular_systems:stone_work",
+  "input": {
+    "tag": "forge:gravel"
+  },
+  "output": {
+    "count": 1,
+    "result": "minecraft:sand"
+  }
+}

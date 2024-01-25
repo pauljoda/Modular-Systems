@@ -2,6 +2,7 @@ package com.pauljoda.modularsystems.core.recipe.stonework;
 
 import com.pauljoda.nucleus.recipe.CustomRecipeBuilder;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
@@ -37,7 +38,7 @@ public class StoneWorkRecipeBuilder implements CustomRecipeBuilder<StoneWorkReci
      */
     @Override
     public StoneWorkRecipe createRecipe() {
-        return null;
+        return new StoneWorkRecipe(input, new ItemStack(result));
     }
 
     /**
