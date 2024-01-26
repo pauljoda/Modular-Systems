@@ -1,0 +1,8 @@
+{
+  "type": "modular_systems:fluidfuel",
+  "burntime": 1600,
+  "input": {
+    "Amount": 100,
+    "FluidName": "minecraft:lava"
+  }
+}

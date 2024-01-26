@@ -8,6 +8,8 @@ import com.pauljoda.modularsystems.core.multiblock.cuboid.container.CuboidIOCont
 import com.pauljoda.modularsystems.core.multiblock.providers.block.entity.CuboidBankSolidsBE;
 import com.pauljoda.modularsystems.core.recipe.blockvalues.BlockValueRecipeType;
 import com.pauljoda.modularsystems.core.recipe.blockvalues.BlockValuesRecipeSerializer;
+import com.pauljoda.modularsystems.core.recipe.fluidfuel.FluidFuelRecipeSerializer;
+import com.pauljoda.modularsystems.core.recipe.fluidfuel.FluidFuelRecipeType;
 import com.pauljoda.modularsystems.core.recipe.stonework.StoneWorkRecipeSerializer;
 import com.pauljoda.modularsystems.core.recipe.stonework.StoneWorkRecipeType;
 import com.pauljoda.modularsystems.furnace.block.FurnaceCoreBlock;
@@ -189,6 +191,11 @@ public class Registration {
             RECIPE_TYPES.register("block_values", BlockValueRecipeType::new);
     public static final DeferredHolder<RecipeSerializer<?>, BlockValuesRecipeSerializer> BLOCK_VALUE_RECIPE_SERIALIZER =
             RECIPE_SERIALIZERS.register("block_values", BlockValuesRecipeSerializer::new);
+
+    public static final DeferredHolder<RecipeType<?>, FluidFuelRecipeType> FLUID_FUEL_RECIPE_TYPE =
+            RECIPE_TYPES.register("fluidfuel", FluidFuelRecipeType::new);
+    public static final DeferredHolder<RecipeSerializer<?>, FluidFuelRecipeSerializer> FLUID_FUEL_RECIPE_SERIALIZER =
+            RECIPE_SERIALIZERS.register("fluidfuel", FluidFuelRecipeSerializer::new);
 
     /*******************************************************************************************************************
      * Creative Tabs                                                                                                   *

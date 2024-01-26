@@ -54,7 +54,9 @@ public class ModularSystemsJEIPlugin implements IModPlugin {
                 recipeManager.getAllRecipesFor(Registration.BLOCK_VALUE_RECIPE_TYPE.get()).stream().map(RecipeHolder::value).toList());
 
         registration.addRecipes(STONE_WORK,
-                recipeManager.getAllRecipesFor(Registration.STONE_WORK_RECIPE_TYPE.get()).stream().map(RecipeHolder::value).toList());
+                recipeManager.getAllRecipesFor(Registration.STONE_WORK_RECIPE_TYPE.get()).stream().map(RecipeHolder::value)
+                        .filter(stoneWorkRecipe -> !stoneWorkRecipe.output().isEmpty())
+                        .toList());
     }
 
     @Override
@@ -72,6 +74,7 @@ public class ModularSystemsJEIPlugin implements IModPlugin {
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         // Add Furnace Core to Smelting Handlers
         registration.addRecipeCatalyst(new ItemStack(Registration.FURNACE_CORE_BLOCK.get()), RecipeTypes.SMELTING);
+        registration.addRecipeCatalyst(new ItemStack(Registration.CUBOID_BANK_SOLIDS_BLOCK.get()), RecipeTypes.FUELING);
 
         registration.addRecipeCatalyst(new ItemStack(Registration.FURNACE_CORE_BLOCK.get()), BLOCK_VALUES);
         registration.addRecipeCatalyst(new ItemStack(Registration.STONE_WORK_CORE_BLOCK.get()), BLOCK_VALUES);

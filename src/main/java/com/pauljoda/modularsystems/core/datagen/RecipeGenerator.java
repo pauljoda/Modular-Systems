@@ -4,6 +4,7 @@ import com.pauljoda.modularsystems.core.lib.Reference;
 import com.pauljoda.modularsystems.core.lib.Registration;
 import com.pauljoda.modularsystems.core.recipe.blockvalues.BlockValueRecipeBuilder;
 import com.pauljoda.modularsystems.core.math.collections.Calculation;
+import com.pauljoda.modularsystems.core.recipe.fluidfuel.FluidFuelRecipeBuilder;
 import com.pauljoda.modularsystems.core.recipe.stonework.StoneWorkRecipeBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -18,7 +19,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.fluids.FluidStack;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -89,6 +92,9 @@ public class RecipeGenerator extends RecipeProvider {
         stoneWork(outputs, Tags.Items.GRAVEL, Blocks.SAND, "gravel_sand");
         stoneWork(outputs, Tags.Items.SAND, Blocks.GLASS, "sand_glass");
         stoneWork(outputs, Tags.Items.GLASS, Blocks.GLASS, "glass_back_to_glass");
+
+        // Fluid Fuels
+        fluidFuel(outputs, new FluidStack(Fluids.LAVA, 100), 1600, "lava");
 
         // region Block Values
         // region By Block
@@ -279,5 +285,18 @@ public class RecipeGenerator extends RecipeProvider {
                                      String name) {
         BlockValueRecipeBuilder.of(block, speed, efficiency, multiplicity)
                 .save(output, new ResourceLocation(Reference.MOD_ID, String.format("block_values/%s", name)));
+    }
+
+    /**
+     * This method creates a fluid fuel recipe and saves it using the provided parameters.
+     *
+     * @param output   the RecipeOutput instance to save the recipe to
+     * @param input    the input fluid for the recipe
+     * @param burnTime the burn time of the fluid in ticks
+     * @param name     the name of the recipe
+     */
+    protected static void fluidFuel(RecipeOutput output, FluidStack input, int burnTime, String name) {
+        FluidFuelRecipeBuilder.of(input, burnTime)
+                .save(output, new ResourceLocation(Reference.MOD_ID, String.format("fluidfuel/%s", name)));
     }
 }
