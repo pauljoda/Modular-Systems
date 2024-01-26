@@ -58,6 +58,7 @@ public abstract class CuboidProxyBE extends Syncable {
      * @param coreLocation the new core location as a BlockPos object
      */
     public void setCoreLocation(BlockPos coreLocation) {
+        getLevel().invalidateCapabilities(getBlockPos());
         this.coreLocation = coreLocation;
     }
 
